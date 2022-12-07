@@ -7,13 +7,12 @@
 1. In order to allow rendering in WSL2. We need to ensure Xming is installed.
 2. Before starting development, launch application "XLaunch"
 3. Follow below steps, for `Additional parameters for VcXsrv`, type `-ac`
+   <img src="./img/xlaunch_1.png" width="400" height="300" />
+   <img src="./img/xlaunch_2.png" width="400" height="300" />
+   <img src="./img/xlaunch_3.png" width="400" height="300" />
 
-<img src="./img/xlaunch_1.png" width="400" height="300" />
-<img src="./img/xlaunch_2.png" width="400" height="300" />
-<img src="./img/xlaunch_3.png" width="400" height="300" />
-
-3. After above steps, click `Finish` and launch Xming
-4. Once Xming is launched, we'll need to configure the `$DISPLAY` variable to point to the local machine's IP. To do that, open a terminal and follow below steps:
+4. After above steps, click `Finish` and launch Xming
+5. Once Xming is launched, we'll need to configure the `$DISPLAY` variable to point to the local machine's IP. To do that, open a terminal and follow below steps:
 
 ```bash
 $cat /etc/resolv.conf
@@ -27,4 +26,6 @@ $cat /etc/resolv.conf
 $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
 ```
 
-5. Now you can run `python3 <app_name>.py` to execute programs
+5. (optional) If you are running application using `code-runner` in `VSCode`. You can configure `"code-runner.runInTerminal": true` in `settings.json`. As well as setting `python` command as `python3 -m`. See below
+   <img src="./img/vscode_1.png" width="450" height="320" />
+6. Now you can run `python3 <app_name>.py` to execute programs
