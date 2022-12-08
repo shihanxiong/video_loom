@@ -58,6 +58,7 @@ timeline_text.grid(row=1, column=0)
 text_scroll = ttk.Scrollbar(
     timeline_component, orient="vertical", command=timeline_text.yview)
 text_scroll.grid(row=1, column=1, sticky="NS")
+timeline_text["yscrollcommand"] = text_scroll.set
 
 
 # toolbar
