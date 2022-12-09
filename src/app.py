@@ -1,12 +1,9 @@
+from sys import platform
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
 from windows import set_dpi_awareness
-
-
-# set high resolution in windows 10
-set_dpi_awareness()
 
 
 # methods
@@ -35,7 +32,14 @@ def select_file():
 root = tk.Tk()
 root.title("Video Loom")
 root.geometry("800x1000")
-root.resizable(False, False)
+
+if platform == "win32":
+    set_dpi_awareness()  # set high resolution in windows 10
+    root.resizable(False, False)  # this does not work on MacOS
+if platform == "darwin":
+    pass
+else:
+    pass
 
 
 # app layout
@@ -98,7 +102,7 @@ timeline_label = ttk.Label(timeline_component, text="Timeline")
 timeline_label.grid(row=0)
 
 timeline_text = tk.Text(timeline_component, height=16)
-timeline_text.grid(row=1, column=0)
+timeline_text.grid(row=1, column=0, sticky="EW")
 
 text_scroll = ttk.Scrollbar(
     timeline_component, orient="vertical", command=timeline_text.yview)
