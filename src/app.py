@@ -1,6 +1,7 @@
 from sys import platform
 import tkinter as tk
 from tkinter import ttk
+from datetime import datetime
 from windows import set_dpi_awareness
 from video_input_frame import VideoInputFrame
 from audio_setting_frame import AudioSettingFrame
@@ -17,8 +18,8 @@ class VideoLoom(tk.Tk):
 
         # app config
         self.default_font = ("Courier", 14)
-        s = ttk.Style()
-        s.configure('.', font=self.default_font)
+        style = ttk.Style(self)
+        style.configure('.', font=self.default_font)
 
         # app layout
         self.columnconfigure(0, weight=1)
@@ -47,8 +48,13 @@ class VideoLoom(tk.Tk):
             pass
 
     def generate_video(self):
+        start_time = datetime.now()
         print("generating video...")
-        print("video is ready!")
+        print(
+            f'using audio track {self.audio_setting_component.audio_track_variable.get() + 1}')
+        end_time = datetime.now()
+        print(
+            f"video is ready! Taking total of {(end_time - start_time).total_seconds()} seconds")
 
 
 # start app
