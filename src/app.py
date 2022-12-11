@@ -6,6 +6,23 @@ from windows import set_dpi_awareness
 from video import generate_video
 
 
+class VideoLoom(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.app_configure()
+        self.title("Video Loom")
+        self.geometry("800x1000")
+
+    def app_configure(self):
+        if platform == "win32":
+            set_dpi_awareness()  # set high resolution in windows 10
+            self.resizable(False, False)  # this does not work on MacOS
+        elif platform == "darwin":
+            pass
+        else:
+            pass
+
+
 # methods
 def select_file():
     filetypes = (
@@ -20,14 +37,10 @@ def select_file():
 
     if filename != "":
         video_list.append(filename)
-        showinfo(
-            title='Selected File',
-            message=filename
-        )
         print(video_list)
         if len(video_list) == 2:
             video_import_button["state"] = "disable"
-        video_label.config(text=f"Videos {len(video_list)} of 2")
+        video_label_text.set(f"Videos {len(video_list)} of 2")
 
 
 def insert_timestamp(e):
@@ -35,21 +48,10 @@ def insert_timestamp(e):
 
 
 # app config
-root = tk.Tk()
-root.title("Video Loom")
-root.geometry("800x1000")
+root = VideoLoom()
 default_font = ("Courier", 14)
 s = ttk.Style()
 s.configure('.', font=default_font)
-
-
-if platform == "win32":
-    set_dpi_awareness()  # set high resolution in windows 10
-    root.resizable(False, False)  # this does not work on MacOS
-if platform == "darwin":
-    pass
-else:
-    pass
 
 
 # app layout
@@ -63,6 +65,7 @@ root.rowconfigure(3, weight=1)
 # variables
 video_list = []
 audio_track_variable = tk.IntVar()
+video_label_text = tk.StringVar(value=f"Videos {len(video_list)} of 2")
 
 
 # videos input
@@ -72,7 +75,7 @@ video_component.rowconfigure(0, weight=0)
 video_component.rowconfigure(1, weight=1)
 
 video_label = ttk.Label(
-    video_component, text=f"Videos {len(video_list)} of 2", padding=(10))
+    video_component, textvariable=video_label_text, padding=(10))
 video_label.grid(row=0)
 
 video_import_button = ttk.Button(video_component, text="Import a video",
