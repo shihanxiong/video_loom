@@ -32,6 +32,10 @@ def select_file():
 root = tk.Tk()
 root.title("Video Loom")
 root.geometry("800x1000")
+default_font = ("Courier", 14)
+s = ttk.Style()
+s.configure('.', font=default_font)
+
 
 if platform == "win32":
     set_dpi_awareness()  # set high resolution in windows 10
