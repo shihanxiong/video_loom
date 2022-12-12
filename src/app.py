@@ -29,8 +29,8 @@ class VideoLoom(tk.Tk):
 
         # components
         self.video_component = VideoInputFrame(self, padding=(10, 0))
-        self.audio_setting_component = AudioSettingFrame(self, padding=(20, 0))
-        self.timeline_component = TimelineFrame(self, padding=(10, 10))
+        self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
+        self.timeline_component = TimelineFrame(self, padding=(10, 0))
         self.toolbar_component = ToolbarFrame(self, padding=(10, 0))
 
         # events binding
