@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog as fd
+from datetime import datetime
 
 
 # videos input
@@ -40,3 +41,12 @@ class VideoInputFrame(ttk.Frame):
             if len(self.video_list) == 2:
                 self.video_import_button["state"] = "disable"
             self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
+
+    def generate_video(self):
+        start_time = datetime.now()
+        print("generating video...")
+        print(
+            f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
+        end_time = datetime.now()
+        print(
+            f"video is ready! Taking total of {(end_time - start_time).total_seconds()} seconds")

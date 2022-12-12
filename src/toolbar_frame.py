@@ -13,7 +13,7 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(1, weight=1)
 
         generate_button = ttk.Button(
-            self, text="Generate Video", padding=(10), command=self.master.generate_video)
+            self, text="Generate Video", padding=(10), command=self.master.video_component.generate_video)
         generate_button.grid(row=0, column=0, sticky="EW")
 
         quit_button = ttk.Button(self, text="Quit", padding=(
