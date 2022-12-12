@@ -45,11 +45,11 @@ class VideoInputFrame(ttk.Frame):
 
         if filename != "":
             self.video_list.append(filename)
-            print(self.video_list)
             self.refresh()
-            self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
 
     def refresh(self):
+        self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
+        print(self.video_list)
         if len(self.video_list) == 2:
             self.video_import_button["state"] = "disable"
             self.master.toolbar_component.generate_button["state"] = "enable"
@@ -59,7 +59,6 @@ class VideoInputFrame(ttk.Frame):
 
     def clear_video_list(self):
         self.video_list = []
-        print(self.video_list)
         self.refresh()
 
     def generate_video(self):
