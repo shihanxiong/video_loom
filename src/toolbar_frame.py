@@ -8,7 +8,7 @@ class ToolbarFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # layout
-        self.grid(row=3, sticky="NEW")
+        self.grid(row=4, sticky="NEW")
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 

@@ -6,6 +6,7 @@ from video_input_frame import VideoInputFrame
 from audio_setting_frame import AudioSettingFrame
 from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
+from status_frame import StatusFrame
 
 
 class VideoLoom(tk.Tk):
@@ -26,11 +27,13 @@ class VideoLoom(tk.Tk):
         self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=1)
         self.rowconfigure(3, weight=1)
+        self.rowconfigure(4, weight=1)
 
         # components
         self.video_component = VideoInputFrame(self, padding=(10, 0))
         self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
         self.timeline_component = TimelineFrame(self, padding=(10, 10))
+        self.status_component = StatusFrame(self, padding=(10, 10))
         self.toolbar_component = ToolbarFrame(self, padding=(10, 0))
 
         # events binding
