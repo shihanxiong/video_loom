@@ -30,3 +30,19 @@ $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
    <img src="./img/vscode_1.png" width="450" height="320" />
    (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VSCode terminal)
 6. Now you can run `python3 <app_name>.py` to execute programs.
+
+## Testing
+
+> Ensure `pytest` is installed
+
+```bash
+# install pytest
+$pip3 install pytest
+```
+
+> Running tests
+
+```bash
+# running tests
+$pytest
+```
