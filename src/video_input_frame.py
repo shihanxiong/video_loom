@@ -46,6 +46,8 @@ class VideoInputFrame(ttk.Frame):
         if filename != "":
             self.video_list.append(filename)
             self.refresh()
+            self.master.status_component.set_and_log_status(
+                f"Imported {filename}")
 
     def refresh(self):
         self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
@@ -89,5 +91,5 @@ class VideoInputFrame(ttk.Frame):
 
         # logging
         end_time = datetime.now()
-        print(
-            f"video is ready! Taking total of {(end_time - start_time).total_seconds()} seconds")
+        self.master.status_component.set_and_log_status(
+            f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds")

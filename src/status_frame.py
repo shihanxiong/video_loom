@@ -16,6 +16,10 @@ class StatusFrame(ttk.Frame):
         status_label = ttk.Label(self, text="Process status:", padding=(10))
         status_label.grid(row=0, columnspan=1)
 
-        status_text = ttk.Label(
-            self, textvariable=self.status_variable, padding=(10))
-        status_text.grid(row=0, column=1, sticky="W")
+        status_text = ttk.Label(self, textvariable=self.status_variable, padding=(
+            10), wraplength=(self.master.window_width - 250))
+        status_text.grid(row=0, column=1, sticky="EW")
+
+    def set_and_log_status(self, status):
+        self.status_variable.set(status)
+        print(status)
