@@ -28,5 +28,5 @@ class TimelineFrame(ttk.Frame):
         text_scroll.grid(row=1, column=1, sticky="NS")
         self.timeline_text["yscrollcommand"] = text_scroll.set
 
-    def insert_timestamp(self, e):
-        self.timeline_text.insert(END, e.char + "\n")
+    def insert_timestamp(self, v_idx):
+        self.timeline_text.insert(END, str(v_idx + 1) + "\n")

@@ -32,15 +32,11 @@ class VideoLoom(tk.Tk):
         self.rowconfigure(4, weight=1)
 
         # components
+        self.timeline_component = TimelineFrame(self, padding=(10, 10))
         self.video_component = VideoInputFrame(self, padding=(10, 0))
         self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
-        self.timeline_component = TimelineFrame(self, padding=(10, 10))
         self.status_component = StatusFrame(self, padding=(10, 10))
         self.toolbar_component = ToolbarFrame(self, padding=(10, 0))
-
-        # events binding
-        for i in range(1, 3):
-            self.bind(str(i), self.timeline_component.insert_timestamp)
 
     def app_configure(self):
         if platform == "win32":
