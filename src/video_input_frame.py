@@ -15,7 +15,8 @@ class VideoInputFrame(ttk.Frame):
         self.video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 2")
-        self.output_file_name = tk.StringVar(value="output.mp4")
+        self.output_file_name = tk.StringVar(
+            value=f"{self.get_current_timestamp()}.mp4")
 
         self.total_rows = 3
         self.total_columns = 2
@@ -121,3 +122,6 @@ class VideoInputFrame(ttk.Frame):
         end_time = datetime.now()
         self.master.status_component.set_and_log_status(
             f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds")
+
+    def get_current_timestamp(self):
+        return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
