@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
 import ffmpeg
+from video_renderer_frame import VideoRendererFrame
 
 
 # videos input
@@ -36,6 +37,8 @@ class VideoInputFrame(ttk.Frame):
         self.clear_video_list_button.grid(row=1, column=1, sticky="E")
 
         # video rendering
+        self.video_renderer_component = VideoRendererFrame(
+            self, padding=(10, 0))
 
         # video selection
         self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
@@ -67,10 +70,10 @@ class VideoInputFrame(ttk.Frame):
         print(self.video_list)
         if len(self.video_list) == 2:
             self.video_import_button["state"] = "disable"
-            self.master.toolbar_component.generate_button["state"] = "enable"
+            self.master.toolbar_component.enable_generate_button()
         else:
             self.video_import_button["state"] = "enable"
-            self.master.toolbar_component.generate_button["state"] = "disable"
+            self.master.toolbar_component.disable_generate_button()
 
     def clear_video_list(self):
         self.video_list = []
@@ -90,6 +93,9 @@ class VideoInputFrame(ttk.Frame):
         print("generating video...")
         print(
             f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
+        print("================timeline start================")
+        print(self.master.timeline_component.get_timeline_text())
+        print("================timeline end================")
 
         # remove output file if exists
         if os.path.exists(self.output_file_name.get()):

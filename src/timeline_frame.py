@@ -30,3 +30,6 @@ class TimelineFrame(ttk.Frame):
 
     def insert_timestamp(self, v_idx):
         self.timeline_text.insert(END, str(v_idx + 1) + "\n")
+
+    def get_timeline_text(self):
+        return self.timeline_text.get("1.0", END)
