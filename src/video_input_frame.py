@@ -12,6 +12,7 @@ class VideoInputFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # variables
+        self.pts_filter = "PTS-STARTPTS"
         self.video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 2")
@@ -82,10 +83,9 @@ class VideoInputFrame(ttk.Frame):
         self.master.status_component.set_and_log_status("video list cleared")
 
     def get_stream_audio(self):
-        pts = "PTS-STARTPTS"
         stream = ffmpeg.input(os.path.abspath(
             self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
-        audio = stream.filter_("asetpts", pts)
+        audio = stream.filter_("asetpts", self.pts_filter)
         return audio
 
     def generate_video(self):
@@ -108,7 +108,8 @@ class VideoInputFrame(ttk.Frame):
         # video processing
         try:
             stream = ffmpeg.input(os.path.abspath(self.video_list[0]))
-            video = ffmpeg.hflip(stream)
+            video = stream.trim(start=5, end=10).filter(
+                "setpts", self.pts_filter)
             video_and_audio = ffmpeg.concat(video, audio, v=1, a=1)
             output = ffmpeg.output(
                 video_and_audio, self.output_file_name.get(), format="mp4")
