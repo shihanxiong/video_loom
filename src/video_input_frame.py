@@ -2,8 +2,8 @@ import os
 import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
-import ffmpeg
 from video_renderer_frame import VideoRendererFrame
+import ffmpeg
 
 
 # videos input
@@ -19,6 +19,7 @@ class VideoInputFrame(ttk.Frame):
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
 
+        # layout
         self.total_rows = 3
         self.total_columns = 2
         self.grid(row=0, sticky="N")
@@ -41,14 +42,15 @@ class VideoInputFrame(ttk.Frame):
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
             self, padding=(10, 0))
+        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEW")
 
         # video selection
         self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
             10), command=lambda: self.master.timeline_component.insert_timestamp(0))
-        self.select_video_button_1.grid(row=3, column=0, sticky="S")
+        self.select_video_button_1.grid(row=3, column=0, sticky="W")
         self.select_video_button_2 = ttk.Button(self, text="Select", padding=(
             10), command=lambda: self.master.timeline_component.insert_timestamp(1))
-        self.select_video_button_2.grid(row=3, column=1, sticky="S")
+        self.select_video_button_2.grid(row=3, column=1, sticky="E")
 
     def select_file(self):
         filetypes = (
