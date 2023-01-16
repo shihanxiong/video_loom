@@ -21,7 +21,7 @@ class VideoInputFrame(ttk.Frame):
 
         # layout
         self.total_rows = 3
-        self.total_columns = 3
+        self.total_columns = 4
         self.grid(row=0, sticky="N")
         for r_idx in range(self.total_rows):
             self.rowconfigure(r_idx, weight=1)
@@ -36,7 +36,7 @@ class VideoInputFrame(ttk.Frame):
         # video import / clear
         video_label = ttk.Label(
             self, textvariable=self.video_label_text, padding=(10))
-        video_label.grid(row=0, columnspan=3)
+        video_label.grid(row=0, columnspan=4)
         self.video_import_button = ttk.Button(
             self, text="Import a video", padding=(10), command=self.select_file)
         self.video_import_button.grid(row=1, column=0, sticky="W")
@@ -45,7 +45,10 @@ class VideoInputFrame(ttk.Frame):
         self.clear_video_list_button.grid(row=1, column=1, sticky="N")
         self.play_all_videos_button = ttk.Button(self, text="Play all videos", padding=(
             10), command=self.video_renderer_component.play_all)
-        self.play_all_videos_button.grid(row=1, column=2, sticky="E")
+        self.play_all_videos_button.grid(row=1, column=2, sticky="N")
+        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", padding=(
+            10), command=self.video_renderer_component.pause_all)
+        self.pause_all_videos_button.grid(row=1, column=3, sticky="E")
 
         # video selection
         self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
