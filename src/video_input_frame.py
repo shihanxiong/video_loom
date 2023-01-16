@@ -21,36 +21,39 @@ class VideoInputFrame(ttk.Frame):
 
         # layout
         self.total_rows = 3
-        self.total_columns = 2
+        self.total_columns = 3
         self.grid(row=0, sticky="N")
         for r_idx in range(self.total_rows):
             self.rowconfigure(r_idx, weight=1)
         for c_idx in range(self.total_columns):
             self.columnconfigure(c_idx, weight=1)
 
-        # video import / clear
-        video_label = ttk.Label(
-            self, textvariable=self.video_label_text, padding=(10))
-        video_label.grid(row=0, columnspan=2)
-        self.video_import_button = ttk.Button(
-            self, text="Import a video", padding=(10), command=self.select_file)
-        self.video_import_button.grid(row=1, column=0, sticky="W")
-        self.clear_video_list_button = ttk.Button(
-            self, text="Clear video list", padding=(10), command=self.clear_video_list)
-        self.clear_video_list_button.grid(row=1, column=1, sticky="E")
-
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
             self, padding=(10, 0))
         self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEW")
 
+        # video import / clear
+        video_label = ttk.Label(
+            self, textvariable=self.video_label_text, padding=(10))
+        video_label.grid(row=0, columnspan=3)
+        self.video_import_button = ttk.Button(
+            self, text="Import a video", padding=(10), command=self.select_file)
+        self.video_import_button.grid(row=1, column=0, sticky="W")
+        self.clear_video_list_button = ttk.Button(
+            self, text="Clear video list", padding=(10), command=self.clear_video_list)
+        self.clear_video_list_button.grid(row=1, column=1, sticky="N")
+        self.play_all_videos_button = ttk.Button(self, text="Play all videos", padding=(
+            10), command=self.video_renderer_component.play_all)
+        self.play_all_videos_button.grid(row=1, column=2, sticky="E")
+
         # video selection
         self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
             10), command=lambda: self.master.timeline_component.insert_timestamp(0))
-        self.select_video_button_1.grid(row=3, column=0, sticky="W")
+        self.select_video_button_1.grid(row=3, column=0, sticky="EW")
         self.select_video_button_2 = ttk.Button(self, text="Select", padding=(
             10), command=lambda: self.master.timeline_component.insert_timestamp(1))
-        self.select_video_button_2.grid(row=3, column=1, sticky="E")
+        self.select_video_button_2.grid(row=3, column=1, sticky="EW")
 
     def select_file(self):
         filetypes = (

@@ -15,7 +15,7 @@ class VideoLoom(tk.Tk):
         self.app_configure()
         self.title("Video Loom - v1.0-beta")
         self.window_width = 800
-        self.window_height = 1000
+        self.window_height = 800
         self.geometry(f"{self.window_width}x{self.window_height}")
 
         # app config
