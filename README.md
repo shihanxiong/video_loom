@@ -46,3 +46,17 @@ $pip3 install pytest
 # running tests
 $pytest
 ```
+
+## Packaging
+
+> Ensure `pyinstaller` is installed
+
+```bash
+$pip3 install pyinstaller
+```
+
+> Generate executables (note: executables will automatically be determined by the OS. e.g. `.exe` for Windows and `.dmg` for MacOS)
+
+```bash
+$./src/bundle.sh
+```

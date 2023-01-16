@@ -25,18 +25,18 @@ class VideoLoom(tk.Tk):
 
         # app layout
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=20)
+        self.rowconfigure(0, weight=10)
         self.rowconfigure(1, weight=0)
-        self.rowconfigure(2, weight=1)
-        self.rowconfigure(3, weight=1)
-        self.rowconfigure(4, weight=1)
+        self.rowconfigure(2, weight=0)
+        self.rowconfigure(3, weight=0)
+        self.rowconfigure(4, weight=0)
 
         # components
-        self.video_component = VideoInputFrame(self, padding=(10, 0))
+        self.video_component = VideoInputFrame(self, padding=(10, 10))
         self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
         self.timeline_component = TimelineFrame(self, padding=(10, 10))
         self.status_component = StatusFrame(self, padding=(10, 10))
-        self.toolbar_component = ToolbarFrame(self, padding=(10, 0))
+        self.toolbar_component = ToolbarFrame(self, padding=(10, 10))
 
     def app_configure(self):
         if platform == "win32":

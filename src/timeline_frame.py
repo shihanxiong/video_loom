@@ -20,7 +20,7 @@ class TimelineFrame(ttk.Frame):
         timeline_label = ttk.Label(self, text="Timeline", padding=(10))
         timeline_label.grid(row=0)
 
-        self.timeline_text = tk.Text(self, height=16, font=self.default_font)
+        self.timeline_text = tk.Text(self, height=22, font=self.default_font)
         self.timeline_text.grid(row=1, column=0, sticky="EW")
 
         text_scroll = ttk.Scrollbar(
