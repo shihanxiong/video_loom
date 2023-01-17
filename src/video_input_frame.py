@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
 from video_renderer_frame import VideoRendererFrame
+from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 import ffmpeg
 
 
@@ -78,6 +79,10 @@ class VideoInputFrame(ttk.Frame):
     def refresh(self):
         self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
         print(self.video_list)
+
+        if len(self.video_list) > 0:
+            self.video_renderer_component.load_videos()
+
         if len(self.video_list) == 2:
             self.video_import_button["state"] = "disable"
             self.master.toolbar_component.enable_generate_button()
@@ -91,10 +96,9 @@ class VideoInputFrame(ttk.Frame):
         self.master.status_component.set_and_log_status("video list cleared")
 
     def get_stream_audio(self):
-        stream = ffmpeg.input(os.path.abspath(
-            self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
-        audio = stream.filter_("asetpts", self.pts_filter)
-        return audio
+        audio_clip = AudioFileClip(
+            self.video_list[self.master.audio_setting_component.audio_track_variable.get()])
+        return audio_clip
 
     def generate_video(self):
         # logging
@@ -104,7 +108,7 @@ class VideoInputFrame(ttk.Frame):
             f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
         print("================timeline start================")
         print(self.master.timeline_component.get_timeline_text())
-        print("================timeline end================")
+        print("================timeline end==================")
 
         # remove output file if exists
         if os.path.exists(self.output_file_name.get()):
@@ -115,18 +119,19 @@ class VideoInputFrame(ttk.Frame):
 
         # video processing
         try:
-            stream = ffmpeg.input(os.path.abspath(self.video_list[0]))
-            video = stream.trim(start=5, end=10).filter(
-                "setpts", self.pts_filter)
-            video_and_audio = ffmpeg.concat(video, audio, v=1, a=1)
-            output = ffmpeg.output(
-                video_and_audio, self.output_file_name.get(), format="mp4")
-            # TODO: switch to run_async()
-            ffmpeg.run(output, capture_stdout=True, capture_stderr=True)
-        except ffmpeg.Error as e:
-            print("stdout:", e.stdout.decode("utf8"))
-            print("stderr:", e.stderr.decode('utf8'))
-            raise e
+            # audio
+            audio_clip = self.get_stream_audio()
+
+            # video
+            clip_1 = VideoFileClip(self.video_list[0]).subclip(3, 6)
+            clip_2 = VideoFileClip(self.video_list[1]).subclip(8, 12)
+            final_clip = concatenate_videoclips(
+                [clip_1, clip_2]).set_audio(audio_clip)
+            final_clip.write_videofile(self.output_file_name.get(
+            ), fps=48, audio_codec="aac", codec="mpeg4", threads=8)
+        except:
+            self.master.status_component.set_and_log_status(
+                "An error occurred while generating video :(")
 
         # logging
         end_time = datetime.now()

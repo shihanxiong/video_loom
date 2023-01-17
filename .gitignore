@@ -26,3 +26,4 @@ yarn-debug.log*
 yarn-error.log*
 src/app.spec
 *.mp4
+*.wav

@@ -18,15 +18,15 @@ class VideoRendererFrame(ttk.Frame):
         # video renderer
         # video player #1
         self.videoplayer_1 = TkinterVideo(self, scaled=True)
-        self.videoplayer_1.load(
-            r"/Users/shihanxiong/Downloads/Tv_1280x720.mp4")
         self.videoplayer_1.grid(row=0, column=0, sticky="W")
 
         # video player #2
         self.videoplayer_2 = TkinterVideo(self, scaled=True)
-        self.videoplayer_2.load(
-            r"/Users/shihanxiong/Downloads/SampleVideo_1280x720_20mb.mp4")
         self.videoplayer_2.grid(row=0, column=1, sticky="E")
+
+    def load_videos(self):
+        self.videoplayer_1.load(self.master.video_list[0])
+        self.videoplayer_2.load(self.master.video_list[1])
 
     def play_all(self):
         self.master.master.status_component.set_and_log_status(
