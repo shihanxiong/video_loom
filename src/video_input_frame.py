@@ -44,10 +44,10 @@ class VideoInputFrame(ttk.Frame):
         self.clear_video_list_button = ttk.Button(
             self, text="Clear video list", padding=(10), command=self.clear_video_list)
         self.clear_video_list_button.grid(row=1, column=1, sticky="N")
-        self.play_all_videos_button = ttk.Button(self, text="Play all videos", padding=(
+        self.play_all_videos_button = ttk.Button(self, text="Play all videos", state="disable", padding=(
             10), command=self.video_renderer_component.play_all)
         self.play_all_videos_button.grid(row=1, column=2, sticky="N")
-        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", padding=(
+        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", state="disable", padding=(
             10), command=self.video_renderer_component.pause_all)
         self.pause_all_videos_button.grid(row=1, column=3, sticky="E")
 
@@ -81,13 +81,18 @@ class VideoInputFrame(ttk.Frame):
         print(self.video_list)
 
         if len(self.video_list) > 0:
+            self.set_buttons_status(
+                [self.play_all_videos_button, self.pause_all_videos_button], "enable")
             self.video_renderer_component.load_videos()
+        else:
+            self.set_buttons_status(
+                [self.play_all_videos_button, self.pause_all_videos_button], "disable")
 
         if len(self.video_list) == 2:
-            self.video_import_button["state"] = "disable"
+            self.set_buttons_status([self.video_import_button], "disable")
             self.master.toolbar_component.enable_generate_button()
         else:
-            self.video_import_button["state"] = "enable"
+            self.set_buttons_status([self.video_import_button], "enable")
             self.master.toolbar_component.disable_generate_button()
 
     def clear_video_list(self):
@@ -140,3 +145,7 @@ class VideoInputFrame(ttk.Frame):
 
     def get_current_timestamp(self):
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
+    def set_buttons_status(self, buttons, status):
+        for button in buttons:
+            button["state"] = status

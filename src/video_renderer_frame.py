@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkVideoPlayer import TkinterVideo
-import cv2
 
 
 # video renderer
