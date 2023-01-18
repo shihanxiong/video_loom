@@ -4,7 +4,6 @@ from tkinter import ttk, filedialog as fd
 from datetime import datetime
 from video_renderer_frame import VideoRendererFrame
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
-import ffmpeg
 
 
 # videos input
@@ -13,7 +12,6 @@ class VideoInputFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # variables
-        self.pts_filter = "PTS-STARTPTS"
         self.video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 2")
@@ -21,18 +19,23 @@ class VideoInputFrame(ttk.Frame):
             value=f"{self.get_current_timestamp()}.mp4")
 
         # layout
-        self.total_rows = 3
         self.total_columns = 4
-        self.grid(row=0, sticky="N")
-        for r_idx in range(self.total_rows):
-            self.rowconfigure(r_idx, weight=1)
+        self.grid(row=0, sticky="NEW")
+
+        # layout - rows
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1, minsize=200)
+        self.rowconfigure(3, weight=1)
+
+        # layout - columns
         for c_idx in range(self.total_columns):
             self.columnconfigure(c_idx, weight=1)
 
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
             self, padding=(10, 0))
-        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEW")
+        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEWS")
 
         # video import / clear
         video_label = ttk.Label(
@@ -40,16 +43,16 @@ class VideoInputFrame(ttk.Frame):
         video_label.grid(row=0, columnspan=4)
         self.video_import_button = ttk.Button(
             self, text="Import a video", padding=(10), command=self.select_file)
-        self.video_import_button.grid(row=1, column=0, sticky="W")
+        self.video_import_button.grid(row=1, column=0, sticky="EW")
         self.clear_video_list_button = ttk.Button(
             self, text="Clear video list", padding=(10), command=self.clear_video_list)
-        self.clear_video_list_button.grid(row=1, column=1, sticky="N")
+        self.clear_video_list_button.grid(row=1, column=1, sticky="EW")
         self.play_all_videos_button = ttk.Button(self, text="Play all videos", state="disable", padding=(
             10), command=self.video_renderer_component.play_all)
-        self.play_all_videos_button.grid(row=1, column=2, sticky="N")
+        self.play_all_videos_button.grid(row=1, column=2, sticky="EW")
         self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", state="disable", padding=(
             10), command=self.video_renderer_component.pause_all)
-        self.pause_all_videos_button.grid(row=1, column=3, sticky="E")
+        self.pause_all_videos_button.grid(row=1, column=3, sticky="EW")
 
         # video selection
         self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
@@ -101,8 +104,8 @@ class VideoInputFrame(ttk.Frame):
         self.master.status_component.set_and_log_status("video list cleared")
 
     def get_stream_audio(self):
-        audio_clip = AudioFileClip(
-            self.video_list[self.master.audio_setting_component.audio_track_variable.get()])
+        audio_clip = AudioFileClip(os.path.abspath(
+            self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
         return audio_clip
 
     def generate_video(self):
@@ -119,17 +122,16 @@ class VideoInputFrame(ttk.Frame):
         if os.path.exists(self.output_file_name.get()):
             os.remove(self.output_file_name.get())
 
-        # get selected audio
-        audio = self.get_stream_audio()
-
         # video processing
         try:
             # audio
             audio_clip = self.get_stream_audio()
 
             # video
-            clip_1 = VideoFileClip(self.video_list[0]).subclip(3, 6)
-            clip_2 = VideoFileClip(self.video_list[1]).subclip(8, 12)
+            clip_1 = VideoFileClip(os.path.abspath(
+                self.video_list[0])).subclip(3, 6)
+            clip_2 = VideoFileClip(os.path.abspath(
+                self.video_list[1])).subclip(8, 12)
             final_clip = concatenate_videoclips(
                 [clip_1, clip_2]).set_audio(audio_clip)
             final_clip.write_videofile(self.output_file_name.get(

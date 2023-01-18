@@ -14,8 +14,6 @@ class VideoLoom(tk.Tk):
         super().__init__()
         self.app_configure()
         self.title("Video Loom - v1.0-beta")
-        self.window_width = 800
-        self.window_height = 800
         self.geometry(f"{self.window_width}x{self.window_height}")
 
         # app config
@@ -38,12 +36,17 @@ class VideoLoom(tk.Tk):
         self.status_component = StatusFrame(self, padding=(10, 10))
         self.toolbar_component = ToolbarFrame(self, padding=(10, 10))
 
+    # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
+    # Setup window height respectively
     def app_configure(self):
         if platform == "win32":
-            set_dpi_awareness()  # set high resolution in windows 10
-            self.resizable(False, False)  # this does not work on MacOS
+            set_dpi_awareness()
+            self.resizable(False, False)
+            self.window_height = 1100
+            self.window_width = 1100
         elif platform == "darwin":
-            pass
+            self.window_height = 800
+            self.window_width = 800
         else:
             pass
 
