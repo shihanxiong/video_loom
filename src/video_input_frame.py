@@ -3,7 +3,14 @@ import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
 from video_renderer_frame import VideoRendererFrame
+
+'''
+For moviepy pyinstaller import issue, see: https://github.com/Zulko/moviepy/issues/591
+'''
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
+# from moviepy.video.io.VideoFileClip import VideoFileClip
+# from moviepy.audio.io.AudioFileClip import AudioFileClip
+# from moviepy.editor import concatenate_videoclips
 
 
 # videos input
