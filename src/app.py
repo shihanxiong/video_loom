@@ -13,7 +13,7 @@ class VideoLoom(tk.Tk):
     def __init__(self):
         super().__init__()
         self.app_configure()
-        self.title("Video Loom - v1.0-beta")
+        self.title("Video Loom - v0.8-beta")
         self.geometry(f"{self.window_width}x{self.window_height}")
 
         # app config
