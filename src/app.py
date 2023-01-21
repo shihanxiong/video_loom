@@ -2,7 +2,7 @@ from sys import platform
 import tkinter as tk
 from tkinter import ttk
 from windows import set_dpi_awareness
-from video_input_frame import VideoInputFrame
+from video_frame import VideoFrame
 from audio_setting_frame import AudioSettingFrame
 from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
@@ -13,7 +13,7 @@ class VideoLoom(tk.Tk):
     def __init__(self):
         super().__init__()
         self.app_configure()
-        self.title("Video Loom - v0.8-beta")
+        self.title("Video Loom - v0.81-beta")
         self.geometry(f"{self.window_width}x{self.window_height}")
 
         # app config
@@ -30,11 +30,16 @@ class VideoLoom(tk.Tk):
         self.rowconfigure(4, weight=0)
 
         # components
-        self.video_component = VideoInputFrame(self, padding=(10, 10))
+        self.video_component = VideoFrame(self, padding=(10, 10))
+        self.video_component.grid(row=0, sticky="NEW")
         self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
+        self.audio_setting_component.grid(row=1, sticky="NEW")
         self.timeline_component = TimelineFrame(self, padding=(10, 10))
+        self.timeline_component.grid(row=2, sticky="SEW")
         self.status_component = StatusFrame(self, padding=(10, 10))
+        self.status_component.grid(row=3, sticky="NEW")
         self.toolbar_component = ToolbarFrame(self, padding=(10, 10))
+        self.toolbar_component.grid(row=4, sticky="NEW")
 
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
     # Setup window height respectively

@@ -3,31 +3,25 @@ import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
 from video_renderer_frame import VideoRendererFrame
-
-'''
-For moviepy pyinstaller import issue, see: https://github.com/Zulko/moviepy/issues/591
-'''
+from video_select_frame import VideoSelectFrame
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
-# from moviepy.video.io.VideoFileClip import VideoFileClip
-# from moviepy.audio.io.AudioFileClip import AudioFileClip
-# from moviepy.editor import concatenate_videoclips
 
 
 # videos input
-class VideoInputFrame(ttk.Frame):
+class VideoFrame(ttk.Frame):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
         # variables
+        self.max_num_of_videos = 4
         self.video_list = []
         self.video_label_text = tk.StringVar(
-            value=f"Videos {len(self.video_list)} of 2")
+            value=f"Videos {len(self.video_list)} of 4")
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
 
         # layout
         self.total_columns = 4
-        self.grid(row=0, sticky="NEW")
 
         # layout - rows
         self.rowconfigure(0, weight=1)
@@ -62,12 +56,8 @@ class VideoInputFrame(ttk.Frame):
         self.pause_all_videos_button.grid(row=1, column=3, sticky="EW")
 
         # video selection
-        self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
-            10), command=lambda: self.master.timeline_component.insert_timestamp(0))
-        self.select_video_button_1.grid(row=3, column=0, sticky="EW")
-        self.select_video_button_2 = ttk.Button(self, text="Select", padding=(
-            10), command=lambda: self.master.timeline_component.insert_timestamp(1))
-        self.select_video_button_2.grid(row=3, column=1, sticky="EW")
+        self.video_select_frame = VideoSelectFrame(self, padding=(10, 0))
+        self.video_select_frame.grid(row=3, columnspan=4, sticky="NEW")
 
     def select_file(self):
         filetypes = (
@@ -87,7 +77,8 @@ class VideoInputFrame(ttk.Frame):
                 f"Imported {filename}")
 
     def refresh(self):
-        self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
+        self.video_label_text.set(
+            f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
         print(self.video_list)
 
         if len(self.video_list) > 0:
@@ -98,12 +89,10 @@ class VideoInputFrame(ttk.Frame):
             self.set_buttons_status(
                 [self.play_all_videos_button, self.pause_all_videos_button], "disable")
 
-        if len(self.video_list) == 2:
+        if len(self.video_list) == self.max_num_of_videos:
             self.set_buttons_status([self.video_import_button], "disable")
-            self.master.toolbar_component.enable_generate_button()
         else:
             self.set_buttons_status([self.video_import_button], "enable")
-            self.master.toolbar_component.disable_generate_button()
 
     def clear_video_list(self):
         self.video_list = []

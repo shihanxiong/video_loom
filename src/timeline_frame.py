@@ -8,7 +8,6 @@ class TimelineFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # layout
-        self.grid(row=2, sticky="SEW")
         self.rowconfigure(0, weight=0)
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)

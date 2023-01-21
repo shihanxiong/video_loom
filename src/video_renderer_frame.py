@@ -10,7 +10,6 @@ class VideoRendererFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # layout
-        self.grid(row=2, sticky="NEW")
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)

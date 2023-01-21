@@ -10,7 +10,6 @@ class AudioSettingFrame(ttk.Frame):
         # variables
         self.audio_track_variable = tk.IntVar()
 
-        self.grid(row=1, sticky="NEW")
         self.rowconfigure(0, weight=0)
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
