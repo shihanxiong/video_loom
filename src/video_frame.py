@@ -120,21 +120,28 @@ class VideoFrame(ttk.Frame):
 
         # video processing
         try:
+            # parse timeline
+            timeline_arr = self.master.timeline_component.parse_timeline()
+
             # audio
             audio_clip = self.get_stream_audio()
 
             # video
-            clip_1 = VideoFileClip(os.path.abspath(
-                self.video_list[0])).subclip(3, 6)
-            clip_2 = VideoFileClip(os.path.abspath(
-                self.video_list[1])).subclip(8, 12)
+            video_clips = []
+            for timeline in timeline_arr:
+                video, start, end = map(int, timeline.split(","))
+                clip = VideoFileClip(os.path.abspath(
+                    self.video_list[video - 1])).subclip(start, end)
+                video_clips.append(clip)
+
             final_clip = concatenate_videoclips(
-                [clip_1, clip_2]).set_audio(audio_clip)
+                video_clips).set_audio(audio_clip)
             final_clip.write_videofile(self.output_file_name.get(
             ), fps=48, audio_codec="aac", codec="mpeg4", threads=8)
-        except:
+        except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :(")
+            print(err)
 
         # logging
         end_time = datetime.now()
