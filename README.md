@@ -60,3 +60,7 @@ $pip3 install pyinstaller
 ```bash
 $./src/bundle.sh
 ```
+
+## Change log
+
+> change logs can be found [here](changelog.md)
