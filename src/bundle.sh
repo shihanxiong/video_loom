@@ -1,3 +1,3 @@
 #! /bin/bash
 
-pyinstaller app.py --onefile --noconsole
+pyinstaller app.py --onefile --noconsole --debug=imports --hidden-import av --hidden-import chardet

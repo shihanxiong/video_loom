@@ -8,7 +8,6 @@ class TimelineFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # layout
-        self.grid(row=2, sticky="SEW")
         self.rowconfigure(0, weight=0)
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
@@ -27,6 +26,9 @@ class TimelineFrame(ttk.Frame):
             self, orient="vertical", command=self.timeline_text.yview)
         text_scroll.grid(row=1, column=1, sticky="NS")
         self.timeline_text["yscrollcommand"] = text_scroll.set
+
+    def refresh(self):
+        pass
 
     def insert_timestamp(self, v_idx):
         self.timeline_text.insert(END, str(v_idx + 1) + "\n")

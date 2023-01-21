@@ -1,7 +1,7 @@
-import tkinter as tk
-from tkinter import ttk
+import os
 from tkVideoPlayer import TkinterVideo
-import cv2
+from tkinter import ttk
+import tkinter as tk
 
 
 # video renderer
@@ -10,7 +10,6 @@ class VideoRendererFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # layout
-        self.grid(row=2, sticky="NEW")
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
@@ -18,15 +17,17 @@ class VideoRendererFrame(ttk.Frame):
         # video renderer
         # video player #1
         self.videoplayer_1 = TkinterVideo(self, scaled=True)
-        self.videoplayer_1.load(
-            r"/Users/shihanxiong/Downloads/Tv_1280x720.mp4")
-        self.videoplayer_1.grid(row=0, column=0, sticky="W")
+        self.videoplayer_1.grid(
+            row=0, column=0, sticky="NEWS", padx=(10), pady=(20))
 
         # video player #2
         self.videoplayer_2 = TkinterVideo(self, scaled=True)
-        self.videoplayer_2.load(
-            r"/Users/shihanxiong/Downloads/SampleVideo_1280x720_20mb.mp4")
-        self.videoplayer_2.grid(row=0, column=1, sticky="E")
+        self.videoplayer_2.grid(
+            row=0, column=1, sticky="NEWS", padx=(10), pady=(20))
+
+    def load_videos(self):
+        self.videoplayer_1.load(os.path.abspath(self.master.video_list[0]))
+        self.videoplayer_2.load(os.path.abspath(self.master.video_list[1]))
 
     def play_all(self):
         self.master.master.status_component.set_and_log_status(

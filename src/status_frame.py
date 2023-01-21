@@ -10,7 +10,7 @@ class StatusFrame(ttk.Frame):
         # variables
         self.status_variable = tk.StringVar(value="ready")
 
-        self.grid(row=3, sticky="NEW")
+        # layouts
         self.rowconfigure(0, weight=1)
 
         status_label = ttk.Label(self, text="Process status:", padding=(10))
@@ -19,6 +19,9 @@ class StatusFrame(ttk.Frame):
         status_text = ttk.Label(self, textvariable=self.status_variable, padding=(
             10), wraplength=(self.master.window_width - 250))
         status_text.grid(row=0, column=1, sticky="EW")
+
+    def refresh(self):
+        pass
 
     def set_and_log_status(self, status):
         self.status_variable.set(status)

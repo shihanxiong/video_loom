@@ -3,35 +3,40 @@ import tkinter as tk
 from tkinter import ttk, filedialog as fd
 from datetime import datetime
 from video_renderer_frame import VideoRendererFrame
-import ffmpeg
+from video_select_frame import VideoSelectFrame
+from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 
 
 # videos input
-class VideoInputFrame(ttk.Frame):
+class VideoFrame(ttk.Frame):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
         # variables
-        self.pts_filter = "PTS-STARTPTS"
+        self.max_num_of_videos = 4
         self.video_list = []
         self.video_label_text = tk.StringVar(
-            value=f"Videos {len(self.video_list)} of 2")
+            value=f"Videos {len(self.video_list)} of 4")
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
 
         # layout
-        self.total_rows = 3
         self.total_columns = 4
-        self.grid(row=0, sticky="N")
-        for r_idx in range(self.total_rows):
-            self.rowconfigure(r_idx, weight=1)
+
+        # layout - rows
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1, minsize=200)
+        self.rowconfigure(3, weight=1)
+
+        # layout - columns
         for c_idx in range(self.total_columns):
             self.columnconfigure(c_idx, weight=1)
 
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
             self, padding=(10, 0))
-        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEW")
+        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEWS")
 
         # video import / clear
         video_label = ttk.Label(
@@ -39,24 +44,20 @@ class VideoInputFrame(ttk.Frame):
         video_label.grid(row=0, columnspan=4)
         self.video_import_button = ttk.Button(
             self, text="Import a video", padding=(10), command=self.select_file)
-        self.video_import_button.grid(row=1, column=0, sticky="W")
+        self.video_import_button.grid(row=1, column=0, sticky="EW")
         self.clear_video_list_button = ttk.Button(
             self, text="Clear video list", padding=(10), command=self.clear_video_list)
-        self.clear_video_list_button.grid(row=1, column=1, sticky="N")
-        self.play_all_videos_button = ttk.Button(self, text="Play all videos", padding=(
+        self.clear_video_list_button.grid(row=1, column=1, sticky="EW")
+        self.play_all_videos_button = ttk.Button(self, text="Play all videos", state="disable", padding=(
             10), command=self.video_renderer_component.play_all)
-        self.play_all_videos_button.grid(row=1, column=2, sticky="N")
-        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", padding=(
+        self.play_all_videos_button.grid(row=1, column=2, sticky="EW")
+        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", state="disable", padding=(
             10), command=self.video_renderer_component.pause_all)
-        self.pause_all_videos_button.grid(row=1, column=3, sticky="E")
+        self.pause_all_videos_button.grid(row=1, column=3, sticky="EW")
 
         # video selection
-        self.select_video_button_1 = ttk.Button(self, text="Select", padding=(
-            10), command=lambda: self.master.timeline_component.insert_timestamp(0))
-        self.select_video_button_1.grid(row=3, column=0, sticky="EW")
-        self.select_video_button_2 = ttk.Button(self, text="Select", padding=(
-            10), command=lambda: self.master.timeline_component.insert_timestamp(1))
-        self.select_video_button_2.grid(row=3, column=1, sticky="EW")
+        self.video_select_frame = VideoSelectFrame(self, padding=(10, 0))
+        self.video_select_frame.grid(row=3, columnspan=4, sticky="NEW")
 
     def select_file(self):
         filetypes = (
@@ -71,30 +72,37 @@ class VideoInputFrame(ttk.Frame):
 
         if filename != "":
             self.video_list.append(filename)
-            self.refresh()
+            self.master.app_refresh()
             self.master.status_component.set_and_log_status(
                 f"Imported {filename}")
 
     def refresh(self):
-        self.video_label_text.set(f"Videos {len(self.video_list)} of 2")
+        self.video_label_text.set(
+            f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
         print(self.video_list)
-        if len(self.video_list) == 2:
-            self.video_import_button["state"] = "disable"
-            self.master.toolbar_component.enable_generate_button()
+
+        if len(self.video_list) > 0:
+            self.set_buttons_status(
+                [self.play_all_videos_button, self.pause_all_videos_button], "enable")
+            self.video_renderer_component.load_videos()
         else:
-            self.video_import_button["state"] = "enable"
-            self.master.toolbar_component.disable_generate_button()
+            self.set_buttons_status(
+                [self.play_all_videos_button, self.pause_all_videos_button], "disable")
+
+        if len(self.video_list) == self.max_num_of_videos:
+            self.set_buttons_status([self.video_import_button], "disable")
+        else:
+            self.set_buttons_status([self.video_import_button], "enable")
 
     def clear_video_list(self):
         self.video_list = []
-        self.refresh()
+        self.master.app_refresh()
         self.master.status_component.set_and_log_status("video list cleared")
 
     def get_stream_audio(self):
-        stream = ffmpeg.input(os.path.abspath(
+        audio_clip = AudioFileClip(os.path.abspath(
             self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
-        audio = stream.filter_("asetpts", self.pts_filter)
-        return audio
+        return audio_clip
 
     def generate_video(self):
         # logging
@@ -104,29 +112,29 @@ class VideoInputFrame(ttk.Frame):
             f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
         print("================timeline start================")
         print(self.master.timeline_component.get_timeline_text())
-        print("================timeline end================")
+        print("================timeline end==================")
 
         # remove output file if exists
         if os.path.exists(self.output_file_name.get()):
             os.remove(self.output_file_name.get())
 
-        # get selected audio
-        audio = self.get_stream_audio()
-
         # video processing
         try:
-            stream = ffmpeg.input(os.path.abspath(self.video_list[0]))
-            video = stream.trim(start=5, end=10).filter(
-                "setpts", self.pts_filter)
-            video_and_audio = ffmpeg.concat(video, audio, v=1, a=1)
-            output = ffmpeg.output(
-                video_and_audio, self.output_file_name.get(), format="mp4")
-            # TODO: switch to run_async()
-            ffmpeg.run(output, capture_stdout=True, capture_stderr=True)
-        except ffmpeg.Error as e:
-            print("stdout:", e.stdout.decode("utf8"))
-            print("stderr:", e.stderr.decode('utf8'))
-            raise e
+            # audio
+            audio_clip = self.get_stream_audio()
+
+            # video
+            clip_1 = VideoFileClip(os.path.abspath(
+                self.video_list[0])).subclip(3, 6)
+            clip_2 = VideoFileClip(os.path.abspath(
+                self.video_list[1])).subclip(8, 12)
+            final_clip = concatenate_videoclips(
+                [clip_1, clip_2]).set_audio(audio_clip)
+            final_clip.write_videofile(self.output_file_name.get(
+            ), fps=48, audio_codec="aac", codec="mpeg4", threads=8)
+        except:
+            self.master.status_component.set_and_log_status(
+                "An error occurred while generating video :(")
 
         # logging
         end_time = datetime.now()
@@ -135,3 +143,7 @@ class VideoInputFrame(ttk.Frame):
 
     def get_current_timestamp(self):
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
+    def set_buttons_status(self, buttons, status):
+        for button in buttons:
+            button["state"] = status
