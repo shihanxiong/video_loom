@@ -72,7 +72,7 @@ class VideoFrame(ttk.Frame):
 
         if filename != "":
             self.video_list.append(filename)
-            self.refresh()
+            self.master.app_refresh()
             self.master.status_component.set_and_log_status(
                 f"Imported {filename}")
 
@@ -96,7 +96,7 @@ class VideoFrame(ttk.Frame):
 
     def clear_video_list(self):
         self.video_list = []
-        self.refresh()
+        self.master.app_refresh()
         self.master.status_component.set_and_log_status("video list cleared")
 
     def get_stream_audio(self):

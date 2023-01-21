@@ -19,6 +19,9 @@ class ToolbarFrame(ttk.Frame):
             self, text="Quit", padding=(10), command=self.master.destroy)
         self.quit_button.grid(row=0, column=1, sticky="EW")
 
+    def refresh(self):
+        pass
+
     def disable_generate_button(self):
         self.generate_button["state"] = "disable"
 

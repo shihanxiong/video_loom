@@ -20,6 +20,9 @@ class StatusFrame(ttk.Frame):
             10), wraplength=(self.master.window_width - 250))
         status_text.grid(row=0, column=1, sticky="EW")
 
+    def refresh(self):
+        pass
+
     def set_and_log_status(self, status):
         self.status_variable.set(status)
         print(status)
