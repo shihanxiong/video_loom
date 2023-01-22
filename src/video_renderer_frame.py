@@ -25,6 +25,9 @@ class VideoRendererFrame(ttk.Frame):
         self.videoplayer_2.grid(
             row=0, column=1, sticky="NEWS", padx=(10), pady=(20))
 
+    def refresh(self):
+        pass
+
     def load_videos(self):
         self.videoplayer_1.load(os.path.abspath(self.master.video_list[0]))
         self.videoplayer_2.load(os.path.abspath(self.master.video_list[1]))
