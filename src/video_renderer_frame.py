@@ -20,7 +20,7 @@ class VideoRendererFrame(ttk.Frame):
         # dynamically create video player instances
         self.videoplayers = []
         for i in range(len(self.master.video_list)):
-            videoplayer = TkinterVideo(self, scaled=True)
+            videoplayer = TkinterVideo(self, scaled=True, keep_aspect=True)
             videoplayer.load(os.path.abspath(self.master.video_list[i]))
             videoplayer.grid(row=0, column=i, sticky="NEWS",
                              padx=(10), pady=(20))
