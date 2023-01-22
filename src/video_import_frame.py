@@ -29,7 +29,6 @@ class VideoImportFrame(ttk.Frame):
         if len(self.master.video_list) > 0:
             self.set_buttons_status(
                 [self.play_all_videos_button, self.pause_all_videos_button], "enable")
-            self.master.video_renderer_component.load_videos()
         else:
             self.set_buttons_status(
                 [self.play_all_videos_button, self.pause_all_videos_button], "disable")

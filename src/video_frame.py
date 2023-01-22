@@ -43,7 +43,7 @@ class VideoFrame(ttk.Frame):
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
             self, padding=(10, 0))
-        self.video_renderer_component.grid(row=2, columnspan=2, sticky="NEWS")
+        self.video_renderer_component.grid(row=2, columnspan=4, sticky="NEWS")
 
         # video import / clear
         self.video_import_component = VideoImportFrame(self, padding=(10, 0))
@@ -59,12 +59,12 @@ class VideoFrame(ttk.Frame):
         self.components.append(self.video_select_component)
 
     def refresh(self):
-        for component in self.components:
-            component.refresh()
-
         self.video_label_text.set(
             f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
         print(self.video_list)
+
+        for component in self.components:
+            component.refresh()
 
     def get_stream_audio(self):
         audio_clip = AudioFileClip(os.path.abspath(
