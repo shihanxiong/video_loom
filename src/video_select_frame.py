@@ -26,3 +26,6 @@ class VideoSelectFrame(ttk.Frame):
         self.select_video_button_4 = ttk.Button(self, text="Select", padding=(
             10), command=lambda: self.master.master.timeline_component.insert_timestamp(3))
         self.select_video_button_4.grid(row=0, column=3, sticky="EW")
+
+    def refresh(self):
+        pass

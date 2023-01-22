@@ -13,30 +13,27 @@ class VideoRendererFrame(ttk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
 
-        # video renderer
-        # video player #1
-        self.videoplayer_1 = TkinterVideo(self, scaled=True)
-        self.videoplayer_1.grid(
-            row=0, column=0, sticky="NEWS", padx=(10), pady=(20))
-
-        # video player #2
-        self.videoplayer_2 = TkinterVideo(self, scaled=True)
-        self.videoplayer_2.grid(
-            row=0, column=1, sticky="NEWS", padx=(10), pady=(20))
-
-    def load_videos(self):
-        self.videoplayer_1.load(os.path.abspath(self.master.video_list[0]))
-        self.videoplayer_2.load(os.path.abspath(self.master.video_list[1]))
+    def refresh(self):
+        # dynamically create video player instances
+        self.videoplayers = []
+        for i in range(len(self.master.video_list)):
+            videoplayer = TkinterVideo(self, scaled=True, keep_aspect=True)
+            videoplayer.load(os.path.abspath(self.master.video_list[i]))
+            videoplayer.grid(row=0, column=i, sticky="NEWS",
+                             padx=(10), pady=(20))
+            self.videoplayers.append(videoplayer)
 
     def play_all(self):
         self.master.master.status_component.set_and_log_status(
             "playing all videos")
-        self.videoplayer_1.play()
-        self.videoplayer_2.play()
+        for videoplayer in self.videoplayers:
+            videoplayer.play()
 
     def pause_all(self):
         self.master.master.status_component.set_and_log_status(
             "pausing all videos")
-        self.videoplayer_1.pause()
-        self.videoplayer_2.pause()
+        for videoplayer in self.videoplayers:
+            videoplayer.pause()
