@@ -1,5 +1,12 @@
 # Versions
 
+### v0.9.0-beta
+
+- added time progress bar to display current video duration
+- added start time / end time
+- added skip buttons to jump +/- 5 seconds
+- added support to copy current timestamp into clipboard
+
 ### v0.8.1-beta
 
 - added default resolution for Linux system (now app supports Win, MacOS, and Linux)
