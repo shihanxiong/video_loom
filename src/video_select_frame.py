@@ -25,8 +25,9 @@ class VideoSelectFrame(ttk.Frame):
             self, text=str(datetime.timedelta(seconds=0)).split(".")[0])
         self.start_time.grid(row=0, column=1, sticky="W")
 
+        # TODO: implement command=self.seek
         self.progress_slider = tk.Scale(
-            self, variable=self.progress_value, from_=0, to=0, orient="horizontal", command=self.seek)
+            self, variable=self.progress_value, from_=0, to=0, orient="horizontal")
         self.progress_slider.grid(
             row=0, column=2, columnspan=5, sticky="EW", pady=(0, 20))
 
@@ -44,7 +45,8 @@ class VideoSelectFrame(ttk.Frame):
 
     def refresh(self):
         if len(self.master.video_renderer_component.videoplayers) > 0:
-            self.video_player = self.master.video_renderer_component.videoplayers[0]
+            self.video_players = self.master.video_renderer_component.videoplayers
+            self.video_player = self.video_players[0]
             self.video_player.bind("<<Duration>>", self.update_duration)
             self.video_player.bind("<<SecondChanged>>", self.update_scale)
         else:
@@ -52,11 +54,13 @@ class VideoSelectFrame(ttk.Frame):
 
     def seek(self, value):
         if self.video_player != None:
-            self.video_player.seek(value)
+            for video_player in self.video_players:
+                video_player.seek(value)
 
     def skip(self, value: int):
         if self.video_player != None:
-            self.video_player.seek(int(self.progress_slider.get()) + value)
+            for video_player in self.video_players:
+                video_player.seek(int(self.progress_slider.get()) + value)
             self.progress_value.set(self.progress_slider.get() + value)
 
     def update_duration(self, event):
