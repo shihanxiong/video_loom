@@ -30,6 +30,7 @@ class TimelineFrame(ttk.Frame):
     def refresh(self):
         pass
 
+    # deprecated: this method is no-longer used
     def insert_timestamp(self, v_idx):
         self.timeline_text.insert(END, str(v_idx + 1) + "\n")
 
