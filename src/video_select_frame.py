@@ -17,8 +17,8 @@ class VideoSelectFrame(ttk.Frame):
         self.progress_value = tk.IntVar()
 
         # videos control panel
-        self.skip_minus_5sec_button = ttk.Button(self, text="<< 5 sec", padding=(
-            10), command=lambda: self.master.master.timeline_component.insert_timestamp(0))
+        self.skip_minus_5sec_button = ttk.Button(
+            self, text="<< 5 sec", padding=(10), command=lambda: self.skip(-5))
         self.skip_minus_5sec_button.grid(row=0, column=0, sticky="W")
 
         self.start_time = tk.Label(
@@ -34,8 +34,8 @@ class VideoSelectFrame(ttk.Frame):
             datetime.timedelta(seconds=0)).split(".")[0])
         self.end_time.grid(row=0, column=7, sticky="E")
 
-        self.skip_plus_5sec_button = ttk.Button(self, text=">> 5 sec", padding=(
-            10), command=lambda: self.master.master.timeline_component.insert_timestamp(0))
+        self.skip_plus_5sec_button = ttk.Button(
+            self, text=">> 5 sec", padding=(10), command=lambda: self.skip(5))
         self.skip_plus_5sec_button.grid(row=0, column=8, sticky="E")
 
         self.copy_timestamp_button = ttk.Button(self, text="Copy current timestamp", padding=(
