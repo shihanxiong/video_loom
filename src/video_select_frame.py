@@ -49,6 +49,7 @@ class VideoSelectFrame(ttk.Frame):
             self.video_player = self.video_players[0]
             self.video_player.bind("<<Duration>>", self.update_duration)
             self.video_player.bind("<<SecondChanged>>", self.update_scale)
+            self.video_player.bind("<<Ended>>", self.video_ended)
         else:
             self.video_player = None
 
@@ -73,6 +74,10 @@ class VideoSelectFrame(ttk.Frame):
     def update_scale(self, event):
         if self.video_player != None:
             self.progress_value.set(self.video_player.current_duration())
+
+    def video_ended(self, event):
+        self.progress_slider.set(self.progress_slider["to"])
+        self.progress_slider.set(0)
 
     def copy_current_timestamp_to_clipboard(self):
         if self.video_player != None:
