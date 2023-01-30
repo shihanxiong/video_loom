@@ -1,7 +1,7 @@
 import os
-from tkVideoPlayer import TkinterVideo
 from tkinter import ttk
 import tkinter as tk
+from tkVideoPlayer import TkinterVideo
 
 
 # video renderer

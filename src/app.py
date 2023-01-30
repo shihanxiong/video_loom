@@ -15,7 +15,7 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v0.85-beta")
+        self.title("Video Loom - v0.9.0-beta")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
@@ -50,7 +50,7 @@ class VideoLoom(tk.Tk):
         self.components.append(self.toolbar_component)
 
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
-    # Setup window height respectively
+    # Setup window height respectively, default to 1000x1000 for Linux
     def app_configure(self):
         if platform == "win32":
             set_dpi_awareness()
@@ -61,7 +61,8 @@ class VideoLoom(tk.Tk):
             self.window_height = 900
             self.window_width = 1000
         else:
-            pass
+            self.window_height = 1000
+            self.window_width = 1000
 
     def app_refresh(self):
         for component in self.components:
