@@ -11,7 +11,7 @@ class ToolbarFrame(ttk.Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
-        self.generate_button = ttk.Button(self, text="Generate Video", padding=(
+        self.generate_button = ttk.Button(self, text="Generate Video", state="disable", padding=(
             10), command=self.master.video_component.generate_video)
         self.generate_button.grid(row=0, column=0, sticky="EW")
 
@@ -20,7 +20,10 @@ class ToolbarFrame(ttk.Frame):
         self.quit_button.grid(row=0, column=1, sticky="EW")
 
     def refresh(self):
-        pass
+        if len(self.master.video_component.video_list) == 0:
+            self.disable_generate_button()
+        else:
+            self.enable_generate_button()
 
     def disable_generate_button(self):
         self.generate_button["state"] = "disable"
