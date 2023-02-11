@@ -12,7 +12,7 @@
 
 # production
 src/build/
-src/dist/
+src/dist/app/
 
 # misc
 .DS_Store
