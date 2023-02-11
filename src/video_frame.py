@@ -28,7 +28,7 @@ class VideoFrame(ttk.Frame):
         # layout - rows
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
-        self.rowconfigure(2, weight=1, minsize=200)
+        self.rowconfigure(2, weight=1, minsize=220)
         self.rowconfigure(3, weight=1)
 
         # layout - columns

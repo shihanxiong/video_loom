@@ -21,18 +21,18 @@ class VideoSelectFrame(ttk.Frame):
             self, text="<< 5 sec", padding=(10), command=lambda: self.skip(-5))
         self.skip_minus_5sec_button.grid(row=0, column=0, sticky="W")
 
-        self.start_time = tk.Label(
-            self, text=str(datetime.timedelta(seconds=0)).split(".")[0])
+        self.start_time = tk.Label(self, text=str(datetime.timedelta(
+            seconds=0)).split(".")[0], font=self.master.master.default_font)
         self.start_time.grid(row=0, column=1, sticky="W")
 
         # TODO: implement command=self.seek
-        self.progress_slider = tk.Scale(
-            self, variable=self.progress_value, from_=0, to=0, orient="horizontal")
+        self.progress_slider = tk.Scale(self, variable=self.progress_value, from_=0,
+                                        to=0, orient="horizontal", font=self.master.master.default_font)
         self.progress_slider.grid(
             row=0, column=2, columnspan=5, sticky="EW", pady=(0, 20))
 
-        self.end_time = tk.Label(self, text=str(
-            datetime.timedelta(seconds=0)).split(".")[0])
+        self.end_time = tk.Label(self, text=str(datetime.timedelta(
+            seconds=0)).split(".")[0], font=self.master.master.default_font)
         self.end_time.grid(row=0, column=7, sticky="E")
 
         self.skip_plus_5sec_button = ttk.Button(
