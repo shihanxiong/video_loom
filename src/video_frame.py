@@ -22,9 +22,6 @@ class VideoFrame(ttk.Frame):
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
 
-        # layout
-        self.total_columns = 4
-
         # layout - rows
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
@@ -32,6 +29,7 @@ class VideoFrame(ttk.Frame):
         self.rowconfigure(3, weight=1)
 
         # layout - columns
+        self.total_columns = 4
         for c_idx in range(self.total_columns):
             self.columnconfigure(c_idx, weight=1)
 

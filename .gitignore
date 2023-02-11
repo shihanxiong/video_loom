@@ -12,7 +12,7 @@
 
 # production
 src/build/
-src/dist/
+src/dist/app/
 
 # misc
 .DS_Store
@@ -24,6 +24,5 @@ src/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-src/app.spec
 *.mp4
 *.wav
