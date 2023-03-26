@@ -6,6 +6,16 @@ input_video_a = "/Users/shihanxiong/Downloads/Tv_1280x720.mp4"
 input_video_b = "/Users/shihanxiong/Downloads/SampleVideo_1280x720_20mb.mp4"
 output_directory = "."
 
+# remove temp files
+try:
+    os.remove(f"{output_directory}/final.mp4")
+    os.remove(f"{output_directory}/output.mp4")
+    os.remove(f"{output_directory}/video_a_trimmed.mp4")
+    os.remove(f"{output_directory}/video_b_trimmed.mp4")
+    os.remove(f"{output_directory}/audio_b_trimmed.aac")
+except OSError:
+    pass
+
 
 # Define the start and end times of the segment to extract
 start_time = "00:00:01"
