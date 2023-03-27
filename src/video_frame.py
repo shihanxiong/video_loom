@@ -1,4 +1,6 @@
 import os
+import glob
+import subprocess
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -69,7 +71,17 @@ class VideoFrame(ttk.Frame):
             self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
         return audio_clip
 
-    def generate_video(self):
+    def generate_video_with_ffmpeg(self):
+        # remove output file if exists
+        self.clean_up_temp_files()
+
+        # calculate output video resolution
+        # this will scale all inputs to match the max width & max height
+        output_width, output_height = self.calculate_output_resolutions()
+        pass
+
+    # TODO: this method is deprecated, switch to using generate_video_with_ffmpeg()
+    def generate_video_with_moviepy(self):
         # logging
         start_time = datetime.now()
         print("generating video...")
@@ -80,8 +92,7 @@ class VideoFrame(ttk.Frame):
         print("================timeline end==================")
 
         # remove output file if exists
-        if os.path.exists(self.output_file_name.get()):
-            os.remove(self.output_file_name.get())
+        self.clean_up_temp_files()
 
         # video processing
         try:
@@ -115,3 +126,29 @@ class VideoFrame(ttk.Frame):
 
     def get_current_timestamp(self):
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
+    def clean_up_temp_files(self):
+        try:
+            for f in glob.glob("*.mp4"):
+                os.remove(f)
+            for f in glob.glob("*.aac"):
+                os.remove(f)
+        except OSError:
+            pass
+
+    def calculate_output_resolutions(self):
+        output_width = 0
+        output_height = 0
+
+        # Get information about the videos
+        for video in self.video_list:
+            cmd = f"ffprobe -v error -show_entries stream=width,height -of csv=p=0 {video}"
+            output = subprocess.check_output(cmd, shell=True)
+            width, height = output.decode().strip().split(",")
+            output_width = max(output_width, int(width))
+            output_height = max(output_height, int(height))
+
+        self.master.status_component.set_and_log_status(
+            f"output resolution is determined at {output_width} x {output_height}")
+
+        return output_width, output_height

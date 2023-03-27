@@ -1,4 +1,5 @@
 import os
+import glob
 import subprocess
 
 
@@ -8,14 +9,12 @@ output_directory = "."
 
 # remove temp files
 try:
-    os.remove(f"{output_directory}/final.mp4")
-    os.remove(f"{output_directory}/output.mp4")
-    os.remove(f"{output_directory}/video_a_trimmed.mp4")
-    os.remove(f"{output_directory}/video_b_trimmed.mp4")
-    os.remove(f"{output_directory}/audio_b_trimmed.aac")
+    for f in glob.glob("*.mp4"):
+        os.remove(f)
+    for f in glob.glob("*.aac"):
+        os.remove(f)
 except OSError:
     pass
-
 
 # Define the start and end times of the segment to extract
 start_time = "00:00:01"
