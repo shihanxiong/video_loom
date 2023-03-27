@@ -44,16 +44,16 @@ class VideoImportFrame(ttk.Frame):
             ('All files', '*.*')
         )
 
-        filename = fd.askopenfilename(
+        filenames = fd.askopenfilenames(
             title='Open a file',
             initialdir='/',
             filetypes=filetypes)
 
-        if filename != "":
-            self.master.video_list.append(filename)
+        if filenames != None:
+            self.master.video_list += filenames
             self.master.master.app_refresh()
             self.master.master.status_component.set_and_log_status(
-                f"Imported {filename}")
+                f"Imported {filenames}")
 
     def clear_video_list(self):
         self.master.video_list = []
