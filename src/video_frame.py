@@ -23,6 +23,7 @@ class VideoFrame(ttk.Frame):
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 4")
         self.output_directory = "./src/output"
+        self.temp_directory = "./src/temp"
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
         self.output_width = 0
@@ -122,6 +123,10 @@ class VideoFrame(ttk.Frame):
                 os.remove(f)
             for f in glob.glob(f"{self.output_directory}/*.aac"):
                 os.remove(f)
+            for f in glob.glob(f"{self.temp_directory}/*.mp4"):
+                os.remove(f)
+            for f in glob.glob(f"{self.temp_directory}/*.aac"):
+                os.remove(f)
         except OSError:
             pass
 
@@ -143,13 +148,13 @@ class VideoFrame(ttk.Frame):
     def process_trimmed_videos(self):
         for idx, timeline in enumerate(self.timeline_arr):
             video, start, end = timeline.split(",")
-            trimmed_output = f"{self.output_directory}/trimmed_{idx}.mp4"
+            trimmed_output = f"{self.temp_directory}/trimmed_{idx}.mp4"
             self.trimmed_video_list.append(trimmed_output)
             cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {trimmed_output}"
             subprocess.check_output(cmd, shell=True)
 
     def concatenate_trimmed_videos(self):
-        output_file = f"{self.output_directory}/output.mp4"
+        output_file = f"{self.temp_directory}/output.mp4"
         input_args = ""
 
         for trimmed_video in self.trimmed_video_list:
@@ -161,7 +166,7 @@ class VideoFrame(ttk.Frame):
         return output_file
 
     def process_audio(self):
-        output_sound = f"{self.output_directory}/audio.aac"
+        output_sound = f"{self.temp_directory}/audio.aac"
         cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {output_sound}"
         subprocess.check_output(cmd, shell=True)
 
