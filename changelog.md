@@ -1,5 +1,10 @@
 # Versions
 
+### v0.9.1-beta
+
+- fixed the issue when the output video has resolution loss
+- using ffmpeg instead of moviepy for video processing
+
 ### v0.9.0-beta
 
 - added time progress bar to display current video duration
