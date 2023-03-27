@@ -1,11 +1,12 @@
 import os
+import glob
+import subprocess
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_select_frame import VideoSelectFrame
-from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 
 
 # videos input
@@ -17,10 +18,15 @@ class VideoFrame(ttk.Frame):
         self.components = []
         self.max_num_of_videos = 4
         self.video_list = []
+        self.timeline_arr = []
+        self.trimmed_video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 4")
+        self.output_directory = "./src/output"
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
+        self.output_width = 0
+        self.output_height = 0
 
         # layout - rows
         self.rowconfigure(0, weight=1)
@@ -64,12 +70,14 @@ class VideoFrame(ttk.Frame):
         for component in self.components:
             component.refresh()
 
-    def get_stream_audio(self):
-        audio_clip = AudioFileClip(os.path.abspath(
-            self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
-        return audio_clip
+    def generate_video_with_ffmpeg(self):
+        # remove output file if exists
+        self.clean_up_temp_files()
 
-    def generate_video(self):
+        # calculate output video resolution
+        # this will scale all inputs to match the max width & max height
+        self.calculate_output_resolutions()
+
         # logging
         start_time = datetime.now()
         print("generating video...")
@@ -79,30 +87,22 @@ class VideoFrame(ttk.Frame):
         print(self.master.timeline_component.get_timeline_text())
         print("================timeline end==================")
 
-        # remove output file if exists
-        if os.path.exists(self.output_file_name.get()):
-            os.remove(self.output_file_name.get())
-
         # video processing
         try:
             # parse timeline
-            timeline_arr = self.master.timeline_component.parse_timeline()
+            self.timeline_arr = self.master.timeline_component.parse_timeline()
 
-            # audio
-            audio_clip = self.get_stream_audio()
+            # trim videos
+            self.process_trimmed_videos()
 
-            # video
-            video_clips = []
-            for timeline in timeline_arr:
-                video, start, end = map(int, timeline.split(","))
-                clip = VideoFileClip(os.path.abspath(
-                    self.video_list[video - 1])).subclip(start, end)
-                video_clips.append(clip)
+            # concatenate trimmed videos
+            output_file = self.concatenate_trimmed_videos()
 
-            final_clip = concatenate_videoclips(
-                video_clips).set_audio(audio_clip)
-            final_clip.write_videofile(self.output_file_name.get(
-            ), fps=48, audio_codec="aac", codec="mpeg4", threads=8)
+            # get audio from selected video
+            output_sound = self.process_audio()
+
+            # combine video and audio into final file
+            self.finalize_video(output_file, output_sound)
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :(")
@@ -115,3 +115,59 @@ class VideoFrame(ttk.Frame):
 
     def get_current_timestamp(self):
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
+    def clean_up_temp_files(self):
+        try:
+            for f in glob.glob(f"{self.output_directory}/*.mp4"):
+                os.remove(f)
+            for f in glob.glob(f"{self.output_directory}/*.aac"):
+                os.remove(f)
+        except OSError:
+            pass
+
+    def calculate_output_resolutions(self):
+        self.output_width = 0
+        self.output_height = 0
+
+        # Get information about the videos
+        for video in self.video_list:
+            cmd = f"ffprobe -v error -show_entries stream=width,height -of csv=p=0 {video}"
+            output = subprocess.check_output(cmd, shell=True)
+            width, height = output.decode().strip().split(",")
+            self.output_width = max(self.output_width, int(width))
+            self.output_height = max(self.output_height, int(height))
+
+        self.master.status_component.set_and_log_status(
+            f"output resolution is determined at {self.output_width} x {self.output_height}")
+
+    def process_trimmed_videos(self):
+        for idx, timeline in enumerate(self.timeline_arr):
+            video, start, end = timeline.split(",")
+            trimmed_output = f"{self.output_directory}/trimmed_{idx}.mp4"
+            self.trimmed_video_list.append(trimmed_output)
+            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {trimmed_output}"
+            subprocess.check_output(cmd, shell=True)
+
+    def concatenate_trimmed_videos(self):
+        output_file = f"{self.output_directory}/output.mp4"
+        input_args = ""
+
+        for trimmed_video in self.trimmed_video_list:
+            input_args += f"-i {trimmed_video} "
+
+        cmd = f"ffmpeg {input_args} -filter_complex '[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0' -c:v libx264 -crf 23 -preset medium -y -vsync 2 {output_file}"
+        subprocess.check_output(cmd, shell=True)
+
+        return output_file
+
+    def process_audio(self):
+        output_sound = f"{self.output_directory}/audio.aac"
+        cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {output_sound}"
+        subprocess.check_output(cmd, shell=True)
+
+        return output_sound
+
+    def finalize_video(self, output_file, output_sound):
+        final_file = f"{self.output_directory}/{self.output_file_name.get()}.mp4"
+        cmd = f"ffmpeg -i {output_file} -i {output_sound} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {final_file}"
+        subprocess.check_output(cmd, shell=True)

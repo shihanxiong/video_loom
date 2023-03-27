@@ -1,11 +1,20 @@
 import os
+import glob
 import subprocess
 
 
 input_video_a = "/Users/shihanxiong/Downloads/Tv_1280x720.mp4"
 input_video_b = "/Users/shihanxiong/Downloads/SampleVideo_1280x720_20mb.mp4"
-output_directory = "."
+output_directory = "./src/sandbox/output"
 
+# remove temp files
+try:
+    for f in glob.glob(f"{output_directory}/*.mp4"):
+        os.remove(f)
+    for f in glob.glob(f"{output_directory}/*.aac"):
+        os.remove(f)
+except OSError:
+    pass
 
 # Define the start and end times of the segment to extract
 start_time = "00:00:01"
