@@ -7,7 +7,6 @@ from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_select_frame import VideoSelectFrame
-from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 
 
 # videos input
@@ -71,11 +70,6 @@ class VideoFrame(ttk.Frame):
         for component in self.components:
             component.refresh()
 
-    def get_stream_audio(self):
-        audio_clip = AudioFileClip(os.path.abspath(
-            self.video_list[self.master.audio_setting_component.audio_track_variable.get()]))
-        return audio_clip
-
     def generate_video_with_ffmpeg(self):
         # remove output file if exists
         self.clean_up_temp_files()
@@ -109,49 +103,6 @@ class VideoFrame(ttk.Frame):
 
             # combine video and audio into final file
             self.finalize_video(output_file, output_sound)
-        except Exception as err:
-            self.master.status_component.set_and_log_status(
-                "An error occurred while generating video :(")
-            print(err)
-
-        # logging
-        end_time = datetime.now()
-        self.master.status_component.set_and_log_status(
-            f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds")
-
-    def generate_video_with_moviepy(self):
-        # logging
-        start_time = datetime.now()
-        print("generating video...")
-        print(
-            f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
-        print("================timeline start================")
-        print(self.master.timeline_component.get_timeline_text())
-        print("================timeline end==================")
-
-        # remove output file if exists
-        self.clean_up_temp_files()
-
-        # video processing
-        try:
-            # parse timeline
-            self.timeline_arr = self.master.timeline_component.parse_timeline()
-
-            # audio
-            audio_clip = self.get_stream_audio()
-
-            # video
-            video_clips = []
-            for timeline in self.timeline_arr:
-                video, start, end = map(int, timeline.split(","))
-                clip = VideoFileClip(os.path.abspath(
-                    self.video_list[video - 1])).subclip(start, end)
-                video_clips.append(clip)
-
-            final_clip = concatenate_videoclips(
-                video_clips).set_audio(audio_clip)
-            final_clip.write_videofile(self.output_file_name.get(
-            ), fps=48, audio_codec="aac", codec="mpeg4", threads=8)
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :(")
