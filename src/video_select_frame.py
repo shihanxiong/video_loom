@@ -82,5 +82,6 @@ class VideoSelectFrame(ttk.Frame):
     def copy_current_timestamp_to_clipboard(self):
         if self.video_player != None:
             self.clipboard_clear()
-            self.clipboard_append(round(self.video_player.current_duration()))
+            self.clipboard_append(str(datetime.timedelta(
+                seconds=round(self.video_player.current_duration()))))
             self.update()
