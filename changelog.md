@@ -1,5 +1,9 @@
 # Versions
 
+### v1.0.1
+
+- :file_folder: added user documentation
+
 ### v1.0.0
 
 - :loudspeaker: official release of video loom v1.0.0

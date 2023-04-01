@@ -1,5 +1,24 @@
 # VIDEO LOOM
 
+## User guide
+
+- download the .exe (windows) or .app (macOS) file
+- open the application
+- click on "Import files" button and start importing videos (up to 4)
+  - <img src="./img/user_guide_1.png" width="450" height="450" />
+- click on "Play all videos" and "Pause all videos" to play all video files simutaneously
+  - use skip -5 / +5 buttons to skip backward and forward
+- In the text box, type in the segments of the videos you want to trim
+  - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like:
+  ```bash
+  1,0:00:00,0:10:00
+  2,0:10:00,0:15:05
+  ```
+  - ensure no extra space in the text and each line represents a segment. As shown below
+  - <img src="./img/user_guide_2.png" width="450" height="450" />
+- select the audio you would like to use for the final video
+- then click "generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
+
 ## Environment setup
 
 ### windows (WSL2)
