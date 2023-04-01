@@ -2,7 +2,8 @@
 
 ### v0.9.3-beta
 
-- Solved the app portability issue in Win32
+- Solved the app portability issue in Win32 (:heavy_check_mark: win32 tested)
+- Fixed path issue on macOS (:heavy_check_mark: macOS tested)
 
 ### v0.9.2-beta
 
