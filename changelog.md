@@ -1,5 +1,9 @@
 # Versions
 
+### v0.9.3-beta
+
+- Solved the app portability issue in Win32
+
 ### v0.9.2-beta
 
 - fixed the issue when ffmpeg file path could be unidentified in Win32

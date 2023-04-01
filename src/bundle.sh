@@ -9,4 +9,4 @@ if [ $# -eq 0 ]; then
   exit
 fi
 
-pyinstaller $1 --onefile --debug=imports --hidden-import av --hidden-import chardet --log-level=DEBUG --noconsole
+pyinstaller $1 --onefile --debug=imports --hidden-import av --hidden-import chardet --log-level=DEBUG
