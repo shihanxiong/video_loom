@@ -7,6 +7,7 @@ from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_select_frame import VideoSelectFrame
+from sys import platform
 
 
 # videos input
@@ -74,6 +75,11 @@ class VideoFrame(ttk.Frame):
     def generate_video_with_ffmpeg(self):
         # remove output file if exists
         self.clean_up_temp_files()
+
+        # for win32, wrap the video path w/ quotes
+        if platform == "win32":
+            for idx, video in enumerate(self.video_list):
+                self.video_list[idx] = self.escape_file_name(video)
 
         # calculate output video resolution
         # this will scale all inputs to match the max width & max height
@@ -156,11 +162,16 @@ class VideoFrame(ttk.Frame):
     def concatenate_trimmed_videos(self):
         output_file = f"{self.temp_directory}/output.mp4"
         input_args = ""
+        ffmpeg_filter = f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
 
         for trimmed_video in self.trimmed_video_list:
-            input_args += f"-i {trimmed_video} "
+            input_args += f"-i {self.escape_file_name(trimmed_video)} "
 
-        cmd = f"ffmpeg {input_args} -filter_complex '[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0' -c:v libx264 -crf 23 -preset medium -y -vsync 2 {output_file}"
+        if platform == "win32":
+            # remove the single quote ' if it's windows
+            ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
+
+        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -preset medium -y -vsync 2 {self.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
 
         return output_file
@@ -176,3 +187,10 @@ class VideoFrame(ttk.Frame):
         final_file = f"{self.output_directory}/{self.output_file_name.get()}.mp4"
         cmd = f"ffmpeg -i {output_file} -i {output_sound} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {final_file}"
         subprocess.check_output(cmd, shell=True)
+
+    def escape_file_name(self, filename):
+        # for win32, wrap the video path w/ quotes
+        if platform == "win32":
+            return f"\"{filename}\""
+
+        return filename

@@ -55,7 +55,7 @@ class VideoLoom(tk.Tk):
         if platform == "win32":
             set_dpi_awareness()
             self.resizable(False, False)
-            self.window_height = 1150
+            self.window_height = 1200
             self.window_width = 1200
         elif platform == "darwin":
             self.window_height = 950
