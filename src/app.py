@@ -15,7 +15,7 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v0.9.1-beta")
+        self.title("Video Loom - v0.9.3-beta")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
@@ -55,7 +55,7 @@ class VideoLoom(tk.Tk):
         if platform == "win32":
             set_dpi_awareness()
             self.resizable(False, False)
-            self.window_height = 1150
+            self.window_height = 1200
             self.window_width = 1200
         elif platform == "darwin":
             self.window_height = 950

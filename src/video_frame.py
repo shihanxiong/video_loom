@@ -7,6 +7,7 @@ from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_select_frame import VideoSelectFrame
+from sys import platform
 
 
 # videos input
@@ -22,12 +23,12 @@ class VideoFrame(ttk.Frame):
         self.trimmed_video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 4")
-        self.output_directory = "./src/output"
-        self.temp_directory = "./src/temp"
+        self.output_directory = os.getcwd()
         self.output_file_name = tk.StringVar(
             value=f"{self.get_current_timestamp()}.mp4")
         self.output_width = 0
         self.output_height = 0
+        self.is_filename_escaped = False
 
         # layout - rows
         self.rowconfigure(0, weight=1)
@@ -75,6 +76,12 @@ class VideoFrame(ttk.Frame):
         # remove output file if exists
         self.clean_up_temp_files()
 
+        # for win32|macOS, wrap the video path w/ quotes
+        if self.is_filename_escaped == False:
+            for idx, video in enumerate(self.video_list):
+                self.video_list[idx] = self.escape_file_name(video)
+            self.is_filename_escaped = True
+
         # calculate output video resolution
         # this will scale all inputs to match the max width & max height
         self.calculate_output_resolutions()
@@ -119,13 +126,9 @@ class VideoFrame(ttk.Frame):
 
     def clean_up_temp_files(self):
         try:
-            for f in glob.glob(f"{self.output_directory}/*.mp4"):
+            for f in glob.glob("*.mp4"):
                 os.remove(f)
-            for f in glob.glob(f"{self.output_directory}/*.aac"):
-                os.remove(f)
-            for f in glob.glob(f"{self.temp_directory}/*.mp4"):
-                os.remove(f)
-            for f in glob.glob(f"{self.temp_directory}/*.aac"):
+            for f in glob.glob("*.aac"):
                 os.remove(f)
         except OSError:
             pass
@@ -148,31 +151,41 @@ class VideoFrame(ttk.Frame):
     def process_trimmed_videos(self):
         for idx, timeline in enumerate(self.timeline_arr):
             video, start, end = timeline.split(",")
-            trimmed_output = f"{self.temp_directory}/trimmed_{idx}.mp4"
+            trimmed_output = os.path.join(
+                self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
             cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {trimmed_output}"
             subprocess.check_output(cmd, shell=True)
 
     def concatenate_trimmed_videos(self):
-        output_file = f"{self.temp_directory}/output.mp4"
+        output_file = os.path.join(self.output_directory, "output.mp4")
         input_args = ""
+        ffmpeg_filter = f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
 
         for trimmed_video in self.trimmed_video_list:
-            input_args += f"-i {trimmed_video} "
+            input_args += f"-i {self.escape_file_name(trimmed_video)} "
 
-        cmd = f"ffmpeg {input_args} -filter_complex '[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0' -c:v libx264 -crf 23 -preset medium -y -vsync 2 {output_file}"
+        if platform == "win32":
+            # remove the single quote ' if it's windows
+            ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
+
+        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -preset medium -y -vsync 2 {self.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
 
         return output_file
 
     def process_audio(self):
-        output_sound = f"{self.temp_directory}/audio.aac"
+        output_sound = os.path.join(self.output_directory, "audio.aac")
         cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {output_sound}"
         subprocess.check_output(cmd, shell=True)
 
         return output_sound
 
     def finalize_video(self, output_file, output_sound):
-        final_file = f"{self.output_directory}/{self.output_file_name.get()}.mp4"
+        final_file = os.path.join(
+            self.output_directory, f"{self.output_file_name.get()}.mp4")
         cmd = f"ffmpeg -i {output_file} -i {output_sound} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {final_file}"
         subprocess.check_output(cmd, shell=True)
+
+    def escape_file_name(self, filename):
+        return f"\"{filename}\""

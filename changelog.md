@@ -1,5 +1,16 @@
 # Versions
 
+### v0.9.3-beta
+
+- Solved the app portability issue in Win32 (:heavy_check_mark: win32 tested)
+- Fixed path issue on macOS (:heavy_check_mark: macOS tested)
+
+### v0.9.2-beta
+
+- fixed the issue when ffmpeg file path could be unidentified in Win32
+- fixed the issue when imported filenames are too long that caused rendering section to be cutoff
+- bundle script now accepts specific os spec files
+
 ### v0.9.1-beta
 
 - fixed the issue when the output video has resolution loss
