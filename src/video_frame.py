@@ -76,8 +76,8 @@ class VideoFrame(ttk.Frame):
         # remove output file if exists
         self.clean_up_temp_files()
 
-        # for win32, wrap the video path w/ quotes
-        if platform == "win32" and self.is_filename_escaped == False:
+        # for win32|macOS, wrap the video path w/ quotes
+        if self.is_filename_escaped == False:
             for idx, video in enumerate(self.video_list):
                 self.video_list[idx] = self.escape_file_name(video)
             self.is_filename_escaped = True
@@ -188,8 +188,4 @@ class VideoFrame(ttk.Frame):
         subprocess.check_output(cmd, shell=True)
 
     def escape_file_name(self, filename):
-        # for win32, wrap the video path w/ quotes
-        if platform == "win32":
-            return f"\"{filename}\""
-
-        return filename
+        return f"\"{filename}\""
