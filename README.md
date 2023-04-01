@@ -2,6 +2,28 @@
 
 ## User guide
 
+> Before start using the software, be sure to have following softwares installed on your local machine.
+>
+> windows - `chocolatey` and `ffmpeg`
+>
+> mac - `ffmpeg`
+
+### How to install chocolatey on windows
+
+1. Open `powershell` on windows w/ administration access
+2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
+3. Type this command `Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))` and click enter
+4. wait till the installation to complete
+
+### How to install ffmpeg
+
+1. open `powershell` on windows w/ administration access
+2. In `powershell`, type `choco install ffmpeg-full`, then click enter
+3. wait till the installation process is complete
+4. (optional) to verify `ffmpeg` is installed, reopen another `powershell` terminal and type `ffmpeg` and click enter. You should not see any error messages.
+
+### How to run the application
+
 - download the .exe (windows) or .app (macOS) file
 - open the application
 - click on "Import files" button and start importing videos (up to 4)
