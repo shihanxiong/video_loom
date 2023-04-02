@@ -154,7 +154,7 @@ class VideoFrame(ttk.Frame):
             trimmed_output = os.path.join(
                 self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
-            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {trimmed_output}"
+            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.escape_file_name(trimmed_output)}"
             subprocess.check_output(cmd, shell=True)
 
     def concatenate_trimmed_videos(self):
@@ -176,7 +176,7 @@ class VideoFrame(ttk.Frame):
 
     def process_audio(self):
         output_sound = os.path.join(self.output_directory, "audio.aac")
-        cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {output_sound}"
+        cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {self.escape_file_name(output_sound)}"
         subprocess.check_output(cmd, shell=True)
 
         return output_sound
@@ -184,7 +184,7 @@ class VideoFrame(ttk.Frame):
     def finalize_video(self, output_file, output_sound):
         final_file = os.path.join(
             self.output_directory, f"{self.output_file_name.get()}.mp4")
-        cmd = f"ffmpeg -i {output_file} -i {output_sound} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {final_file}"
+        cmd = f"ffmpeg -i {self.escape_file_name(output_file)} -i {self.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.escape_file_name(final_file)}"
         subprocess.check_output(cmd, shell=True)
 
     def escape_file_name(self, filename):
