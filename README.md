@@ -85,7 +85,7 @@ $pip3 install pytest
 
 ```bash
 # running tests
-$pytest
+$pytest -vv -s
 ```
 
 ## Packaging
@@ -101,12 +101,6 @@ $pip3 install pyinstaller
 ```bash
 $./src/bundle.sh
 ```
-
-### Error triaging
-
-#### `AttributeError: module 'moviepy.audio.fx.all' has no attribute 'audio_fadein'` issue
-
-See https://stackoverflow.com/questions/44615249/attributeerror-module-object-has-no-attribute-audio-fadein
 
 ## Change log
 
