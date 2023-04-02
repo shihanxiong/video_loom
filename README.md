@@ -38,13 +38,17 @@
 - click on "Play all videos" and "Pause all videos" to play all video files simutaneously
   - use skip -5 / +5 buttons to skip backward and forward
 - In the text box, type in the segments of the videos you want to trim
+
   - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like:
+
   ```bash
   1,0:00:00,0:10:00
   2,0:10:00,0:15:05
   ```
+
   - ensure no extra space in the text and each line represents a segment. As shown below
   - <img src="./img/user_guide_2.png" width="450" height="450" />
+
 - select the audio you would like to use for the final video
 - then click "generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
 
@@ -74,10 +78,10 @@ $cat /etc/resolv.conf
 $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
 ```
 
-5. (optional) If you are running application using `code-runner` in `VSCode`. You can configure `"code-runner.runInTerminal": true` in `settings.json`. As well as setting `python` command as `python3 -m`. See below
+6. (optional) If you are running application using `code-runner` in `VSCode`. You can configure `"code-runner.runInTerminal": true` in `settings.json`. As well as setting `python` command as `python3 -m`. See below
    <img src="./img/vscode_1.png" width="450" height="320" />
    (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VSCode terminal)
-6. Now you can run `python3 <app_name>.py` to execute programs.
+7. Now you can run `python3 <app_name>.py` to execute programs.
 
 ## Testing
 
