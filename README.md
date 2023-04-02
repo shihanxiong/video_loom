@@ -85,7 +85,7 @@ $pip3 install pytest
 
 ```bash
 # running tests
-$pytest -vv
+$pytest -vv -s
 ```
 
 ## Packaging
