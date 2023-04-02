@@ -1,5 +1,9 @@
 # Versions
 
+### v1.1.0
+
+- added timeline validation (video processing will be skipped if timeline is invalid)
+
 ### v1.0.1
 
 - :file_folder: added user documentation
