@@ -1,6 +1,7 @@
 import os
 import subprocess
 import logging
+import threading
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -78,7 +79,8 @@ class VideoFrame(ttk.Frame):
 
     def generate_video_with_ffmpeg(self):
         # remove output file if exists
-        self.file_utils.clean_up_temp_files()
+        thread = threading.Thread(target=self.file_utils.clean_up_temp_files())
+        thread.start()
 
         # for win32|macOS, wrap the video path w/ quotes
         if self.is_filename_escaped == False:
@@ -114,7 +116,8 @@ class VideoFrame(ttk.Frame):
                 return
 
             # trim videos
-            self.process_trimmed_videos()
+            thread = threading.Thread(target=self.process_trimmed_videos())
+            thread.start()
 
             # concatenate trimmed videos
             output_file = self.concatenate_trimmed_videos()
