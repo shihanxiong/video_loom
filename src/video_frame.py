@@ -9,6 +9,7 @@ from video_select_frame import VideoSelectFrame
 from sys import platform
 from time_utils import TimeUtils
 from file_utils import FileUtils
+from timeline_utils import TimelineUtils
 
 
 # videos input
@@ -20,7 +21,6 @@ class VideoFrame(ttk.Frame):
         self.components = []
         self.max_num_of_videos = 4
         self.video_list = []
-        self.timeline_arr = []
         self.trimmed_video_list = []
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 4")
@@ -100,8 +100,17 @@ class VideoFrame(ttk.Frame):
 
         # video processing
         try:
-            # parse timeline
-            self.timeline_arr = self.master.timeline_component.parse_timeline()
+            # validate timeline
+            timeline_utils = TimelineUtils()
+            error = timeline_utils.validate_timeline(
+                self.master.timeline_component.get_timeline_text())
+
+            if error is None:
+                self.master.status_component.set_and_log_status(
+                    "timeline validated")
+            else:
+                self.master.status_component.set_and_log_status(error)
+                return
 
             # trim videos
             self.process_trimmed_videos()
@@ -140,8 +149,12 @@ class VideoFrame(ttk.Frame):
             f"output resolution is determined at {self.output_width} x {self.output_height}")
 
     def process_trimmed_videos(self):
-        for idx, timeline in enumerate(self.timeline_arr):
-            video, start, end = timeline.split(",")
+        timeline_utils = TimelineUtils()
+        parsed_timeline_arr = timeline_utils.parse_timeline(
+            self.master.timeline_component.get_timeline_text())
+
+        for idx, timeline in enumerate(parsed_timeline_arr):
+            video, start, end = timeline
             trimmed_output = os.path.join(
                 self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
