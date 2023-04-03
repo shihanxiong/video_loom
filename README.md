@@ -8,7 +8,9 @@
 >
 > mac - `ffmpeg`
 
-### How to install chocolatey on windows
+### Windows
+
+#### How to install chocolatey on windows
 
 1. Open `powershell` on windows w/ administration access
 2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
@@ -22,12 +24,16 @@
 
 4. wait till the installation to complete
 
-### How to install ffmpeg
+#### How to install ffmpeg
 
 1. open `powershell` on windows w/ administration access
 2. In `powershell`, type `choco install ffmpeg-full`, then click enter
 3. wait till the installation process is complete
 4. (optional) to verify `ffmpeg` is installed, reopen another `powershell` terminal and type `ffmpeg` and click enter. You should not see any error messages.
+
+### Mac
+
+TBD
 
 ### How to run the application
 
@@ -107,7 +113,7 @@ $pytest -vv -s
 $pip3 install pyinstaller
 ```
 
-> Generate executables (note: executables will automatically be determined by the OS. e.g. `.exe` for Windows and `.dmg` for MacOS)
+> Generate executables (note: executables will automatically be determined by the OS. e.g. `.exe` for Windows and `.app` for MacOS)
 
 ```bash
 $./src/bundle.sh
