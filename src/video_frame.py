@@ -1,5 +1,6 @@
 import os
 import subprocess
+import logging
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
@@ -70,7 +71,7 @@ class VideoFrame(ttk.Frame):
     def refresh(self):
         self.video_label_text.set(
             f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
-        print(self.video_list)
+        logging.debug(self.video_list)
 
         for component in self.components:
             component.refresh()
@@ -91,12 +92,12 @@ class VideoFrame(ttk.Frame):
 
         # logging
         start_time = datetime.now()
-        print("generating video...")
-        print(
+        logging.info("generating video...")
+        logging.info(
             f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
-        print("================timeline start================")
-        print(self.master.timeline_component.get_timeline_text())
-        print("================timeline end==================")
+        logging.info("================timeline start================")
+        logging.info(self.master.timeline_component.get_timeline_text())
+        logging.info("================timeline end==================")
 
         # video processing
         try:
@@ -126,7 +127,7 @@ class VideoFrame(ttk.Frame):
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :(")
-            print(err)
+            logging.error(err)
 
         # logging
         end_time = datetime.now()

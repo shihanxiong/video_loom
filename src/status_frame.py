@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import logging
 
 
 # application status
@@ -25,4 +26,4 @@ class StatusFrame(ttk.Frame):
 
     def set_and_log_status(self, status):
         self.status_variable.set(status)
-        print(status)
+        logging.info(status)

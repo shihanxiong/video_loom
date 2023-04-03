@@ -1,5 +1,6 @@
 from sys import platform
 import tkinter as tk
+import logging
 from tkinter import ttk
 from windows import set_dpi_awareness
 from video_frame import VideoFrame
@@ -7,6 +8,7 @@ from audio_setting_frame import AudioSettingFrame
 from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
 from status_frame import StatusFrame
+from time_utils import TimeUtils
 
 
 class VideoLoom(tk.Tk):
@@ -15,12 +17,30 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v1.1.0")
+        self.title("Video Loom - v1.2.0")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
         style = ttk.Style(self)
         style.configure('.', font=self.default_font)
+
+        # initialize logging
+        time_utils = TimeUtils()
+        log_formatter = logging.Formatter(
+            fmt="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p')
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+
+        # file handler
+        file_handler = logging.FileHandler(
+            f"{time_utils.get_current_date()}.log")
+        file_handler.setFormatter(log_formatter)
+        root_logger.addHandler(file_handler)
+
+        # console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(log_formatter)
+        root_logger.addHandler(console_handler)
 
         # app layout
         self.columnconfigure(0, weight=1)

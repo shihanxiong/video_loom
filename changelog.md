@@ -1,5 +1,10 @@
 # Versions
 
+### v1.2.0
+
+- added logging system, now all app info can be viewed in the log files
+- application will no longer have a terminal running the background
+
 ### v1.1.0
 
 - added timeline validation (video processing will be skipped if timeline is invalid)
