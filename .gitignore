@@ -27,3 +27,4 @@ yarn-error.log*
 *.mp4
 *.aac
 *.wav
+*.log
