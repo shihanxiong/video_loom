@@ -29,22 +29,5 @@ class TimelineFrame(ttk.Frame):
     def refresh(self):
         pass
 
-    # deprecated: this method is no-longer used
-    def insert_timestamp(self, v_idx):
-        self.timeline_text.insert(END, str(v_idx + 1) + "\n")
-
     def get_timeline_text(self):
         return self.timeline_text.get("1.0", END)
-
-    def parse_timeline(self):
-        timeline_arr = self.get_timeline_text().splitlines()
-        for timeline in timeline_arr:
-            parsed_arr = timeline.split(",")
-            # todo: add more validation to ensure video, start, end are numeric
-            if (len(parsed_arr) != 3):
-                error_incorrect_syntax = "The timeline syntax is incorrect."
-                self.master.status_component.set_and_log_status(
-                    error_incorrect_syntax)
-                # todo: define more specific exception
-                raise Exception(error_incorrect_syntax)
-        return timeline_arr

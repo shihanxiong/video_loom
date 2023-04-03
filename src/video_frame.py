@@ -92,7 +92,7 @@ class VideoFrame(ttk.Frame):
 
         # logging
         start_time = datetime.now()
-        logging.info("generating video...")
+        logging.info("kicking off video processing, hang tight")
         logging.info(
             f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
         logging.info("================timeline start================")
