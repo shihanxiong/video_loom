@@ -58,7 +58,7 @@ TBD
 - select the audio you would like to use for the final video
 - then click "generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
 
-## Environment setup
+## Environment setup (for developers)
 
 ### windows (WSL2)
 
