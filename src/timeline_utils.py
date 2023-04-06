@@ -10,12 +10,14 @@ class TimelineUtils():
         pass
 
     def parse_timeline(self, timeline_text):
-        timeline_arr = timeline_text.splitlines()
-        for idx, timeline in enumerate(timeline_arr):
-            video, start, end = timeline.split(",")
-            timeline_arr[idx] = [video, start, end]
+        parsed_timeline_arr = []
+        for timeline in timeline_text.splitlines():
+            if timeline != "":
+                video, start, end = timeline.strip().split(",")
+                parsed_timeline_arr.append(
+                    [video.strip(), start.strip(), end.strip()])
 
-        return timeline_arr
+        return parsed_timeline_arr
 
     def validate_timeline(self, timeline_text):
         try:

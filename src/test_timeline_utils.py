@@ -1,9 +1,39 @@
 from timeline_utils import TimelineUtils
 
 
-def test_parse_timeline():
+def test_parse_timeline_valid():
     timeline_utils = TimelineUtils()
     timeline_text = "1,0:00:01,0:00:05\n2,0:00:05,0:00:10\n3,0:00:10,0:00:15"
+    assert timeline_utils.parse_timeline(timeline_text) == [
+        ['1', '0:00:01', '0:00:05'],
+        ['2', '0:00:05', '0:00:10'],
+        ['3', '0:00:10', '0:00:15']
+    ]
+
+
+def test_parse_timeline_with_leading_trailing_spaces():
+    timeline_utils = TimelineUtils()
+    timeline_text = " 1,0:00:01,0:00:05\n2,0:00:05,0:00:10 \n3,0:00:10,0:00:15"
+    assert timeline_utils.parse_timeline(timeline_text) == [
+        ['1', '0:00:01', '0:00:05'],
+        ['2', '0:00:05', '0:00:10'],
+        ['3', '0:00:10', '0:00:15']
+    ]
+
+
+def test_parse_timeline_with_spaces_in_middle():
+    timeline_utils = TimelineUtils()
+    timeline_text = "1,0:00:01, 0:00:05\n2,0:00:05, 0:00:10\n3,0:00:10,0:00:15"
+    assert timeline_utils.parse_timeline(timeline_text) == [
+        ['1', '0:00:01', '0:00:05'],
+        ['2', '0:00:05', '0:00:10'],
+        ['3', '0:00:10', '0:00:15']
+    ]
+
+
+def test_parse_timeline_extra_eol():
+    timeline_utils = TimelineUtils()
+    timeline_text = "1,0:00:01,0:00:05\n2,0:00:05,0:00:10\n\n3,0:00:10,0:00:15\n\n\n"
     assert timeline_utils.parse_timeline(timeline_text) == [
         ['1', '0:00:01', '0:00:05'],
         ['2', '0:00:05', '0:00:10'],
