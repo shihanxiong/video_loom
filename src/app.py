@@ -75,10 +75,10 @@ class VideoLoom(tk.Tk):
         if platform == "win32":
             set_dpi_awareness()
             # self.resizable(False, False) # TODO: render display in scale for non-4k monitors
-            self.window_height = 1200
+            self.window_height = 950
             self.window_width = 1200
         elif platform == "darwin":
-            self.window_height = 950
+            self.window_height = 800
             self.window_width = 1000
         else:
             self.window_height = 1000
