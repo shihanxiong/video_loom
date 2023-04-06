@@ -1,5 +1,9 @@
 # Versions
 
+### v1.2.1
+
+- fixed the issue when timeline parse incorrectly when extra spaces / EOL were included
+
 ### v1.2.0
 
 - added logging system, now all app info can be viewed in the log files
