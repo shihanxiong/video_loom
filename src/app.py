@@ -74,7 +74,7 @@ class VideoLoom(tk.Tk):
     def app_configure(self):
         if platform == "win32":
             set_dpi_awareness()
-            self.resizable(False, False)
+            # self.resizable(False, False) # TODO: render display in scale for non-4k monitors
             self.window_height = 1200
             self.window_width = 1200
         elif platform == "darwin":
