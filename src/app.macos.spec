@@ -28,7 +28,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [('v', None, 'OPTION')],
-    name='app',
+    name='video_loom',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -44,7 +44,7 @@ exe = EXE(
 )
 app = BUNDLE(
     exe,
-    name='app.app',
-    icon=None,
+    name='video_loom.app',
+    icon="/Users/shihanxiong/dev/video_loom/img/app_logo.ico",
     bundle_identifier=None,
 )
