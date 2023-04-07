@@ -2,6 +2,7 @@ import os
 import subprocess
 import logging
 import tkinter as tk
+from subprocess import Popen, PIPE
 from tkinter import ttk
 from datetime import datetime
 from video_import_frame import VideoImportFrame
@@ -153,6 +154,7 @@ class VideoFrame(ttk.Frame):
         timeline_utils = TimelineUtils()
         parsed_timeline_arr = timeline_utils.parse_timeline(
             self.master.timeline_component.get_timeline_text())
+        cmd_arr = []
 
         for idx, timeline in enumerate(parsed_timeline_arr):
             video, start, end = timeline
@@ -160,7 +162,14 @@ class VideoFrame(ttk.Frame):
                 self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
             cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.file_utils.escape_file_name(trimmed_output)}"
-            subprocess.check_output(cmd, shell=True)
+            cmd_arr.append(cmd)
+
+        # process trimming in parallel
+        procs_list = [Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+                      for cmd in cmd_arr]
+        for proc in procs_list:
+            proc.wait()
+
         self.master.status_component.set_and_log_status(
             "completed trimming videos")
 
