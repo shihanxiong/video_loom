@@ -194,7 +194,7 @@ class VideoFrame(ttk.Frame):
 
     def finalize_video(self, output_file, output_sound):
         final_file = os.path.join(
-            self.output_directory, f"{self.output_file_name.get()}.mp4")
+            self.output_directory, self.output_file_name.get())
         cmd = f"ffmpeg -i {self.file_utils.escape_file_name(output_file)} -i {self.file_utils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.file_utils.escape_file_name(final_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
