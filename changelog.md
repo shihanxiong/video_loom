@@ -1,5 +1,9 @@
 # Versions
 
+### v1.2.2
+
+- fixed a output naming issue
+
 ### v1.2.1
 
 - fixed the issue when timeline parse incorrectly when extra spaces / EOL were included
