@@ -14,25 +14,22 @@ class AudioSettingFrame(ttk.Frame):
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
-        self.columnconfigure(2, weight=1)
-        self.columnconfigure(3, weight=1)
 
         audio_setting_label = ttk.Label(
             self, text="Audio Settings", padding=(10))
-        audio_setting_label.grid(row=0, columnspan=4)
+        audio_setting_label.grid(row=0, columnspan=2)
 
-        audio_track_option_1 = ttk.Radiobutton(
-            self, text="Audio track 1", variable=self.audio_track_variable, value=0)
-        audio_track_option_2 = ttk.Radiobutton(
-            self, text="Audio track 2", variable=self.audio_track_variable, value=1)
-        audio_track_option_3 = ttk.Radiobutton(
-            self, text="Audio track 3", variable=self.audio_track_variable, value=2)
-        audio_track_option_4 = ttk.Radiobutton(
-            self, text="Audio track 4", variable=self.audio_track_variable, value=3)
-        audio_track_option_1.grid(row=1, column=0)
-        audio_track_option_2.grid(row=1, column=1)
-        audio_track_option_3.grid(row=1, column=2)
-        audio_track_option_4.grid(row=1, column=3)
+        audio_track_label = ttk.Label(self, text="audio track:")
+        audio_track_label.grid(row=1, column=0, sticky="E")
+        self.audio_track_selection = ttk.Combobox(
+            self, width=14, textvariable=self.audio_track_variable, state="readonly")
+        self.audio_track_selection.grid(row=1, column=1)
+        self.audio_track_selection['values'] = (1, 2, 3, 4)
+        self.audio_track_selection.current(0)  # default - 1
 
     def refresh(self):
-        pass
+        self.audio_track_selection['values'] = tuple(
+            range(1, len(self.master.master.video_component.video_list) + 1))
+
+    def get_audio_track(self):
+        return self.audio_track_variable.get()
