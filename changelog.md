@@ -1,5 +1,9 @@
 # Versions
 
+### v1.4.2
+
+- shows error message when timeline text is blank
+
 ### v1.4.1
 
 - fixed the dropdown menu font size issue in windows system
