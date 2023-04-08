@@ -1,5 +1,9 @@
 # Versions
 
+### v1.3.0
+
+- now allows user to select a video processing speed (higher speed leads to more quality loss)
+
 ### v1.2.2
 
 - fixed a output naming issue
