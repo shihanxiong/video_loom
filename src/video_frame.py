@@ -94,7 +94,7 @@ class VideoFrame(ttk.Frame):
         start_time = datetime.now()
         logging.info("kicking off video processing, hang tight")
         logging.info(
-            f'using audio track {self.master.audio_setting_component.audio_track_variable.get() + 1}')
+            f'using audio track {self.master.settings_component.audio_setting_component.audio_track_variable.get() + 1}')
         logging.info("================timeline start================")
         logging.info(self.master.timeline_component.get_timeline_text())
         logging.info("================timeline end==================")
@@ -112,6 +112,11 @@ class VideoFrame(ttk.Frame):
             else:
                 self.master.status_component.set_and_log_status(error)
                 return
+
+            # determine processing speed
+            self.ffmpeg_preset_arg = f"-preset {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
+            self.master.status_component.set_and_log_status(
+                f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}")
 
             # trim videos
             self.process_trimmed_videos()
@@ -159,7 +164,7 @@ class VideoFrame(ttk.Frame):
             trimmed_output = os.path.join(
                 self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
-            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.file_utils.escape_file_name(trimmed_output)}"
+            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(trimmed_output)}"
             subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed trimming videos")
@@ -176,7 +181,7 @@ class VideoFrame(ttk.Frame):
             # remove the single quote ' if it's windows
             ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
 
-        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -preset medium -y -vsync 2 {self.file_utils.escape_file_name(output_file)}"
+        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -preset medium -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed concatenating trimmed videos")
@@ -185,7 +190,7 @@ class VideoFrame(ttk.Frame):
 
     def process_audio(self):
         output_sound = os.path.join(self.output_directory, "audio.aac")
-        cmd = f"ffmpeg -i {self.video_list[self.master.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {self.file_utils.escape_file_name(output_sound)}"
+        cmd = f"ffmpeg -i {self.video_list[self.master.settings_component.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_sound)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed processing audio")
@@ -195,7 +200,7 @@ class VideoFrame(ttk.Frame):
     def finalize_video(self, output_file, output_sound):
         final_file = os.path.join(
             self.output_directory, self.output_file_name.get())
-        cmd = f"ffmpeg -i {self.file_utils.escape_file_name(output_file)} -i {self.file_utils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.file_utils.escape_file_name(final_file)}"
+        cmd = f"ffmpeg -i {self.file_utils.escape_file_name(output_file)} -i {self.file_utils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(final_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "video is processed and ready for use")

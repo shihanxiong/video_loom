@@ -29,10 +29,10 @@ class AudioSettingFrame(ttk.Frame):
             self, text="Audio track 3", variable=self.audio_track_variable, value=2)
         audio_track_option_4 = ttk.Radiobutton(
             self, text="Audio track 4", variable=self.audio_track_variable, value=3)
-        audio_track_option_1.grid(row=1, column=0, sticky="N")
-        audio_track_option_2.grid(row=1, column=1, sticky="N")
-        audio_track_option_3.grid(row=1, column=2, sticky="N")
-        audio_track_option_4.grid(row=1, column=3, sticky="N")
+        audio_track_option_1.grid(row=1, column=0)
+        audio_track_option_2.grid(row=1, column=1)
+        audio_track_option_3.grid(row=1, column=2)
+        audio_track_option_4.grid(row=1, column=3)
 
     def refresh(self):
         pass

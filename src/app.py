@@ -4,7 +4,7 @@ import logging
 from tkinter import ttk
 from windows import set_dpi_awareness
 from video_frame import VideoFrame
-from audio_setting_frame import AudioSettingFrame
+from settings_frame import SettingsFrame
 from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
 from status_frame import StatusFrame
@@ -53,8 +53,8 @@ class VideoLoom(tk.Tk):
         # components
         self.video_component = VideoFrame(self, padding=(10, 10))
         self.video_component.grid(row=0, sticky="NEW")
-        self.audio_setting_component = AudioSettingFrame(self, padding=(10, 0))
-        self.audio_setting_component.grid(row=1, sticky="NEW")
+        self.settings_component = SettingsFrame(self, padding=(10, 0))
+        self.settings_component.grid(row=1, sticky="NEW")
         self.timeline_component = TimelineFrame(self, padding=(10, 10))
         self.timeline_component.grid(row=2, sticky="SEW")
         self.status_component = StatusFrame(self, padding=(10, 10))
@@ -64,7 +64,7 @@ class VideoLoom(tk.Tk):
 
         # register all components
         self.components.append(self.video_component)
-        self.components.append(self.audio_setting_component)
+        self.components.append(self.settings_component)
         self.components.append(self.timeline_component)
         self.components.append(self.status_component)
         self.components.append(self.toolbar_component)
