@@ -17,12 +17,13 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v1.4.0")
+        self.title("Video Loom - v1.4.1")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
         style = ttk.Style(self)
         style.configure('.', font=self.default_font)
+        self.option_add('*TCombobox*Listbox.font', self.default_font)
 
         # initialize logging
         time_utils = TimeUtils()

@@ -1,5 +1,9 @@
 # Versions
 
+### v1.4.1
+
+- fixed the dropdown menu font size issue in windows system
+
 ### v1.4.0
 
 - audio track selection is now a dropdown control, the list in the dropdown is based on the number of videos imported

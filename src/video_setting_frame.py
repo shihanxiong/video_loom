@@ -22,7 +22,7 @@ class VideoSettingFrame(ttk.Frame):
         ffmpeg_preset_label = ttk.Label(self, text="process speed:")
         ffmpeg_preset_label.grid(row=1, column=0, sticky="E")
         ffmpeg_preset_selection = ttk.Combobox(
-            self, width=14, textvariable=self.ffmpeg_preset_arg, state="readonly")
+            self, width=14, textvariable=self.ffmpeg_preset_arg, state="readonly", font=self.master.master.default_font)
         ffmpeg_preset_selection.grid(row=1, column=1)
         ffmpeg_preset_selection['values'] = (
             'ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow')

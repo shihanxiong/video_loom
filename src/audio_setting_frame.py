@@ -22,7 +22,7 @@ class AudioSettingFrame(ttk.Frame):
         audio_track_label = ttk.Label(self, text="audio track:")
         audio_track_label.grid(row=1, column=0, sticky="E")
         self.audio_track_selection = ttk.Combobox(
-            self, width=14, textvariable=self.audio_track_variable, state="readonly")
+            self, width=14, textvariable=self.audio_track_variable, state="readonly", font=self.master.master.default_font)
         self.audio_track_selection.grid(row=1, column=1)
         self.audio_track_selection['values'] = (1, 2, 3, 4)
         self.audio_track_selection.current(0)  # default - 1
