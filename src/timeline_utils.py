@@ -5,6 +5,7 @@ class TimelineUtils():
     _MISS_VALUE_IN_TIMELINE_ERROR_MESSAGE = "Missing timeline value - ensure the timeline is in format '<video_number>,<start_time>,<end_time>' and separated by comma ','"
     _REDUNDANT_VALUE_IN_TIMELINE_ERROR_MESSAGE = "Redundant timeline value - ensure the timeline is in format '<video_number>,<start_time>,<end_time>' and separated by comma ','"
     _START_TIME_AFTER_END_TIME_ERROR_MESSAGE = "Invalid timeline - start time is equal/after end time"
+    _EMPTY_TIMELINE_ERROR_MESSAGE = "Invalid timeline - timeline cannot be empty"
 
     def __init__(self):
         pass
@@ -20,6 +21,9 @@ class TimelineUtils():
         return parsed_timeline_arr
 
     def validate_timeline(self, timeline_text):
+        if timeline_text.replace("\n", "").replace("\t", "").replace(" ", "") == "":
+            return self._EMPTY_TIMELINE_ERROR_MESSAGE
+
         try:
             parsed_timeline_arr = self.parse_timeline(timeline_text)
 

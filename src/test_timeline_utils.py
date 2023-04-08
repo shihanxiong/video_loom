@@ -41,6 +41,13 @@ def test_parse_timeline_extra_eol():
     ]
 
 
+def test_validate_timeline_empty():
+    timeline_utils = TimelineUtils()
+    timeline_text = " \n \n\n   \n\n\n"
+    assert timeline_utils.validate_timeline(
+        timeline_text) == "Invalid timeline - timeline cannot be empty"
+
+
 def test_validate_timeline():
     timeline_utils = TimelineUtils()
 
