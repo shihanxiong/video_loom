@@ -1,5 +1,9 @@
 # Versions
 
+### v1.4.0
+
+- audio track selection is now a dropdown control, the list in the dropdown is based on the number of videos imported
+
 ### v1.3.0
 
 - now allows user to select a video processing speed (higher speed leads to more quality loss)

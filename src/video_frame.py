@@ -94,7 +94,7 @@ class VideoFrame(ttk.Frame):
         start_time = datetime.now()
         logging.info("kicking off video processing, hang tight")
         logging.info(
-            f'using audio track {self.master.settings_component.audio_setting_component.audio_track_variable.get() + 1}')
+            f'using audio track {self.master.settings_component.audio_setting_component.get_audio_track()}')
         logging.info("================timeline start================")
         logging.info(self.master.timeline_component.get_timeline_text())
         logging.info("================timeline end==================")
@@ -190,7 +190,7 @@ class VideoFrame(ttk.Frame):
 
     def process_audio(self):
         output_sound = os.path.join(self.output_directory, "audio.aac")
-        cmd = f"ffmpeg -i {self.video_list[self.master.settings_component.audio_setting_component.audio_track_variable.get()]} -vn -acodec copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_sound)}"
+        cmd = f"ffmpeg -i {self.video_list[self.master.settings_component.audio_setting_component.get_audio_track() - 1]} -vn -acodec copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_sound)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed processing audio")

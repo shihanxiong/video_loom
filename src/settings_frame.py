@@ -13,6 +13,7 @@ class SettingsFrame(ttk.Frame):
         self.rowconfigure(0, weight=0)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+        self.components = []
 
         # components
         self.audio_setting_component = AudioSettingFrame(self)
@@ -20,5 +21,10 @@ class SettingsFrame(ttk.Frame):
         self.video_setting_component = VideoSettingFrame(self)
         self.video_setting_component.grid(row=0, column=1, sticky="NEW")
 
+        # register all components
+        self.components.append(self.audio_setting_component)
+        self.components.append(self.video_setting_component)
+
     def refresh(self):
-        pass
+        for component in self.components:
+            component.refresh()
