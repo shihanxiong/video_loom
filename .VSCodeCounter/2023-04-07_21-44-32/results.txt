@@ -1,0 +1,58 @@
+Date : 2023-04-07 21:44:32
+Directory : /Users/shihanxiong/dev/video_loom
+Total : 27 files,  915 codes, 84 comments, 301 blanks, all 1300 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| Python       |         22 |        701 |         78 |        213 |        992 |
+| Markdown     |          2 |        130 |          0 |         72 |        202 |
+| Ruby         |          2 |         79 |          2 |         12 |         93 |
+| Shell Script |          1 |          5 |          4 |          4 |         13 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                              | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                 |         27 |        915 |         84 |        301 |      1,300 |
+| . (Files)                                                         |          2 |        130 |          0 |         72 |        202 |
+| src                                                               |         25 |        785 |         84 |        229 |      1,098 |
+| src (Files)                                                       |         21 |        703 |         68 |        200 |        971 |
+| src/sandbox                                                       |          4 |         82 |         16 |         29 |        127 |
++-------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                          | language     | code       | comment    | blank      | total      |
++-------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| /Users/shihanxiong/dev/video_loom/README.md                       | Markdown     |         86 |          0 |         39 |        125 |
+| /Users/shihanxiong/dev/video_loom/changelog.md                    | Markdown     |         44 |          0 |         33 |         77 |
+| /Users/shihanxiong/dev/video_loom/src/app.macos.spec              | Ruby         |         44 |          1 |          6 |         51 |
+| /Users/shihanxiong/dev/video_loom/src/app.py                      | Python       |         70 |         11 |         14 |         95 |
+| /Users/shihanxiong/dev/video_loom/src/app.win32.spec              | Ruby         |         35 |          1 |          6 |         42 |
+| /Users/shihanxiong/dev/video_loom/src/audio_setting_frame.py      | Python       |         25 |          2 |          9 |         36 |
+| /Users/shihanxiong/dev/video_loom/src/bundle.sh                   | Shell Script |          5 |          4 |          4 |         13 |
+| /Users/shihanxiong/dev/video_loom/src/file_utils.py               | Python       |         15 |          0 |          5 |         20 |
+| /Users/shihanxiong/dev/video_loom/src/sandbox/app_logging.py      | Python       |         16 |          2 |          7 |         25 |
+| /Users/shihanxiong/dev/video_loom/src/sandbox/sandbox_filepath.py | Python       |          3 |          0 |          2 |          5 |
+| /Users/shihanxiong/dev/video_loom/src/sandbox/sandbox_macos.py    | Python       |         42 |         10 |         13 |         65 |
+| /Users/shihanxiong/dev/video_loom/src/sandbox/sandbox_win32.py    | Python       |         21 |          4 |          7 |         32 |
+| /Users/shihanxiong/dev/video_loom/src/settings_frame.py           | Python       |         20 |          4 |          7 |         31 |
+| /Users/shihanxiong/dev/video_loom/src/status_frame.py             | Python       |         18 |          3 |          9 |         30 |
+| /Users/shihanxiong/dev/video_loom/src/test_file_utils.py          | Python       |          4 |          0 |          3 |          7 |
+| /Users/shihanxiong/dev/video_loom/src/test_time_utils.py          | Python       |         10 |          0 |          5 |         15 |
+| /Users/shihanxiong/dev/video_loom/src/test_timeline_utils.py      | Python       |         47 |          3 |         14 |         64 |
+| /Users/shihanxiong/dev/video_loom/src/time_utils.py               | Python       |          8 |          0 |          5 |         13 |
+| /Users/shihanxiong/dev/video_loom/src/timeline_frame.py           | Python       |         22 |          3 |          9 |         34 |
+| /Users/shihanxiong/dev/video_loom/src/timeline_utils.py           | Python       |         32 |          0 |         10 |         42 |
+| /Users/shihanxiong/dev/video_loom/src/toolbar_frame.py            | Python       |         22 |          2 |          9 |         33 |
+| /Users/shihanxiong/dev/video_loom/src/video_frame.py              | Python       |        145 |         24 |         38 |        207 |
+| /Users/shihanxiong/dev/video_loom/src/video_import_frame.py       | Python       |         54 |          1 |         12 |         67 |
+| /Users/shihanxiong/dev/video_loom/src/video_renderer_frame.py     | Python       |         30 |          3 |          7 |         40 |
+| /Users/shihanxiong/dev/video_loom/src/video_select_frame.py       | Python       |         66 |          4 |         18 |         88 |
+| /Users/shihanxiong/dev/video_loom/src/video_setting_frame.py      | Python       |         25 |          2 |          9 |         36 |
+| /Users/shihanxiong/dev/video_loom/src/windows.py                  | Python       |          6 |          0 |          1 |          7 |
+| Total                                                             |              |        915 |         84 |        301 |      1,300 |
++-------------------------------------------------------------------+--------------+------------+------------+------------+------------+
