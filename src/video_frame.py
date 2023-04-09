@@ -71,7 +71,7 @@ class VideoFrame(ttk.Frame):
     def refresh(self):
         self.video_label_text.set(
             f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
-        logging.debug(self.video_list)
+        logging.debug(f"imported videos {self.video_list}")
 
         for component in self.components:
             component.refresh()
