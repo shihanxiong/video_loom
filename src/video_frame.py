@@ -6,7 +6,7 @@ from tkinter import ttk
 from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
-from video_select_frame import VideoSelectFrame
+from video_control_frame import VideoControlFrame
 from sys import platform
 from time_utils import TimeUtils
 from file_utils import FileUtils
@@ -60,7 +60,7 @@ class VideoFrame(ttk.Frame):
         self.video_import_component.grid(row=1, columnspan=4, sticky="NEW")
 
         # video selection
-        self.video_select_component = VideoSelectFrame(self, padding=(10, 0))
+        self.video_select_component = VideoControlFrame(self, padding=(10, 0))
         self.video_select_component.grid(row=3, columnspan=4, sticky="NEW")
 
         # register all components

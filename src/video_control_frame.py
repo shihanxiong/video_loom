@@ -1,9 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
 import datetime
+from tkinter import ttk
 
 
-class VideoSelectFrame(ttk.Frame):
+class VideoControlFrame(ttk.Frame):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
