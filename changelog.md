@@ -1,6 +1,6 @@
 # Versions
 
-### unreleased
+### Hackday
 
 - newer logo design
 - enabled app resizing, this will allow videos display to enlarge/shrink

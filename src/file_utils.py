@@ -17,3 +17,15 @@ class FileUtils():
 
     def escape_file_name(self, filename):
         return f"\"{filename}\""
+
+    def get_latest_version_from_changelog(self):
+        changelog_path = os.path.join(os.getcwd(), 'changelog.md')
+
+        with open(changelog_path, 'r') as f:
+            text = f.read()
+            lines = text.split('\n')
+            for line in lines:
+                if line.startswith('###'):
+                    return line.split(' ')[1]
+
+        return 'Unknown'

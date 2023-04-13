@@ -9,6 +9,7 @@ from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
 from status_frame import StatusFrame
 from time_utils import TimeUtils
+from file_utils import FileUtils
 
 
 class VideoLoom(tk.Tk):
@@ -17,7 +18,9 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v1.4.2")
+        file_utils = FileUtils()
+        self.title(
+            f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
@@ -45,7 +48,7 @@ class VideoLoom(tk.Tk):
 
         # app layout
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=10)
+        self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=0)
         self.rowconfigure(3, weight=0)
