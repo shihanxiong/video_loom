@@ -84,7 +84,7 @@ class VideoLoom(tk.Tk):
             self.window_height = 1000
             self.window_width = 1200
         elif platform == "darwin":
-            self.window_height = 800
+            self.window_height = 900
             self.window_width = 1000
         else:
             self.window_height = 1000
