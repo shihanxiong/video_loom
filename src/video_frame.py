@@ -60,13 +60,15 @@ class VideoFrame(ttk.Frame):
         self.video_import_component.grid(row=1, columnspan=4, sticky="NEW")
 
         # video selection
-        self.video_select_component = VideoControlFrame(self, padding=(10, 0))
-        self.video_select_component.grid(row=3, columnspan=4, sticky="SEW")
+        self.video_control_component = VideoControlFrame(self, padding=(10, 0))
+        self.video_control_component.grid(row=3, columnspan=4, sticky="SEW")
 
         # register all components
-        self.components.append(self.video_import_component)
-        self.components.append(self.video_renderer_component)
-        self.components.append(self.video_select_component)
+        self.components = [
+            self.video_import_component,
+            self.video_renderer_component,
+            self.video_control_component
+        ]
 
     def refresh(self):
         self.video_label_text.set(

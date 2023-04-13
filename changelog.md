@@ -1,5 +1,10 @@
 # Versions
 
+### unreleased
+
+- newer logo design
+- enabled app resizing, this will allow videos display to enlarge/shrink
+
 ### v1.4.2
 
 - shows error message when timeline text is blank
