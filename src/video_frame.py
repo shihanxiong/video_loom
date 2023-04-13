@@ -35,8 +35,8 @@ class VideoFrame(ttk.Frame):
         self.is_filename_escaped = False
 
         # layout - rows
-        self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=1, minsize=220)
         self.rowconfigure(3, weight=1)
 
@@ -48,7 +48,7 @@ class VideoFrame(ttk.Frame):
         # video label
         video_label = ttk.Label(
             self, textvariable=self.video_label_text, padding=(10))
-        video_label.grid(row=0, columnspan=4)
+        video_label.grid(row=0, columnspan=4, sticky="N")
 
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
@@ -61,7 +61,7 @@ class VideoFrame(ttk.Frame):
 
         # video selection
         self.video_select_component = VideoControlFrame(self, padding=(10, 0))
-        self.video_select_component.grid(row=3, columnspan=4, sticky="NEW")
+        self.video_select_component.grid(row=3, columnspan=4, sticky="SEW")
 
         # register all components
         self.components.append(self.video_import_component)

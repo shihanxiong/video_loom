@@ -52,23 +52,28 @@ class VideoLoom(tk.Tk):
         self.rowconfigure(4, weight=0)
 
         # components
-        self.video_component = VideoFrame(self, padding=(10, 10))
-        self.video_component.grid(row=0, sticky="NEW")
-        self.settings_component = SettingsFrame(self, padding=(10, 0))
-        self.settings_component.grid(row=1, sticky="NEW")
-        self.timeline_component = TimelineFrame(self, padding=(10, 10))
+        component_padding = (10, 10)
+        self.video_component = VideoFrame(self, padding=component_padding)
+        self.video_component.grid(row=0, sticky="NEWS")
+        self.settings_component = SettingsFrame(
+            self, padding=component_padding)
+        self.settings_component.grid(row=1, sticky="SEW")
+        self.timeline_component = TimelineFrame(
+            self, padding=component_padding)
         self.timeline_component.grid(row=2, sticky="SEW")
-        self.status_component = StatusFrame(self, padding=(10, 10))
-        self.status_component.grid(row=3, sticky="NEW")
-        self.toolbar_component = ToolbarFrame(self, padding=(10, 10))
-        self.toolbar_component.grid(row=4, sticky="NEW")
+        self.status_component = StatusFrame(self, padding=component_padding)
+        self.status_component.grid(row=3, sticky="SEW")
+        self.toolbar_component = ToolbarFrame(self, padding=component_padding)
+        self.toolbar_component.grid(row=4, sticky="SEW")
 
         # register all components
-        self.components.append(self.video_component)
-        self.components.append(self.settings_component)
-        self.components.append(self.timeline_component)
-        self.components.append(self.status_component)
-        self.components.append(self.toolbar_component)
+        self.components = [
+            self.video_component,
+            self.settings_component,
+            self.timeline_component,
+            self.status_component,
+            self.toolbar_component
+        ]
 
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
     # Setup window height respectively, default to 1000x1000 for Linux
