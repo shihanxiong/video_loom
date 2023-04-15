@@ -45,6 +45,6 @@ exe = EXE(
 app = BUNDLE(
     exe,
     name='video_loom.app',
-    icon="/Users/shihanxiong/dev/video_loom/img/app_logo_2.ico",
+    icon="/Users/shihanxiong/dev/video_loom/img/app_logo.ico",
     bundle_identifier=None,
 )
