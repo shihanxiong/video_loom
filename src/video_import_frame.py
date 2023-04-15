@@ -13,7 +13,7 @@ class VideoImportFrame(ttk.Frame):
         self.columnconfigure(3, weight=1)
 
         self.video_import_button = ttk.Button(
-            self, text="Import a video", padding=(10), command=self.select_file)
+            self, text="Import videos", padding=(10), command=self.select_file)
         self.video_import_button.grid(row=1, column=0, sticky="EW")
         self.clear_video_list_button = ttk.Button(
             self, text="Clear video list", padding=(10), command=self.clear_video_list)
