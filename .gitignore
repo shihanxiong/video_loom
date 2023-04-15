@@ -9,6 +9,7 @@
 # testing
 /coverage
 /src/Test/__pycache__/
+/src/test/
 
 # production
 src/build/
