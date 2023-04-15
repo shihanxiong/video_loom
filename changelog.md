@@ -4,6 +4,7 @@
 
 - newer logo design
 - enabled app resizing, this will allow videos display to enlarge/shrink
+- auto displays current application version per changelog
 
 ### v1.4.2
 

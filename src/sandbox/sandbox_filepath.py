@@ -11,3 +11,13 @@ else:
     application_path = os.path.dirname(os.path.abspath(__file__))
     print('running in a normal Python process')
 print("application_path=", application_path)
+
+
+# get the path to the temporary directory containing the bundled files
+base_path = getattr(sys, '_MEIPASS', os.path.dirname(
+    os.path.abspath(__file__)))
+
+# construct the path to the file
+file_path = os.path.join(base_path, 'changelog.md')
+
+print(file_path)
