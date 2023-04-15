@@ -5,8 +5,10 @@ class TimeUtils():
     def __init__(self):
         pass
 
-    def get_current_date(self):
+    @staticmethod
+    def get_current_date():
         return datetime.now().strftime("%Y_%m_%d")
 
-    def get_current_timestamp(self):
+    @staticmethod
+    def get_current_timestamp():
         return datetime.now().strftime("%Y_%m_%d_%H_%M_%S")

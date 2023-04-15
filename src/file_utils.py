@@ -1,6 +1,7 @@
 import os
 import sys
 import glob
+from sys_utils import SysUtils
 
 
 class FileUtils():
@@ -16,10 +17,12 @@ class FileUtils():
         except OSError:
             pass
 
-    def escape_file_name(self, filename):
+    @staticmethod
+    def escape_file_name(filename):
         return f"\"{filename}\""
 
-    def get_bundled_file_path(self, filename):
+    @staticmethod
+    def get_bundled_file_path(filename):
         # get the path to the temporary directory containing the bundled files
         base_path = getattr(sys, '_MEIPASS', os.path.dirname(
             os.path.abspath(__file__)))
@@ -29,13 +32,16 @@ class FileUtils():
 
         return file_path
 
+    @staticmethod
+    def get_file_path(filename):
+        return os.path.join(os.getcwd(), filename)
+
     def get_latest_version_from_changelog(self):
-        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-            # running in a pyinstaller bundle
-            changelog_path = self.get_bundled_file_path('changelog.md')
+        filename = 'changelog.md'
+        if SysUtils.is_running_in_pyinstaller_bundle():
+            changelog_path = self.get_bundled_file_path(filename)
         else:
-            # running in a normal python process
-            changelog_path = os.path.join(os.getcwd(), 'changelog.md')
+            changelog_path = self.get_file_path(filename)
 
         with open(changelog_path, 'r') as f:
             text = f.read()

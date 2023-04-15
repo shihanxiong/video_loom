@@ -1,3 +1,4 @@
+import os
 from sys import platform
 import tkinter as tk
 import logging
@@ -29,7 +30,6 @@ class VideoLoom(tk.Tk):
         self.option_add('*TCombobox*Listbox.font', self.default_font)
 
         # initialize logging
-        time_utils = TimeUtils()
         log_formatter = logging.Formatter(
             fmt="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p')
         root_logger = logging.getLogger()
@@ -37,7 +37,7 @@ class VideoLoom(tk.Tk):
 
         # file handler
         file_handler = logging.FileHandler(
-            f"{time_utils.get_current_date()}.log")
+            f"{TimeUtils.get_current_date()}.log")
         file_handler.setFormatter(log_formatter)
         root_logger.addHandler(file_handler)
 
@@ -100,4 +100,5 @@ class VideoLoom(tk.Tk):
 
 # start app
 root = VideoLoom()
+root.iconbitmap(FileUtils.get_file_path(os.path.join('img', 'app_logo.ico')))
 root.mainloop()

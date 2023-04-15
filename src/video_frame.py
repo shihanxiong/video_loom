@@ -27,9 +27,8 @@ class VideoFrame(ttk.Frame):
             value=f"Videos {len(self.video_list)} of 4")
         self.output_directory = os.getcwd()
         self.file_utils = FileUtils()
-        self.time_utils = TimeUtils()
         self.output_file_name = tk.StringVar(
-            value=f"{self.time_utils.get_current_timestamp()}.mp4")
+            value=f"{TimeUtils.get_current_timestamp()}.mp4")
         self.output_width = 0
         self.output_height = 0
         self.is_filename_escaped = False
