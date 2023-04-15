@@ -6,7 +6,7 @@ from tkinter import ttk
 from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
-from video_select_frame import VideoSelectFrame
+from video_control_frame import VideoControlFrame
 from sys import platform
 from time_utils import TimeUtils
 from file_utils import FileUtils
@@ -27,16 +27,15 @@ class VideoFrame(ttk.Frame):
             value=f"Videos {len(self.video_list)} of 4")
         self.output_directory = os.getcwd()
         self.file_utils = FileUtils()
-        self.time_utils = TimeUtils()
         self.output_file_name = tk.StringVar(
-            value=f"{self.time_utils.get_current_timestamp()}.mp4")
+            value=f"{TimeUtils.get_current_timestamp()}.mp4")
         self.output_width = 0
         self.output_height = 0
         self.is_filename_escaped = False
 
         # layout - rows
-        self.rowconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(0, weight=0)
+        self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=1, minsize=220)
         self.rowconfigure(3, weight=1)
 
@@ -48,7 +47,7 @@ class VideoFrame(ttk.Frame):
         # video label
         video_label = ttk.Label(
             self, textvariable=self.video_label_text, padding=(10))
-        video_label.grid(row=0, columnspan=4)
+        video_label.grid(row=0, columnspan=4, sticky="N")
 
         # video rendering
         self.video_renderer_component = VideoRendererFrame(
@@ -60,13 +59,15 @@ class VideoFrame(ttk.Frame):
         self.video_import_component.grid(row=1, columnspan=4, sticky="NEW")
 
         # video selection
-        self.video_select_component = VideoSelectFrame(self, padding=(10, 0))
-        self.video_select_component.grid(row=3, columnspan=4, sticky="NEW")
+        self.video_control_component = VideoControlFrame(self, padding=(10, 0))
+        self.video_control_component.grid(row=3, columnspan=4, sticky="SEW")
 
         # register all components
-        self.components.append(self.video_import_component)
-        self.components.append(self.video_renderer_component)
-        self.components.append(self.video_select_component)
+        self.components = [
+            self.video_import_component,
+            self.video_renderer_component,
+            self.video_control_component
+        ]
 
     def refresh(self):
         self.video_label_text.set(

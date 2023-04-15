@@ -7,7 +7,10 @@ block_cipher = None
 a = Analysis(['app.py'],
              pathex=[],
              binaries=[],
-             datas=[("E:\\software\\Python\\Python39\\Lib\\site-packages\\av.libs\\*.dll", 'av.libs')],
+             datas=[
+              ("E:\\software\\Python\\Python311\\Lib\\site-packages\\av.libs\\*.dll", 'av.libs'),
+              ("..\\changelog.md", '.')
+            ],
              hiddenimports=['av', 'chardet'],
              hookspath=[],
              hooksconfig={},

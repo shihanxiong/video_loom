@@ -1,3 +1,4 @@
+import os
 from sys import platform
 import tkinter as tk
 import logging
@@ -9,6 +10,7 @@ from timeline_frame import TimelineFrame
 from toolbar_frame import ToolbarFrame
 from status_frame import StatusFrame
 from time_utils import TimeUtils
+from file_utils import FileUtils
 
 
 class VideoLoom(tk.Tk):
@@ -17,7 +19,9 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        self.title("Video Loom - v1.4.2")
+        file_utils = FileUtils()
+        self.title(
+            f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         self.components = []
@@ -26,7 +30,6 @@ class VideoLoom(tk.Tk):
         self.option_add('*TCombobox*Listbox.font', self.default_font)
 
         # initialize logging
-        time_utils = TimeUtils()
         log_formatter = logging.Formatter(
             fmt="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p')
         root_logger = logging.getLogger()
@@ -34,7 +37,7 @@ class VideoLoom(tk.Tk):
 
         # file handler
         file_handler = logging.FileHandler(
-            f"{time_utils.get_current_date()}.log")
+            f"{TimeUtils.get_current_date()}.log")
         file_handler.setFormatter(log_formatter)
         root_logger.addHandler(file_handler)
 
@@ -45,30 +48,35 @@ class VideoLoom(tk.Tk):
 
         # app layout
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(0, weight=10)
+        self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=0)
         self.rowconfigure(2, weight=0)
         self.rowconfigure(3, weight=0)
         self.rowconfigure(4, weight=0)
 
         # components
-        self.video_component = VideoFrame(self, padding=(10, 10))
-        self.video_component.grid(row=0, sticky="NEW")
-        self.settings_component = SettingsFrame(self, padding=(10, 0))
-        self.settings_component.grid(row=1, sticky="NEW")
-        self.timeline_component = TimelineFrame(self, padding=(10, 10))
+        component_padding = (10, 10)
+        self.video_component = VideoFrame(self, padding=component_padding)
+        self.video_component.grid(row=0, sticky="NEWS")
+        self.settings_component = SettingsFrame(
+            self, padding=component_padding)
+        self.settings_component.grid(row=1, sticky="SEW")
+        self.timeline_component = TimelineFrame(
+            self, padding=component_padding)
         self.timeline_component.grid(row=2, sticky="SEW")
-        self.status_component = StatusFrame(self, padding=(10, 10))
-        self.status_component.grid(row=3, sticky="NEW")
-        self.toolbar_component = ToolbarFrame(self, padding=(10, 10))
-        self.toolbar_component.grid(row=4, sticky="NEW")
+        self.status_component = StatusFrame(self, padding=component_padding)
+        self.status_component.grid(row=3, sticky="SEW")
+        self.toolbar_component = ToolbarFrame(self, padding=component_padding)
+        self.toolbar_component.grid(row=4, sticky="SEW")
 
         # register all components
-        self.components.append(self.video_component)
-        self.components.append(self.settings_component)
-        self.components.append(self.timeline_component)
-        self.components.append(self.status_component)
-        self.components.append(self.toolbar_component)
+        self.components = [
+            self.video_component,
+            self.settings_component,
+            self.timeline_component,
+            self.status_component,
+            self.toolbar_component
+        ]
 
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
     # Setup window height respectively, default to 1000x1000 for Linux
@@ -76,10 +84,10 @@ class VideoLoom(tk.Tk):
         if platform == "win32":
             set_dpi_awareness()
             # self.resizable(False, False) # TODO: render display in scale for non-4k monitors
-            self.window_height = 980
+            self.window_height = 1000
             self.window_width = 1200
         elif platform == "darwin":
-            self.window_height = 800
+            self.window_height = 900
             self.window_width = 1000
         else:
             self.window_height = 1000
@@ -92,4 +100,5 @@ class VideoLoom(tk.Tk):
 
 # start app
 root = VideoLoom()
+root.iconbitmap(FileUtils.get_file_path(os.path.join('img', 'app_logo.ico')))
 root.mainloop()

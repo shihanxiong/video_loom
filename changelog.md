@@ -1,5 +1,12 @@
 # Versions
 
+### v1.4.3
+
+- newer logo design
+- enabled app resizing, this will allow videos display to enlarge/shrink
+- auto displays current application version per changelog
+- adjusted layout
+
 ### v1.4.2
 
 - shows error message when timeline text is blank

@@ -8,7 +8,7 @@ a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('../changelog.md', '.')],
     hiddenimports=['av', 'chardet'],
     hookspath=[],
     hooksconfig={},
