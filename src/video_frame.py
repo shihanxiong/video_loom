@@ -182,7 +182,7 @@ class VideoFrame(ttk.Frame):
             # remove the single quote ' if it's windows
             ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
 
-        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -preset medium -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_file)}"
+        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed concatenating trimmed videos")
