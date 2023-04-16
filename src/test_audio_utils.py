@@ -2,6 +2,7 @@ import os
 import pytest
 from audio_utils import AudioUtils
 from file_utils import FileUtils
+from pdb import set_trace  # call set_trace() inline to setup debugger
 
 
 mp3_output_filename = "test_generate_mp3_from_mp4.mp3"
