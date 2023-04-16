@@ -26,7 +26,6 @@ class VideoFrame(ttk.Frame):
         self.video_label_text = tk.StringVar(
             value=f"Videos {len(self.video_list)} of 4")
         self.output_directory = os.getcwd()
-        self.file_utils = FileUtils()
         self.output_file_name = tk.StringVar(
             value=f"{TimeUtils.get_current_timestamp()}.mp4")
         self.output_width = 0
@@ -79,12 +78,12 @@ class VideoFrame(ttk.Frame):
 
     def generate_video_with_ffmpeg(self):
         # remove output file if exists
-        self.file_utils.clean_up_temp_files()
+        FileUtils.clean_up_temp_files()
 
         # for win32|macOS, wrap the video path w/ quotes
         if self.is_filename_escaped == False:
             for idx, video in enumerate(self.video_list):
-                self.video_list[idx] = self.file_utils.escape_file_name(video)
+                self.video_list[idx] = FileUtils.escape_file_name(video)
             self.is_filename_escaped = True
 
         # calculate output video resolution
@@ -139,6 +138,7 @@ class VideoFrame(ttk.Frame):
         end_time = datetime.now()
         self.master.status_component.set_and_log_status(
             f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds")
+        self.master.app_refresh()
 
     def calculate_output_resolutions(self):
         self.output_width = 0
@@ -165,7 +165,7 @@ class VideoFrame(ttk.Frame):
             trimmed_output = os.path.join(
                 self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
-            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(trimmed_output)}"
+            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
             subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed trimming videos")
@@ -176,13 +176,13 @@ class VideoFrame(ttk.Frame):
         ffmpeg_filter = f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
 
         for trimmed_video in self.trimmed_video_list:
-            input_args += f"-i {self.file_utils.escape_file_name(trimmed_video)} "
+            input_args += f"-i {FileUtils.escape_file_name(trimmed_video)} "
 
         if SysUtils.is_win32():
             # remove the single quote ' if it's windows
             ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
 
-        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_file)}"
+        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "completed concatenating trimmed videos")
@@ -203,7 +203,7 @@ class VideoFrame(ttk.Frame):
     def finalize_video(self, output_file, output_sound):
         final_file = os.path.join(
             self.output_directory, self.output_file_name.get())
-        cmd = f"ffmpeg -i {self.file_utils.escape_file_name(output_file)} -i {self.file_utils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(final_file)}"
+        cmd = f"ffmpeg -i {FileUtils.escape_file_name(output_file)} -i {FileUtils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(final_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
             "video is processed and ready for use")

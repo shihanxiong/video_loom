@@ -43,6 +43,9 @@ TBD
   - <img src="./img/user_guide_1.png" width="450" height="450" />
 - click on "Play all videos" and "Pause all videos" to play all video files simutaneously
   - use skip -5 / +5 buttons to skip backward and forward
+  - (optional) if you want to play video with audio. Choose an audio track, then click on "generate preview" button under "Audio settings"
+    - <img src="./img/user_guide_3.png" width="450" height="450" />
+    - Wait till the application prompts you the preview generation is complete. Now when you play vidoes, you can hear the audio from the video simutenously
 - In the text box, type in the segments of the videos you want to trim
 
   - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like:

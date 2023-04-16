@@ -1,5 +1,10 @@
 # Versions
 
+### v1.5.0
+
+- updated readme w/ updated UI
+- application now supports audio preview while playing videos
+
 ### v1.4.3
 
 - newer logo design
