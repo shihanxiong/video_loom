@@ -1,5 +1,9 @@
 # VIDEO LOOM
 
+<p align="center">
+  <img src="./img/app_logo.png" width="450" height="450" />
+</p>
+
 ## User guide
 
 > Before start using the software, be sure to have following softwares installed on your local machine.
@@ -10,7 +14,7 @@
 
 ### Windows
 
-#### How to install chocolatey on windows
+#### How to install `chocolatey` on windows
 
 1. Open `powershell` on windows w/ administration access
 2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
@@ -24,7 +28,7 @@
 
 4. wait till the installation to complete
 
-#### How to install ffmpeg
+#### How to install `ffmpeg`
 
 1. open `powershell` on windows w/ administration access
 2. In `powershell`, type `choco install ffmpeg-full`, then click enter
@@ -33,7 +37,9 @@
 
 ### Mac
 
-TBD
+#### How to install `ffmpeg`
+
+1. in terminal. run `brew install ffmpeg`
 
 ### How to run the application
 
@@ -48,14 +54,13 @@ TBD
     - Wait till the application prompts you the preview generation is complete. Now when you play vidoes, you can hear the audio from the video simutenously
 - In the text box, type in the segments of the videos you want to trim
 
-  - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like:
+  - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like (as shown below):
 
   ```bash
   1,0:00:00,0:10:00
   2,0:10:00,0:15:05
   ```
 
-  - ensure no extra space in the text and each line represents a segment. As shown below
   - <img src="./img/user_guide_2.png" width="450" height="450" />
 
 - select the audio you would like to use for the final video

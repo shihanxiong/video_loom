@@ -1,0 +1,65 @@
+Date : 2023-04-16 17:41:57
+Directory : e:\dev\github\video_loom
+Total : 33 files,  1179 codes, 104 comments, 382 blanks, all 1665 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| Python       |         27 |        933 |         98 |        285 |      1,316 |
+| Markdown     |          2 |        146 |          0 |         81 |        227 |
+| Ruby         |          2 |         86 |          2 |         12 |        100 |
+| JSON         |          1 |          9 |          0 |          0 |          9 |
+| Shell Script |          1 |          5 |          4 |          4 |         13 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                        | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                           |         33 |      1,179 |        104 |        382 |      1,665 |
+| . (Files)                                                   |          3 |        155 |          0 |         81 |        236 |
+| src                                                         |         30 |      1,024 |        104 |        301 |      1,429 |
+| src (Files)                                                 |         25 |        923 |         86 |        263 |      1,272 |
+| src\sandbox                                                 |          5 |        101 |         18 |         38 |        157 |
++-------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                    | language     | code       | comment    | blank      | total      |
++-------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| e:\dev\github\video_loom\.prettierrc                        | JSON         |          9 |          0 |          0 |          9 |
+| e:\dev\github\video_loom\README.md                          | Markdown     |         90 |          0 |         40 |        130 |
+| e:\dev\github\video_loom\changelog.md                       | Markdown     |         56 |          0 |         41 |         97 |
+| e:\dev\github\video_loom\src\app.macos.spec                 | Ruby         |         47 |          1 |          6 |         54 |
+| e:\dev\github\video_loom\src\app.py                         | Python       |         85 |         12 |         16 |        113 |
+| e:\dev\github\video_loom\src\app.win32.spec                 | Ruby         |         39 |          1 |          6 |         46 |
+| e:\dev\github\video_loom\src\audio_setting_frame.py         | Python       |         73 |          6 |         20 |         99 |
+| e:\dev\github\video_loom\src\audio_utils.py                 | Python       |         17 |          2 |          7 |         26 |
+| e:\dev\github\video_loom\src\bundle.sh                      | Shell Script |          5 |          4 |          4 |         13 |
+| e:\dev\github\video_loom\src\file_utils.py                  | Python       |         43 |          2 |         12 |         57 |
+| e:\dev\github\video_loom\src\sandbox\sandbox_app_logging.py | Python       |         16 |          2 |          7 |         25 |
+| e:\dev\github\video_loom\src\sandbox\sandbox_filepath.py    | Python       |         15 |          2 |          7 |         24 |
+| e:\dev\github\video_loom\src\sandbox\sandbox_macos.py       | Python       |         42 |         10 |         13 |         65 |
+| e:\dev\github\video_loom\src\sandbox\sandbox_markdown.py    | Python       |          7 |          0 |          4 |         11 |
+| e:\dev\github\video_loom\src\sandbox\sandbox_win32.py       | Python       |         21 |          4 |          7 |         32 |
+| e:\dev\github\video_loom\src\settings_frame.py              | Python       |         21 |          4 |          7 |         32 |
+| e:\dev\github\video_loom\src\status_frame.py                | Python       |         18 |          3 |          9 |         30 |
+| e:\dev\github\video_loom\src\sys_utils.py                   | Python       |         17 |          2 |          6 |         25 |
+| e:\dev\github\video_loom\src\test_audio_utils.py            | Python       |         32 |          1 |         15 |         48 |
+| e:\dev\github\video_loom\src\test_file_utils.py             | Python       |          8 |          0 |          5 |         13 |
+| e:\dev\github\video_loom\src\test_sys_utils.py              | Python       |          3 |          0 |          3 |          6 |
+| e:\dev\github\video_loom\src\test_time_utils.py             | Python       |          8 |          0 |          5 |         13 |
+| e:\dev\github\video_loom\src\test_timeline_utils.py         | Python       |         52 |          3 |         16 |         71 |
+| e:\dev\github\video_loom\src\time_utils.py                  | Python       |         10 |          0 |          5 |         15 |
+| e:\dev\github\video_loom\src\timeline_frame.py              | Python       |         22 |          3 |          9 |         34 |
+| e:\dev\github\video_loom\src\timeline_utils.py              | Python       |         35 |          0 |         11 |         46 |
+| e:\dev\github\video_loom\src\toolbar_frame.py               | Python       |         22 |          2 |          9 |         33 |
+| e:\dev\github\video_loom\src\video_control_frame.py         | Python       |         67 |          5 |         19 |         91 |
+| e:\dev\github\video_loom\src\video_frame.py                 | Python       |        148 |         24 |         38 |        210 |
+| e:\dev\github\video_loom\src\video_import_frame.py          | Python       |         54 |          1 |         12 |         67 |
+| e:\dev\github\video_loom\src\video_renderer_frame.py        | Python       |         66 |          8 |         13 |         87 |
+| e:\dev\github\video_loom\src\video_setting_frame.py         | Python       |         25 |          2 |          9 |         36 |
+| e:\dev\github\video_loom\src\windows.py                     | Python       |          6 |          0 |          1 |          7 |
+| Total                                                       |              |      1,179 |        104 |        382 |      1,665 |
++-------------------------------------------------------------+--------------+------------+------------+------------+------------+
