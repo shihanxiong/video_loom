@@ -9,7 +9,8 @@ a = Analysis(['app.py'],
              binaries=[],
              datas=[
               ("E:\\software\\Python\\Python311\\Lib\\site-packages\\av.libs\\*.dll", 'av.libs'),
-              ("..\\changelog.md", '.')
+              ("..\\changelog.md", '.'),
+              ("..\\img\\app_logo.ico", '.')
             ],
              hiddenimports=['av', 'chardet'],
              hookspath=[],

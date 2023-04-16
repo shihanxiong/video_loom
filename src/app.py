@@ -100,5 +100,12 @@ class VideoLoom(tk.Tk):
 
 # start app
 root = VideoLoom()
-root.iconbitmap(FileUtils.get_file_path(os.path.join('img', 'app_logo.ico')))
+
+if SysUtils.is_running_in_pyinstaller_bundle():
+    root.iconbitmap(FileUtils.get_bundled_file_path(
+        os.path.join('app_logo.ico')))
+else:
+    root.iconbitmap(FileUtils.get_file_path(
+        os.path.join('img', 'app_logo.ico')))
+
 root.mainloop()

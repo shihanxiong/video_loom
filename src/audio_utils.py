@@ -7,9 +7,9 @@ class AudioUtils():
         pass
 
     @staticmethod
-    def generate_mp3_from_mp4(mp4_input_filename, mp3_output_filename):
+    def generate_mp3_from_mp4(mp4_input_filename, mp3_output_filename, ffmpeg_preset_arg="-preset ultrafast"):
         # using preset = ultrafast as the audio is for preview only
-        cmd = f"ffmpeg -i {mp4_input_filename} -vn -preset ultrafast -acodec mp3 {mp3_output_filename}"
+        cmd = f"ffmpeg -i {mp4_input_filename} -vn -preset ultrafast -acodec mp3 {ffmpeg_preset_arg} {mp3_output_filename}"
         subprocess.check_output(cmd, shell=True)
         # TODO: do logging via status_component instead
         logging.debug(
