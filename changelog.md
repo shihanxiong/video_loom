@@ -1,5 +1,9 @@
 # Versions
 
+### v1.5.0
+
+- updated readme w/ updated UI
+
 ### v1.4.3
 
 - newer logo design

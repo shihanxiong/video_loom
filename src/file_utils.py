@@ -8,9 +8,12 @@ class FileUtils():
     def __init__(self):
         pass
 
-    def clean_up_temp_files(self):
+    @staticmethod
+    def clean_up_temp_files():
         try:
             for f in glob.glob("*.mp4"):
+                os.remove(f)
+            for f in glob.glob("*.mp3"):
                 os.remove(f)
             for f in glob.glob("*.aac"):
                 os.remove(f)

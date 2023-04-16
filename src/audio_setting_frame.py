@@ -1,5 +1,8 @@
+import os
 import tkinter as tk
 from tkinter import ttk
+from audio_utils import AudioUtils
+from file_utils import FileUtils
 
 
 # audio setting
@@ -14,10 +17,12 @@ class AudioSettingFrame(ttk.Frame):
         self.rowconfigure(1, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
 
         audio_setting_label = ttk.Label(
             self, text="Audio Settings", padding=(10))
-        audio_setting_label.grid(row=0, columnspan=2)
+        audio_setting_label.grid(row=0, columnspan=4)
 
         audio_track_label = ttk.Label(self, text="audio track:")
         audio_track_label.grid(row=1, column=0, sticky="E")
@@ -26,10 +31,52 @@ class AudioSettingFrame(ttk.Frame):
         self.audio_track_selection.grid(row=1, column=1)
         self.audio_track_selection['values'] = (1, 2, 3, 4)
         self.audio_track_selection.current(0)  # default - 1
+        self.generate_audio_preview_button = ttk.Button(
+            self, text="Generate preview", command=self.generate_audio_preview)
+        self.generate_audio_preview_button.grid(row=1, column=2)
+        self.remove_audio_preview_button = ttk.Button(
+            self, text="Remove preview", command=self.remove_audio_preview)
+        self.remove_audio_preview_button.grid(row=1, column=3, sticky="W")
+        self.remove_audio_preview_button["state"] = "disable"
+        self.audio_track_selection.bind(
+            "<<ComboboxSelected>>", self.component_refresh)
 
     def refresh(self):
         self.audio_track_selection['values'] = tuple(
             range(1, len(self.master.master.video_component.video_list) + 1))
+        self.component_refresh()
+
+    def component_refresh(self, _=None):
+        if os.path.exists(FileUtils.get_file_path(self.get_audio_preview_filename())):
+            self.generate_audio_preview_button["state"] = "disable"
+            self.remove_audio_preview_button["state"] = "enable"
+        else:
+            self.generate_audio_preview_button["state"] = "enable"
+            self.remove_audio_preview_button["state"] = "disable"
 
     def get_audio_track(self):
         return self.audio_track_variable.get()
+
+    def get_audio_preview_filename(self):
+        return f"audio_preview_{self.get_audio_track()}.mp3"
+
+    def remove_audio_preview(self):
+        if os.path.exists(FileUtils.get_file_path(self.get_audio_preview_filename())):
+            os.remove(self.get_audio_preview_filename())
+        self.component_refresh()
+
+    def generate_audio_preview(self):
+        video_list = self.master.master.video_component.video_list
+
+        # no videos imported
+        if len(video_list) == 0:
+            return
+
+        video_input = self.master.master.video_component.video_list[self.get_audio_track(
+        ) - 1]
+        audio_preview_output = self.get_audio_preview_filename()
+        AudioUtils.generate_mp3_from_mp4(
+            FileUtils.escape_file_name(video_input), audio_preview_output)
+
+        # refresh app state
+        self.master.master.app_refresh()
