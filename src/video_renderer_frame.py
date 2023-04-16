@@ -1,5 +1,6 @@
 import os
 import pygame
+import logging
 from tkinter import ttk
 from tkVideoPlayer import TkinterVideo
 from pdb import set_trace
@@ -17,6 +18,9 @@ class VideoRendererFrame(ttk.Frame):
         self.columnconfigure(2, weight=1)
         self.columnconfigure(3, weight=1)
 
+        # status
+        self.is_playing = False
+
         # pygame
         pygame.init()
         self.mixer = pygame.mixer
@@ -32,31 +36,51 @@ class VideoRendererFrame(ttk.Frame):
             self.videoplayers.append(videoplayer)
 
     def load_audio_preview(self):
-        if self.master.master.settings_component.audio_setting_component.has_audio_preview():
-            self.mixer.music.load(
-                self.master.master.settings_component.audio_setting_component.get_audio_preview())
+        try:
+            if self.master.master.settings_component.audio_setting_component.has_audio_preview():
+                self.mixer.music.load(
+                    self.master.master.settings_component.audio_setting_component.get_audio_preview())
+                if self.is_playing:
+                    self.mixer.music.play(
+                        start=self.master.video_control_component.progress_value.get())
+                else:
+                    self.mixer.music.set_pos(
+                        self.master.video_control_component.progress_value.get())
+            else:
+                self.mixer.music.stop()
+        except Exception as err:
+            logging.error(err)
 
     def play_all(self):
+        self.is_playing = True
         self.master.master.status_component.set_and_log_status(
             "playing all videos")
         for videoplayer in self.videoplayers:
             videoplayer.play()
 
         # audio
-        if self.mixer.music.get_pos() == -1:
-            self.load_audio_preview()
-            self.mixer.music.play()
-        else:
-            self.mixer.music.unpause()
+        if self.master.master.settings_component.audio_setting_component.has_audio_preview():
+            if self.mixer.music.get_pos() == -1:
+                self.load_audio_preview()
+                self.mixer.music.play(
+                    start=self.master.video_control_component.progress_value.get())
+            else:
+                self.mixer.music.set_pos(
+                    self.master.video_control_component.progress_value.get())
+                self.mixer.music.unpause()
 
     def pause_all(self):
+        self.is_playing = False
         self.master.master.status_component.set_and_log_status(
             "pausing all videos")
         for videoplayer in self.videoplayers:
             videoplayer.pause()
 
         # audio
-        self.mixer.music.pause()
+        if self.master.master.settings_component.audio_setting_component.has_audio_preview():
+            self.mixer.music.pause()
 
     def seek(self, value):
-        self.mixer.music.set_pos(value)
+        # audio
+        if self.master.master.settings_component.audio_setting_component.has_audio_preview():
+            self.mixer.music.set_pos(value)
