@@ -1,4 +1,5 @@
 import sys
+from sys import platform
 
 
 class SysUtils():
@@ -13,3 +14,11 @@ class SysUtils():
         else:
             # running in a normal python process
             return False
+
+    @staticmethod
+    def is_win32():
+        return platform == "win32"
+
+    @staticmethod
+    def is_macos():
+        return platform == "darwin"

@@ -7,10 +7,11 @@ from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_control_frame import VideoControlFrame
-from sys import platform
 from time_utils import TimeUtils
 from file_utils import FileUtils
 from timeline_utils import TimelineUtils
+from audio_utils import AudioUtils
+from sys_utils import SysUtils
 
 
 # videos input
@@ -19,7 +20,6 @@ class VideoFrame(ttk.Frame):
         super().__init__(container, **args)
 
         # variables
-        self.components = []
         self.max_num_of_videos = 4
         self.video_list = []
         self.trimmed_video_list = []
@@ -178,7 +178,7 @@ class VideoFrame(ttk.Frame):
         for trimmed_video in self.trimmed_video_list:
             input_args += f"-i {self.file_utils.escape_file_name(trimmed_video)} "
 
-        if platform == "win32":
+        if SysUtils.is_win32():
             # remove the single quote ' if it's windows
             ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
 
@@ -191,10 +191,12 @@ class VideoFrame(ttk.Frame):
 
     def process_audio(self):
         output_sound = os.path.join(self.output_directory, "audio.aac")
-        cmd = f"ffmpeg -i {self.video_list[self.master.settings_component.audio_setting_component.get_audio_track() - 1]} -vn -acodec copy {self.ffmpeg_preset_arg} {self.file_utils.escape_file_name(output_sound)}"
-        subprocess.check_output(cmd, shell=True)
+        input_video = self.video_list[self.master.settings_component.audio_setting_component.get_audio_track(
+        ) - 1]
+        AudioUtils.generate_aac_from_mp4(
+            input_video, output_sound, self.ffmpeg_preset_arg)
         self.master.status_component.set_and_log_status(
-            "completed processing audio")
+            f"completed processing {output_sound} from video {input_video}")
 
         return output_sound
 

@@ -8,7 +8,10 @@ a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[('../changelog.md', '.')],
+    datas=[
+        ('../changelog.md', '.'),
+        ('../img/app_logo.ico', '.')
+    ],
     hiddenimports=['av', 'chardet'],
     hookspath=[],
     hooksconfig={},

@@ -11,6 +11,7 @@ from toolbar_frame import ToolbarFrame
 from status_frame import StatusFrame
 from time_utils import TimeUtils
 from file_utils import FileUtils
+from sys_utils import SysUtils
 
 
 class VideoLoom(tk.Tk):
@@ -24,7 +25,6 @@ class VideoLoom(tk.Tk):
             f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
-        self.components = []
         style = ttk.Style(self)
         style.configure('.', font=self.default_font)
         self.option_add('*TCombobox*Listbox.font', self.default_font)
@@ -81,12 +81,12 @@ class VideoLoom(tk.Tk):
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
     # Setup window height respectively, default to 1000x1000 for Linux
     def app_configure(self):
-        if platform == "win32":
+        if SysUtils.is_win32():
             set_dpi_awareness()
             # self.resizable(False, False) # TODO: render display in scale for non-4k monitors
             self.window_height = 1000
             self.window_width = 1200
-        elif platform == "darwin":
+        elif SysUtils.is_macos():
             self.window_height = 900
             self.window_width = 1000
         else:
@@ -100,5 +100,13 @@ class VideoLoom(tk.Tk):
 
 # start app
 root = VideoLoom()
-root.iconbitmap(FileUtils.get_file_path(os.path.join('img', 'app_logo.ico')))
+
+# set app logo in UI
+if SysUtils.is_running_in_pyinstaller_bundle():
+    root.iconbitmap(FileUtils.get_bundled_file_path(
+        os.path.join('app_logo.ico')))
+else:
+    root.iconbitmap(FileUtils.get_file_path(
+        os.path.join('img', 'app_logo.ico')))
+
 root.mainloop()
