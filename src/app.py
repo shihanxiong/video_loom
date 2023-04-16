@@ -101,6 +101,7 @@ class VideoLoom(tk.Tk):
 # start app
 root = VideoLoom()
 
+# set app logo in UI
 if SysUtils.is_running_in_pyinstaller_bundle():
     root.iconbitmap(FileUtils.get_bundled_file_path(
         os.path.join('app_logo.ico')))
