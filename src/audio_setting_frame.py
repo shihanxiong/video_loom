@@ -47,7 +47,7 @@ class AudioSettingFrame(ttk.Frame):
         self.component_refresh()
 
     def component_refresh(self, _=None):
-        if os.path.exists(FileUtils.get_file_path(self.get_audio_preview_filename())):
+        if self.has_audio_preview():
             self.generate_audio_preview_button["state"] = "disable"
             self.remove_audio_preview_button["state"] = "enable"
         else:
@@ -60,12 +60,20 @@ class AudioSettingFrame(ttk.Frame):
     def get_audio_preview_filename(self):
         return f"audio_preview_{self.get_audio_track()}.mp3"
 
+    def get_audio_preview(self):
+        return FileUtils.get_file_path(self.get_audio_preview_filename())
+
+    def has_audio_preview(self):
+        return os.path.exists(self.get_audio_preview())
+
     def remove_audio_preview(self):
-        if os.path.exists(FileUtils.get_file_path(self.get_audio_preview_filename())):
+        if self.has_audio_preview():
             os.remove(self.get_audio_preview_filename())
         self.component_refresh()
 
     def generate_audio_preview(self):
+        self.master.master.status_component.set_and_log_status(
+            "Generating audio preview, please wait ...")
         video_list = self.master.master.video_component.video_list
 
         # no videos imported
@@ -80,3 +88,5 @@ class AudioSettingFrame(ttk.Frame):
 
         # refresh app state
         self.master.master.app_refresh()
+        self.master.master.status_component.set_and_log_status(
+            f"Audio preview generated for audio track {self.get_audio_track()}")

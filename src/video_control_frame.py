@@ -64,6 +64,9 @@ class VideoControlFrame(ttk.Frame):
                 video_player.seek(int(self.progress_slider.get()) + value)
             self.progress_value.set(self.progress_slider.get() + value)
 
+        # audio
+        self.master.video_renderer_component.seek(self.progress_value.get())
+
     def update_duration(self, event):
         if self.video_player != None:
             duration = self.video_player.video_info()["duration"]
