@@ -18,11 +18,11 @@ class VideoImportFrame(ttk.Frame):
         self.clear_video_list_button = ttk.Button(
             self, text="Clear video list", padding=(10), command=self.clear_video_list)
         self.clear_video_list_button.grid(row=1, column=1, sticky="EW")
-        self.play_all_videos_button = ttk.Button(self, text="Play all videos", state="disable", padding=(
-            10), command=self.master.video_renderer_component.play_all)
+        self.play_all_videos_button = ttk.Button(
+            self, text="Play all videos", state="disable", padding=(10), command=self.play_all)
         self.play_all_videos_button.grid(row=1, column=2, sticky="EW")
-        self.pause_all_videos_button = ttk.Button(self, text="Pause all videos", state="disable", padding=(
-            10), command=self.master.video_renderer_component.pause_all)
+        self.pause_all_videos_button = ttk.Button(
+            self, text="Pause all videos", state="disable", padding=(10), command=self.pause_all)
         self.pause_all_videos_button.grid(row=1, column=3, sticky="EW")
 
     def refresh(self):
@@ -64,3 +64,13 @@ class VideoImportFrame(ttk.Frame):
     def set_buttons_status(self, buttons, status):
         for button in buttons:
             button["state"] = status
+
+    def play_all(self):
+        self.set_buttons_status([self.play_all_videos_button], "disable")
+        self.set_buttons_status([self.pause_all_videos_button], "enable")
+        self.master.video_renderer_component.play_all()
+
+    def pause_all(self):
+        self.set_buttons_status([self.pause_all_videos_button], "disable")
+        self.set_buttons_status([self.play_all_videos_button], "enable")
+        self.master.video_renderer_component.pause_all()
