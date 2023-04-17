@@ -4,6 +4,7 @@
 
 - application now disables play / pause buttons to dis-allow double clicking
 - fixed the issue where removing audio preview is not allowed once audio mixer is loaded
+- fixed the issue when filenames are not escaped while generating audios
 
 ### v1.5.0
 
