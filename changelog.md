@@ -1,5 +1,9 @@
 # Versions
 
+### v1.5.1
+
+- application now disables play / pause buttons to disallow double clicking
+
 ### v1.5.0
 
 - updated readme w/ updated UI
