@@ -70,9 +70,16 @@ class AudioSettingFrame(ttk.Frame):
         return os.path.exists(self.get_audio_preview())
 
     def remove_audio_preview(self):
+        # pause all videos
+        self.master.master.video_component.video_import_component.pause_all()
+
         if self.has_audio_preview():
-            os.remove(self.get_audio_preview_filename())
+            self.master.master.video_component.video_renderer_component.unload_audio_preview()
+            os.remove(FileUtils.get_file_path(
+                self.get_audio_preview_filename()))
         self.component_refresh()
+        self.master.master.status_component.set_and_log_status(
+            f"Audio preview deleted for audio track {self.get_audio_track()}")
 
     def generate_audio_preview(self):
         self.master.master.status_component.set_and_log_status(

@@ -2,7 +2,8 @@
 
 ### v1.5.1
 
-- application now disables play / pause buttons to disallow double clicking
+- application now disables play / pause buttons to dis-allow double clicking
+- fixed the issue where removing audio preview is not allowed once audio mixer is loaded
 
 ### v1.5.0
 

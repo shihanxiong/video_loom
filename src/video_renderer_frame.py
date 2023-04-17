@@ -51,6 +51,12 @@ class VideoRendererFrame(ttk.Frame):
         except Exception as err:
             logging.error(err)
 
+    def unload_audio_preview(self):
+        try:
+            self.mixer.music.unload()
+        except Exception as err:
+            logging.error(err)
+
     def play_all(self):
         self.is_playing = True
         self.master.master.status_component.set_and_log_status(
