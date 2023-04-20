@@ -9,7 +9,6 @@
 # testing
 /coverage
 /src/Test/__pycache__/
-/src/test/
 
 # production
 src/build/
@@ -30,3 +29,6 @@ yarn-error.log*
 *.aac
 *.wav
 *.log
+
+# do not ignore
+!/src/test/*.mp4
