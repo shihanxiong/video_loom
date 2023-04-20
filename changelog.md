@@ -1,6 +1,6 @@
 # Versions
 
-### v1.6.0
+### Unreleased
 
 - added application menu
 

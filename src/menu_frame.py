@@ -12,15 +12,16 @@ class MenuFrame(ttk.Frame):
         self.master.config(menu=menubar)
 
         # file
-        file_menu = Menu(menubar)
+        file_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
+        # file_menu.add_separator()
         file_menu.add_command(
             label='Exit',
             command=self.master.destroy,
         )
-        file_menu.add_separator()
 
         # segment
-        segment_menu = Menu(menubar)
+        segment_menu = Menu(
+            menubar, font=self.master.default_font, tearoff="off")
         segment_menu.add_command(
             label='create random segments',
             command=self.show_create_random_segments_modal
@@ -49,7 +50,7 @@ class MenuFrame(ttk.Frame):
     def show_create_random_segments_modal(self):
         modal = Toplevel(self.master)
         modal.title("create random segments")
-        modal.geometry("400x250")
+        modal.geometry("450x220")
 
         # layout
         modal.rowconfigure(0, weight=0)
