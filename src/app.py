@@ -22,23 +22,23 @@ class VideoLoom(tk.Tk):
 
         # app config
         file_utils = FileUtils()
-        self.title(
-            f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
+        self.title(f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         style = ttk.Style(self)
-        style.configure('.', font=self.default_font)
-        self.option_add('*TCombobox*Listbox.font', self.default_font)
+        style.configure(".", font=self.default_font)
+        self.option_add("*TCombobox*Listbox.font", self.default_font)
 
         # initialize logging
         log_formatter = logging.Formatter(
-            fmt="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p')
+            fmt="%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s",
+            datefmt="%m/%d/%Y %I:%M:%S %p",
+        )
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
 
         # file handler
-        file_handler = logging.FileHandler(
-            f"{TimeUtils.get_current_date()}.log")
+        file_handler = logging.FileHandler(f"{TimeUtils.get_current_date()}.log")
         file_handler.setFormatter(log_formatter)
         root_logger.addHandler(file_handler)
 
@@ -60,11 +60,9 @@ class VideoLoom(tk.Tk):
         self.menu_component = MenuFrame(self)
         self.video_component = VideoFrame(self, padding=component_padding)
         self.video_component.grid(row=0, sticky="NEWS")
-        self.settings_component = SettingsFrame(
-            self, padding=component_padding)
+        self.settings_component = SettingsFrame(self, padding=component_padding)
         self.settings_component.grid(row=1, sticky="SEW")
-        self.timeline_component = TimelineFrame(
-            self, padding=component_padding)
+        self.timeline_component = TimelineFrame(self, padding=component_padding)
         self.timeline_component.grid(row=2, sticky="SEW")
         self.status_component = StatusFrame(self, padding=component_padding)
         self.status_component.grid(row=3, sticky="SEW")
@@ -78,7 +76,7 @@ class VideoLoom(tk.Tk):
             self.settings_component,
             self.timeline_component,
             self.status_component,
-            self.toolbar_component
+            self.toolbar_component,
         ]
 
     # Setup high resolution in windows 10 (high DPI does not apply to MacOS)
@@ -107,10 +105,8 @@ root = VideoLoom()
 
 # set app logo in UI
 if SysUtils.is_running_in_pyinstaller_bundle():
-    root.iconbitmap(FileUtils.get_bundled_file_path(
-        os.path.join('app_logo.ico')))
+    root.iconbitmap(FileUtils.get_bundled_file_path(os.path.join("app_logo.ico")))
 else:
-    root.iconbitmap(FileUtils.get_file_path(
-        os.path.join('img', 'app_logo.ico')))
+    root.iconbitmap(FileUtils.get_file_path(os.path.join("img", "app_logo.ico")))
 
 root.mainloop()
