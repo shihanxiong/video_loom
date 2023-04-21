@@ -1,5 +1,13 @@
 # Versions
 
+### v1.6.0
+
+- added application menu
+- now application supports random :game_die: timeline generation with
+  - number of videos
+  - minutes per segment
+  - total number of segments
+
 ### v1.5.1
 
 - application now disables play / pause buttons to dis-allow double clicking

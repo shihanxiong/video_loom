@@ -4,6 +4,7 @@ import tkinter as tk
 import logging
 from tkinter import ttk
 from windows import set_dpi_awareness
+from menu_frame import MenuFrame
 from video_frame import VideoFrame
 from settings_frame import SettingsFrame
 from timeline_frame import TimelineFrame
@@ -56,6 +57,7 @@ class VideoLoom(tk.Tk):
 
         # components
         component_padding = (10, 10)
+        self.menu_component = MenuFrame(self)
         self.video_component = VideoFrame(self, padding=component_padding)
         self.video_component.grid(row=0, sticky="NEWS")
         self.settings_component = SettingsFrame(
@@ -71,6 +73,7 @@ class VideoLoom(tk.Tk):
 
         # register all components
         self.components = [
+            self.menu_component,
             self.video_component,
             self.settings_component,
             self.timeline_component,
@@ -100,6 +103,7 @@ class VideoLoom(tk.Tk):
 
 # start app
 root = VideoLoom()
+
 
 # set app logo in UI
 if SysUtils.is_running_in_pyinstaller_bundle():
