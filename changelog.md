@@ -3,7 +3,7 @@
 ### v1.6.0
 
 - added application menu
-- now application supports random timeline generation with
+- now application supports random :game_die: timeline generation with
   - number of videos
   - minutes per segment
   - total number of segments
