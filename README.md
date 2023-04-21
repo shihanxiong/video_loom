@@ -99,11 +99,11 @@ $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
 
 ## Testing
 
-> Ensure `pytest` is installed
+> Ensure `pytest, freezegun` are installed
 
 ```bash
 # install pytest
-$pip3 install pytest
+$pip3 install pytest freezegun
 ```
 
 > Running tests
@@ -124,7 +124,8 @@ $pip3 install pyinstaller
 > Generate executables (note: executables will automatically be determined by the OS. e.g. `.exe` for Windows and `.app` for MacOS)
 
 ```bash
-$./src/bundle.sh
+$cd src
+$./bundle.sh <app.win32.spec | app.macos.spec>
 ```
 
 ## Change log
