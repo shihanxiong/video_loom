@@ -81,19 +81,31 @@ def test_validate_timeline():
 
 
 def test_generate_random_segments():
-    TimelineUtils.generate_random_segments(
-        num_segments=10, minutes_per_segment=3, num_videos=3
-    )
+    random_sengments_text = TimelineUtils.generate_random_segments(
+        num_segments=10, min_per_segment=3, num_videos=3)
+    lines = random_sengments_text.splitlines()
+    assert (len(lines) == 10)
+    for i in range(1, 10):
+        assert (lines[i].split(",")[0] != lines[i - 1].split(",")[0])
 
 
 def test_generate_next_video_num():
-    num_video = 3
+    num_videos = 3
     prev = 2
-    num = TimelineUtils.generate_next_video_num(num_video=num_video, prev=prev)
+    num = TimelineUtils.generate_next_video_num(
+        num_videos=num_videos, prev=prev)
     assert num != prev
     prev = num
-    num = TimelineUtils.generate_next_video_num(num_video=num_video, prev=prev)
+    num = TimelineUtils.generate_next_video_num(
+        num_videos=num_videos, prev=prev)
     assert num != prev
     prev = num
-    num = TimelineUtils.generate_next_video_num(num_video=num_video, prev=prev)
+    num = TimelineUtils.generate_next_video_num(
+        num_videos=num_videos, prev=prev)
     assert num != prev
+
+
+def test_generate_next_segment_time():
+    next_segment_time = TimelineUtils.generate_next_segment_time(3, 6)
+    assert (next_segment_time > (3 + 6 - 1) * 60)
+    assert (next_segment_time < (3 + 6 + 1) * 60)

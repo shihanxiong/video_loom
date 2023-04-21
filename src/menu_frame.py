@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, Menu, Toplevel, Entry
 from timeline_utils import TimelineUtils
+from sys_utils import SysUtils
 
 
 # videos input
@@ -17,13 +18,16 @@ class MenuFrame(ttk.Frame):
         # file_menu.add_separator()
         file_menu.add_command(
             label="Exit",
+            font=self.master.default_font,
             command=self.master.destroy,
         )
 
         # segment
-        segment_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
+        segment_menu = Menu(
+            menubar, font=self.master.default_font, tearoff="off")
         segment_menu.add_command(
             label="create random segments",
+            font=self.master.default_font,
             command=self.show_create_random_segments_modal,
         )
 
@@ -42,7 +46,11 @@ class MenuFrame(ttk.Frame):
     def show_create_random_segments_modal(self):
         self.modal = Toplevel(self.master)
         self.modal.title("create random segments")
-        self.modal.geometry("380x180")
+
+        if SysUtils.is_macos():
+            self.modal.geometry("380x180")
+        elif SysUtils.is_win32():
+            self.modal.geometry("480x220")
 
         # layout
         self.modal.rowconfigure(0, weight=0)
@@ -57,21 +65,24 @@ class MenuFrame(ttk.Frame):
             self.modal, text="Number of videos", padding=(10)
         )
         number_of_videos_label.grid(row=0, column=0, sticky="W")
-        self.number_of_videos_input = Entry(self.modal)
+        self.number_of_videos_input = Entry(
+            self.modal, font=self.master.default_font)
         self.number_of_videos_input.grid(row=0, column=1)
 
         number_of_segments_label = ttk.Label(
             self.modal, text="Number of segments", padding=(10)
         )
         number_of_segments_label.grid(row=1, column=0, sticky="W")
-        self.number_of_segments_input = Entry(self.modal)
+        self.number_of_segments_input = Entry(
+            self.modal, font=self.master.default_font)
         self.number_of_segments_input.grid(row=1, column=1)
 
         minutes_per_segment_label = ttk.Label(
             self.modal, text="Minutes per segment", padding=(10)
         )
         minutes_per_segment_label.grid(row=2, column=0, sticky="W")
-        self.minutes_per_segment_input = Entry(self.modal)
+        self.minutes_per_segment_input = Entry(
+            self.modal, font=self.master.default_font)
         self.minutes_per_segment_input.grid(row=2, column=1)
 
         confirm_button = ttk.Button(
@@ -82,12 +93,12 @@ class MenuFrame(ttk.Frame):
         )
         confirm_button.grid(row=3, column=0, sticky="E")
         cancel_button = ttk.Button(
-            self.modal, text="Cancel", padding=(20), command=self.close_modal
+            self.modal, text="Cancel", padding=(10), command=self.close_modal
         )
         cancel_button.grid(row=3, column=1, sticky="W")
 
     def generate_segments(self):
-        randon_segments_text = TimelineUtils.generate_random_segments(
+        random_segments_text = TimelineUtils.generate_random_segments(
             num_segments=self.number_of_segments_input.get(),
             minutes_per_segment=self.minutes_per_segment_input.get(),
             num_videos=self.number_of_videos_input.get(),

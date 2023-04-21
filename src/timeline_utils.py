@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import random
 
 
@@ -18,7 +18,8 @@ class TimelineUtils:
         for timeline in timeline_text.splitlines():
             if timeline != "":
                 video, start, end = timeline.strip().split(",")
-                parsed_timeline_arr.append([video.strip(), start.strip(), end.strip()])
+                parsed_timeline_arr.append(
+                    [video.strip(), start.strip(), end.strip()])
 
         return parsed_timeline_arr
 
@@ -31,8 +32,10 @@ class TimelineUtils:
 
             for idx, parsed_timeline in enumerate(parsed_timeline_arr):
                 video, start, end = parsed_timeline
-                start_in_time = datetime.strptime(start, "%H:%M:%S").time()
-                end_in_time = datetime.strptime(end, "%H:%M:%S").time()
+                start_in_time = datetime.datetime.strptime(
+                    start, "%H:%M:%S").time()
+                end_in_time = datetime.datetime.strptime(
+                    end, "%H:%M:%S").time()
 
                 if start_in_time >= end_in_time:
                     return self._START_TIME_AFTER_END_TIME_ERROR_MESSAGE
@@ -47,19 +50,35 @@ class TimelineUtils:
         return None
 
     @staticmethod
-    def generate_random_segments(num_segments, minutes_per_segment, num_videos):
-        for i in range(num_segments + 1):
-            print(i)
+    def generate_random_segments(num_segments, min_per_segment, num_videos):
+        prev = None
+        start = 0
+        end = 0
+        result = ""
+
+        for i in range(num_segments):
+            next_video_num = TimelineUtils.generate_next_video_num(
+                num_videos=num_videos, prev=prev)
+            end = str(datetime.timedelta(seconds=round(TimelineUtils.generate_next_segment_time(
+                min_per_segment=min_per_segment, prev_in_min=(i * min_per_segment)))))
+
+            result += f"{next_video_num},{start},{end}\n"
+
+            prev = next_video_num
+            start = end
+
+        return result
 
     @staticmethod
-    def generate_next_video_num(num_video, prev):
-        num = random.randint(1, num_video)
+    def generate_next_video_num(num_videos, prev):
+        num = random.randint(1, num_videos)
 
         if num == prev:
-            TimelineUtils.generate_next_video_num(num_video=num_video, prev=prev)
+            return TimelineUtils.generate_next_video_num(num_videos=num_videos, prev=prev)
         else:
             return num
 
     @staticmethod
-    def generate_next_segment_time(minutes_per_segment, prev):
-        margin = random.randint(-30, 30)
+    def generate_next_segment_time(min_per_segment, prev_in_min):
+        margin_in_sec = random.randint(-30, 30)
+        return (prev_in_min + min_per_segment) * 60 + margin_in_sec
