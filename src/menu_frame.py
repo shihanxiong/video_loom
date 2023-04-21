@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, Menu, Toplevel, Entry
+from tkinter import ttk, Menu, Toplevel, Entry, END
 from timeline_utils import TimelineUtils
 from sys_utils import SysUtils
 
@@ -99,10 +99,12 @@ class MenuFrame(ttk.Frame):
 
     def generate_segments(self):
         random_segments_text = TimelineUtils.generate_random_segments(
-            num_segments=self.number_of_segments_input.get(),
-            minutes_per_segment=self.minutes_per_segment_input.get(),
-            num_videos=self.number_of_videos_input.get(),
+            num_segments=int(self.number_of_segments_input.get()),
+            min_per_segment=int(self.minutes_per_segment_input.get()),
+            num_videos=int(self.number_of_videos_input.get()),
         )
+        self.master.timeline_component.timeline_text.insert(
+            END, random_segments_text)
         self.close_modal()
 
     def close_modal(self):

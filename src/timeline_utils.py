@@ -52,7 +52,7 @@ class TimelineUtils:
     @staticmethod
     def generate_random_segments(num_segments, min_per_segment, num_videos):
         prev = None
-        start = 0
+        start = "0:00:00"
         end = 0
         result = ""
 
