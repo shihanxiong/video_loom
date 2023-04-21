@@ -50,7 +50,7 @@ class MenuFrame(ttk.Frame):
         if SysUtils.is_macos():
             self.modal.geometry("380x180")
         elif SysUtils.is_win32():
-            self.modal.geometry("480x220")
+            self.modal.geometry("520x260")
 
         # layout
         self.modal.rowconfigure(0, weight=0)
@@ -62,7 +62,7 @@ class MenuFrame(ttk.Frame):
 
         # props
         number_of_videos_label = ttk.Label(
-            self.modal, text="Number of videos", padding=(10)
+            self.modal, text="Number of videos", padding=(20)
         )
         number_of_videos_label.grid(row=0, column=0, sticky="W")
         self.number_of_videos_input = Entry(
@@ -70,7 +70,7 @@ class MenuFrame(ttk.Frame):
         self.number_of_videos_input.grid(row=0, column=1)
 
         number_of_segments_label = ttk.Label(
-            self.modal, text="Number of segments", padding=(10)
+            self.modal, text="Number of segments", padding=(20)
         )
         number_of_segments_label.grid(row=1, column=0, sticky="W")
         self.number_of_segments_input = Entry(
@@ -78,7 +78,7 @@ class MenuFrame(ttk.Frame):
         self.number_of_segments_input.grid(row=1, column=1)
 
         minutes_per_segment_label = ttk.Label(
-            self.modal, text="Minutes per segment", padding=(10)
+            self.modal, text="Minutes per segment", padding=(20)
         )
         minutes_per_segment_label.grid(row=2, column=0, sticky="W")
         self.minutes_per_segment_input = Entry(

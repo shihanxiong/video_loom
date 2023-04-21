@@ -1,5 +1,9 @@
 # Versions
 
+### v1.6.1
+
+- adjusted segment modal size
+
 ### v1.6.0
 
 - added application menu
