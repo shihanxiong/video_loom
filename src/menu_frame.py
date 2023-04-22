@@ -1,4 +1,5 @@
 import tkinter as tk
+import logging
 from tkinter import ttk, Menu, Toplevel, Entry, END
 from timeline_utils import TimelineUtils
 from sys_utils import SysUtils
@@ -98,14 +99,19 @@ class MenuFrame(ttk.Frame):
         cancel_button.grid(row=3, column=1, sticky="W")
 
     def generate_segments(self):
-        random_segments_text = TimelineUtils.generate_random_segments(
-            num_segments=int(self.number_of_segments_input.get()),
-            min_per_segment=int(self.minutes_per_segment_input.get()),
-            num_videos=int(self.number_of_videos_input.get()),
-        )
-        self.master.timeline_component.timeline_text.insert(
-            END, random_segments_text)
-        self.close_modal()
+        try:
+            random_segments_text = TimelineUtils.generate_random_segments(
+                num_segments=int(self.number_of_segments_input.get()),
+                min_per_segment=int(self.minutes_per_segment_input.get()),
+                num_videos=int(self.number_of_videos_input.get()),
+            )
+            self.master.timeline_component.timeline_text.insert(
+                END, random_segments_text)
+            self.master.status_component.set_and_log_status(
+                "random segments generated")
+            self.close_modal()
+        except Exception as err:
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def close_modal(self):
         self.modal.destroy()

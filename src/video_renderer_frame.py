@@ -49,13 +49,13 @@ class VideoRendererFrame(ttk.Frame):
             else:
                 self.mixer.music.stop()
         except Exception as err:
-            logging.error(err)
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def unload_audio_preview(self):
         try:
             self.mixer.music.unload()
         except Exception as err:
-            logging.error(err)
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def play_all(self):
         self.is_playing = True

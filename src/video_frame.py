@@ -132,7 +132,7 @@ class VideoFrame(ttk.Frame):
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :(")
-            logging.error(err)
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
         # logging
         end_time = datetime.now()
