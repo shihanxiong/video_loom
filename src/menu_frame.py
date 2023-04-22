@@ -1,4 +1,5 @@
 import tkinter as tk
+import logging
 from tkinter import ttk, Menu, Toplevel, Entry, END
 from timeline_utils import TimelineUtils
 from sys_utils import SysUtils
@@ -50,7 +51,7 @@ class MenuFrame(ttk.Frame):
         if SysUtils.is_macos():
             self.modal.geometry("380x180")
         elif SysUtils.is_win32():
-            self.modal.geometry("480x220")
+            self.modal.geometry("520x260")
 
         # layout
         self.modal.rowconfigure(0, weight=0)
@@ -62,7 +63,7 @@ class MenuFrame(ttk.Frame):
 
         # props
         number_of_videos_label = ttk.Label(
-            self.modal, text="Number of videos", padding=(10)
+            self.modal, text="Number of videos", padding=(20)
         )
         number_of_videos_label.grid(row=0, column=0, sticky="W")
         self.number_of_videos_input = Entry(
@@ -70,7 +71,7 @@ class MenuFrame(ttk.Frame):
         self.number_of_videos_input.grid(row=0, column=1)
 
         number_of_segments_label = ttk.Label(
-            self.modal, text="Number of segments", padding=(10)
+            self.modal, text="Number of segments", padding=(20)
         )
         number_of_segments_label.grid(row=1, column=0, sticky="W")
         self.number_of_segments_input = Entry(
@@ -78,7 +79,7 @@ class MenuFrame(ttk.Frame):
         self.number_of_segments_input.grid(row=1, column=1)
 
         minutes_per_segment_label = ttk.Label(
-            self.modal, text="Minutes per segment", padding=(10)
+            self.modal, text="Minutes per segment", padding=(20)
         )
         minutes_per_segment_label.grid(row=2, column=0, sticky="W")
         self.minutes_per_segment_input = Entry(
@@ -98,14 +99,19 @@ class MenuFrame(ttk.Frame):
         cancel_button.grid(row=3, column=1, sticky="W")
 
     def generate_segments(self):
-        random_segments_text = TimelineUtils.generate_random_segments(
-            num_segments=int(self.number_of_segments_input.get()),
-            min_per_segment=int(self.minutes_per_segment_input.get()),
-            num_videos=int(self.number_of_videos_input.get()),
-        )
-        self.master.timeline_component.timeline_text.insert(
-            END, random_segments_text)
-        self.close_modal()
+        try:
+            random_segments_text = TimelineUtils.generate_random_segments(
+                num_segments=int(self.number_of_segments_input.get()),
+                min_per_segment=int(self.minutes_per_segment_input.get()),
+                num_videos=int(self.number_of_videos_input.get()),
+            )
+            self.master.timeline_component.timeline_text.insert(
+                END, random_segments_text)
+            self.master.status_component.set_and_log_status(
+                "random segments generated")
+            self.close_modal()
+        except Exception as err:
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def close_modal(self):
         self.modal.destroy()
