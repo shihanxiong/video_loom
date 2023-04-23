@@ -12,6 +12,7 @@ from file_utils import FileUtils
 from timeline_utils import TimelineUtils
 from audio_utils import AudioUtils
 from sys_utils import SysUtils
+from video_utils import VideoUtils
 
 
 # videos input
@@ -24,10 +25,12 @@ class VideoFrame(ttk.Frame):
         self.video_list = []
         self.trimmed_video_list = []
         self.video_label_text = tk.StringVar(
-            value=f"Videos {len(self.video_list)} of 4")
+            value=f"Videos {len(self.video_list)} of 4"
+        )
         self.output_directory = os.getcwd()
         self.output_file_name = tk.StringVar(
-            value=f"{TimeUtils.get_current_timestamp()}.mp4")
+            value=f"{TimeUtils.get_current_timestamp()}.mp4"
+        )
         self.output_width = 0
         self.output_height = 0
         self.is_filename_escaped = False
@@ -44,13 +47,11 @@ class VideoFrame(ttk.Frame):
             self.columnconfigure(c_idx, weight=1)
 
         # video label
-        video_label = ttk.Label(
-            self, textvariable=self.video_label_text, padding=(10))
+        video_label = ttk.Label(self, textvariable=self.video_label_text, padding=(10))
         video_label.grid(row=0, columnspan=4, sticky="N")
 
         # video rendering
-        self.video_renderer_component = VideoRendererFrame(
-            self, padding=(10, 0))
+        self.video_renderer_component = VideoRendererFrame(self, padding=(10, 0))
         self.video_renderer_component.grid(row=2, columnspan=4, sticky="NEWS")
 
         # video import / clear
@@ -65,12 +66,13 @@ class VideoFrame(ttk.Frame):
         self.components = [
             self.video_import_component,
             self.video_renderer_component,
-            self.video_control_component
+            self.video_control_component,
         ]
 
     def refresh(self):
         self.video_label_text.set(
-            f"Videos {len(self.video_list)} of {self.max_num_of_videos}")
+            f"Videos {len(self.video_list)} of {self.max_num_of_videos}"
+        )
         logging.debug(f"imported videos {self.video_list}")
 
         for component in self.components:
@@ -94,7 +96,8 @@ class VideoFrame(ttk.Frame):
         start_time = datetime.now()
         logging.info("kicking off video processing, hang tight")
         logging.info(
-            f'using audio track {self.master.settings_component.audio_setting_component.get_audio_track()}')
+            f"using audio track {self.master.settings_component.audio_setting_component.get_audio_track()}"
+        )
         logging.info("================timeline start================")
         logging.info(self.master.timeline_component.get_timeline_text())
         logging.info("================timeline end==================")
@@ -104,19 +107,25 @@ class VideoFrame(ttk.Frame):
             # validate timeline
             timeline_utils = TimelineUtils()
             error = timeline_utils.validate_timeline(
-                self.master.timeline_component.get_timeline_text())
+                self.master.timeline_component.get_timeline_text()
+            )
 
             if error is None:
-                self.master.status_component.set_and_log_status(
-                    "timeline validated")
+                self.master.status_component.set_and_log_status("timeline validated")
             else:
                 self.master.status_component.set_and_log_status(error)
                 return
 
             # determine processing speed
-            self.ffmpeg_preset_arg = f"-preset {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
+            ffmpeg_preset_value = (
+                self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()
+            )
+            self.ffmpeg_preset_arg = f"-preset {ffmpeg_preset_value}"
+            self.ffmpeg_nvenc_preset_arg = f"-preset {VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)}"
+
             self.master.status_component.set_and_log_status(
-                f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}")
+                f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
+            )
 
             # trim videos
             self.process_trimmed_videos()
@@ -131,13 +140,15 @@ class VideoFrame(ttk.Frame):
             self.finalize_video(output_file, output_sound)
         except Exception as err:
             self.master.status_component.set_and_log_status(
-                "An error occurred while generating video :(")
+                "An error occurred while generating video :("
+            )
             logging.error(f"{self.__class__.__name__}: {str(err)}")
 
         # logging
         end_time = datetime.now()
         self.master.status_component.set_and_log_status(
-            f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds")
+            f"video is ready! Taking total of {round((end_time - start_time).total_seconds(), 2)} seconds"
+        )
         self.master.app_refresh()
 
     def calculate_output_resolutions(self):
@@ -153,22 +164,22 @@ class VideoFrame(ttk.Frame):
             self.output_height = max(self.output_height, int(height))
 
         self.master.status_component.set_and_log_status(
-            f"output resolution is determined at {self.output_width} x {self.output_height}")
+            f"output resolution is determined at {self.output_width} x {self.output_height}"
+        )
 
     def process_trimmed_videos(self):
         timeline_utils = TimelineUtils()
         parsed_timeline_arr = timeline_utils.parse_timeline(
-            self.master.timeline_component.get_timeline_text())
+            self.master.timeline_component.get_timeline_text()
+        )
 
         for idx, timeline in enumerate(parsed_timeline_arr):
             video, start, end = timeline
-            trimmed_output = os.path.join(
-                self.output_directory, f"trimmed_{idx}.mp4")
+            trimmed_output = os.path.join(self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
-            cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+            cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
             subprocess.check_output(cmd, shell=True)
-        self.master.status_component.set_and_log_status(
-            "completed trimming videos")
+        self.master.status_component.set_and_log_status("completed trimming videos")
 
     def concatenate_trimmed_videos(self):
         output_file = os.path.join(self.output_directory, "output.mp4")
@@ -185,25 +196,29 @@ class VideoFrame(ttk.Frame):
         cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
-            "completed concatenating trimmed videos")
+            "completed concatenating trimmed videos"
+        )
 
         return output_file
 
     def process_audio(self):
         output_sound = os.path.join(self.output_directory, "audio.aac")
-        input_video = self.video_list[self.master.settings_component.audio_setting_component.get_audio_track(
-        ) - 1]
+        input_video = self.video_list[
+            self.master.settings_component.audio_setting_component.get_audio_track() - 1
+        ]
         AudioUtils.generate_aac_from_mp4(
-            input_video, output_sound, self.ffmpeg_preset_arg)
+            input_video, output_sound, self.ffmpeg_preset_arg
+        )
         self.master.status_component.set_and_log_status(
-            f"completed processing {output_sound} from video {input_video}")
+            f"completed processing {output_sound} from video {input_video}"
+        )
 
         return output_sound
 
     def finalize_video(self, output_file, output_sound):
-        final_file = os.path.join(
-            self.output_directory, self.output_file_name.get())
+        final_file = os.path.join(self.output_directory, self.output_file_name.get())
         cmd = f"ffmpeg -i {FileUtils.escape_file_name(output_file)} -i {FileUtils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(final_file)}"
         subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status(
-            "video is processed and ready for use")
+            "video is processed and ready for use"
+        )

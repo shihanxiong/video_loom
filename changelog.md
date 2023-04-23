@@ -3,6 +3,7 @@
 ### v1.6.1
 
 - adjusted segment modal size
+- ffmpeg now uses GPU acceleration instead of CPU
 
 ### v1.6.0
 
