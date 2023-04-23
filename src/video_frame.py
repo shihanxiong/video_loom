@@ -12,6 +12,7 @@ from file_utils import FileUtils
 from timeline_utils import TimelineUtils
 from audio_utils import AudioUtils
 from sys_utils import SysUtils
+from video_utils import VideoUtils
 
 
 # videos input
@@ -116,7 +117,12 @@ class VideoFrame(ttk.Frame):
                 return
 
             # determine processing speed
-            self.ffmpeg_preset_arg = f"-preset {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
+            ffmpeg_preset_value = (
+                self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()
+            )
+            self.ffmpeg_preset_arg = f"-preset {ffmpeg_preset_value}"
+            self.ffmpeg_nvenc_preset_arg = f"-preset {VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)}"
+
             self.master.status_component.set_and_log_status(
                 f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
             )
@@ -171,7 +177,7 @@ class VideoFrame(ttk.Frame):
             video, start, end = timeline
             trimmed_output = os.path.join(self.output_directory, f"trimmed_{idx}.mp4")
             self.trimmed_video_list.append(trimmed_output)
-            cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+            cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
             subprocess.check_output(cmd, shell=True)
         self.master.status_component.set_and_log_status("completed trimming videos")
 
