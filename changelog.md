@@ -3,7 +3,7 @@
 ### v1.6.1
 
 - adjusted segment modal size
-- ffmpeg now uses GPU acceleration instead of CPU
+- ffmpeg now uses GPU acceleration instead of CPU for video trimming
 - fixed an issue when video is paused, switching audio track does not play the audio preview
 
 ### v1.6.0
