@@ -43,7 +43,7 @@
 
 ### How to run the application
 
-- download the .exe (windows) or .app (macOS) file
+- download the .exe (windows) or .app (macOS) file [here](https://github.com/shihanxiong/video_loom/tree/main/src/dist)
 - open the application
 - click on "Import files" button and start importing videos (up to 4)
   - <img src="./img/user_guide_1.png" width="450" height="450" />
