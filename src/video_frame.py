@@ -130,14 +130,16 @@ class VideoFrame(ttk.Frame):
             # trim videos
             self.process_trimmed_videos()
 
-            # concatenate trimmed videos
-            output_file = self.concatenate_trimmed_videos()
+            # concanete only when at least 2 video segments
+            if len(self.trimmed_video_list) > 1:
+                # concatenate trimmed videos
+                output_file = self.concatenate_trimmed_videos()
 
-            # get audio from selected video
-            output_sound = self.process_audio()
+                # get audio from selected video
+                output_sound = self.process_audio()
 
-            # combine video and audio into final file
-            self.finalize_video(output_file, output_sound)
+                # combine video and audio into final file
+                self.finalize_video(output_file, output_sound)
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :("
