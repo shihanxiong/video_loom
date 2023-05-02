@@ -85,8 +85,11 @@ class VideoRendererFrame(ttk.Frame):
     def pause_all(self):
         self.is_playing = False
         self.master.master.status_component.set_and_log_status("pausing all videos")
-        for videoplayer in self.videoplayers:
-            videoplayer.pause()
+        try:
+            for videoplayer in self.videoplayers:
+                videoplayer.pause()
+        except Exception as err:
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
         # audio
         if (
