@@ -4,6 +4,7 @@
 
 - fix the encoder issue on macos (use `ffmpeg encoders` to find all availabe encoders)
 - now allows trimming a single segment
+- fix the error when audio is shorter than output.mp4
 
 ### v1.6.1
 
