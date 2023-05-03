@@ -4,6 +4,10 @@
   <img src="./img/app_logo.png" width="450" height="450" />
 </p>
 
+## What does video loom do?
+
+This is a portable / multi-platform application that helps you trim videos. Say you have 4 cameras shooting a scene simultaneously, video loom can cut these videos by timestamps and combine them into the dynamic final product, try it out!
+
 ## User guide
 
 > Before start using the software, be sure to have following softwares installed on your local machine.
