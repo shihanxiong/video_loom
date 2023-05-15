@@ -1,5 +1,9 @@
 # Versions
 
+### v1.6.3 (unreleased)
+
+- improved app error handling
+
 ### v1.6.2
 
 - fix the encoder issue on macos (use `ffmpeg encoders` to find all availabe encoders)

@@ -21,8 +21,7 @@ class VideoLoom(tk.Tk):
         self.app_configure()
 
         # app config
-        file_utils = FileUtils()
-        self.title(f"Video Loom - {file_utils.get_latest_version_from_changelog()}")
+        self.title(f"Video Loom - {FileUtils.get_latest_version_from_changelog()}")
         self.geometry(f"{self.window_width}x{self.window_height}")
         self.default_font = ("Courier", 14)
         style = ttk.Style(self)
