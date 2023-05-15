@@ -17,6 +17,8 @@ from video_utils import VideoUtils
 
 # videos input
 class VideoFrame(ttk.Frame):
+    _PROCESS_VIDEO_ERROR_MESSAGE = "An error occurred while generating video :("
+
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
@@ -170,60 +172,93 @@ class VideoFrame(ttk.Frame):
         )
 
     def process_trimmed_videos(self):
-        timeline_utils = TimelineUtils()
-        parsed_timeline_arr = timeline_utils.parse_timeline(
-            self.master.timeline_component.get_timeline_text()
-        )
+        try:
+            timeline_utils = TimelineUtils()
+            parsed_timeline_arr = timeline_utils.parse_timeline(
+                self.master.timeline_component.get_timeline_text()
+            )
 
-        for idx, timeline in enumerate(parsed_timeline_arr):
-            video, start, end = timeline
-            trimmed_output = os.path.join(self.output_directory, f"trimmed_{idx}.mp4")
-            self.trimmed_video_list.append(trimmed_output)
-            if SysUtils.is_win32():
-                cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
-            elif SysUtils.is_macos():
-                cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
-            subprocess.check_output(cmd, shell=True)
-        self.master.status_component.set_and_log_status("completed trimming videos")
+            for idx, timeline in enumerate(parsed_timeline_arr):
+                video, start, end = timeline
+                trimmed_output = os.path.join(
+                    self.output_directory, f"trimmed_{idx}.mp4"
+                )
+                self.trimmed_video_list.append(trimmed_output)
+                if SysUtils.is_win32():
+                    cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+                elif SysUtils.is_macos():
+                    cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+                subprocess.check_output(cmd, shell=True)
+            self.master.status_component.set_and_log_status("completed trimming videos")
+        except Exception as err:
+            self.master.status_component.set_and_log_status(
+                self._PROCESS_VIDEO_ERROR_MESSAGE
+            )
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def concatenate_trimmed_videos(self):
-        output_file = os.path.join(self.output_directory, "output.mp4")
-        input_args = ""
-        ffmpeg_filter = f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
+        try:
+            output_file = os.path.join(self.output_directory, "output.mp4")
+            input_args = ""
+            ffmpeg_filter = (
+                f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
+            )
 
-        for trimmed_video in self.trimmed_video_list:
-            input_args += f"-i {FileUtils.escape_file_name(trimmed_video)} "
+            for trimmed_video in self.trimmed_video_list:
+                input_args += f"-i {FileUtils.escape_file_name(trimmed_video)} "
 
-        if SysUtils.is_win32():
-            # remove the single quote ' if it's windows
-            ffmpeg_filter = f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
+            if SysUtils.is_win32():
+                # remove the single quote ' if it's windows
+                ffmpeg_filter = (
+                    f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
+                )
 
-        cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
-        subprocess.check_output(cmd, shell=True)
-        self.master.status_component.set_and_log_status(
-            "completed concatenating trimmed videos"
-        )
+            cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
+            subprocess.check_output(cmd, shell=True)
+            self.master.status_component.set_and_log_status(
+                "completed concatenating trimmed videos"
+            )
 
-        return output_file
+            return output_file
+        except Exception as err:
+            self.master.status_component.set_and_log_status(
+                self._PROCESS_VIDEO_ERROR_MESSAGE
+            )
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def process_audio(self):
-        output_sound = os.path.join(self.output_directory, "audio.aac")
-        input_video = self.video_list[
-            self.master.settings_component.audio_setting_component.get_audio_track() - 1
-        ]
-        AudioUtils.generate_aac_from_mp4(
-            input_video, output_sound, self.ffmpeg_preset_arg
-        )
-        self.master.status_component.set_and_log_status(
-            f"completed processing {output_sound} from video {input_video}"
-        )
+        try:
+            output_sound = os.path.join(self.output_directory, "audio.aac")
+            input_video = self.video_list[
+                self.master.settings_component.audio_setting_component.get_audio_track()
+                - 1
+            ]
+            AudioUtils.generate_aac_from_mp4(
+                input_video, output_sound, self.ffmpeg_preset_arg
+            )
+            self.master.status_component.set_and_log_status(
+                f"completed processing {output_sound} from video {input_video}"
+            )
 
-        return output_sound
+            return output_sound
+        except Exception as err:
+            self.master.status_component.set_and_log_status(
+                self._PROCESS_VIDEO_ERROR_MESSAGE
+            )
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def finalize_video(self, output_file, output_sound):
-        final_file = os.path.join(self.output_directory, self.output_file_name.get())
-        cmd = f"ffmpeg -i {FileUtils.escape_file_name(output_file)} -i {FileUtils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(final_file)}"
-        subprocess.check_output(cmd, shell=True)
-        self.master.status_component.set_and_log_status(
-            "video is processed and ready for use"
-        )
+        try:
+            final_file = os.path.join(
+                self.output_directory, self.output_file_name.get()
+            )
+            cmd = f"ffmpeg -i {FileUtils.escape_file_name(output_file)} -i {FileUtils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(final_file)}"
+            subprocess.check_output(cmd, shell=True)
+            self.master.status_component.set_and_log_status(
+                "video is processed and ready for use"
+            )
+        except Exception as err:
+            self.master.status_component.set_and_log_status(
+                self._PROCESS_VIDEO_ERROR_MESSAGE
+            )
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
