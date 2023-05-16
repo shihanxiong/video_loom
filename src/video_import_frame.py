@@ -60,11 +60,12 @@ class VideoImportFrame(ttk.Frame):
         self.master.master.status_component.set_and_log_status("video list cleared")
 
     def play_pause(self):
-        if self.is_playing == True:
-            self.master.video_renderer_component.pause_all()
-            self.play_pause_videos_button.config(text="Play all videos")
-            self.is_playing = False
-        else:
-            self.master.video_renderer_component.play_all()
-            self.play_pause_videos_button.config(text="Pause all videos")
-            self.is_playing = True
+        if self.play_pause_videos_button["state"] == "enable":
+            if self.is_playing == True:
+                self.master.video_renderer_component.pause_all()
+                self.play_pause_videos_button.config(text="Play all videos")
+                self.is_playing = False
+            else:
+                self.master.video_renderer_component.play_all()
+                self.play_pause_videos_button.config(text="Pause all videos")
+                self.is_playing = True
