@@ -14,7 +14,8 @@ This is a portable / multi-platform application that helps you trim videos. Say 
 >
 > windows - `chocolatey` and `ffmpeg`
 >
-> * for NVidia graphics cards users, the minimum required Nvidia driver for nvenc is 522.25 or newer
+> - for NVidia graphics cards users, the minimum required Nvidia driver for nvenc is 522.25 or newer
+> - python v3.9+
 >
 > mac - `ffmpeg`
 
