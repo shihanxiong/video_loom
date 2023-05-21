@@ -1,6 +1,6 @@
 # Versions
 
-### v1.6.3 (unreleased)
+### v1.6.3
 
 - improved app error handling
 - combined play / pause buttons into a single button
