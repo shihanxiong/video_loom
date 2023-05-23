@@ -1,5 +1,9 @@
 # Versions
 
+### v1.6.4
+
+- added support of +/- 10 seconds and +/- 30 seconds control buttons
+
 ### v1.6.3
 
 - improved app error handling
