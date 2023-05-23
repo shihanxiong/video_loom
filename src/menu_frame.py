@@ -24,12 +24,16 @@ class MenuFrame(ttk.Frame):
         )
 
         # segment
-        segment_menu = Menu(
-            menubar, font=self.master.default_font, tearoff="off")
+        segment_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
         segment_menu.add_command(
             label="create random segments",
             font=self.master.default_font,
             command=self.show_create_random_segments_modal,
+        )
+        segment_menu.add_command(
+            label="export YouTube timestamp",
+            font=self.master.default_font,
+            command=self.show_export_youtube_timestamp_modal,
         )
 
         menubar.add_cascade(label="File", menu=file_menu, underline=0)
@@ -65,37 +69,37 @@ class MenuFrame(ttk.Frame):
         number_of_videos_label = ttk.Label(
             self.modal, text="Number of videos", padding=(20)
         )
-        number_of_videos_label.grid(row=0, column=0, sticky="W")
-        self.number_of_videos_input = Entry(
-            self.modal, font=self.master.default_font)
-        self.number_of_videos_input.grid(row=0, column=1)
-
+        self.number_of_videos_input = Entry(self.modal, font=self.master.default_font)
         number_of_segments_label = ttk.Label(
             self.modal, text="Number of segments", padding=(20)
         )
-        number_of_segments_label.grid(row=1, column=0, sticky="W")
-        self.number_of_segments_input = Entry(
-            self.modal, font=self.master.default_font)
-        self.number_of_segments_input.grid(row=1, column=1)
-
+        self.number_of_segments_input = Entry(self.modal, font=self.master.default_font)
         minutes_per_segment_label = ttk.Label(
             self.modal, text="Minutes per segment", padding=(20)
         )
-        minutes_per_segment_label.grid(row=2, column=0, sticky="W")
         self.minutes_per_segment_input = Entry(
-            self.modal, font=self.master.default_font)
-        self.minutes_per_segment_input.grid(row=2, column=1)
-
+            self.modal, font=self.master.default_font
+        )
         confirm_button = ttk.Button(
             self.modal,
             text="Confirm",
             padding=(10),
             command=self.generate_segments,
         )
-        confirm_button.grid(row=3, column=0, sticky="E")
         cancel_button = ttk.Button(
             self.modal, text="Cancel", padding=(10), command=self.close_modal
         )
+
+        number_of_videos_label.grid(row=0, column=0, sticky="W")
+        self.number_of_videos_input.grid(row=0, column=1)
+
+        number_of_segments_label.grid(row=1, column=0, sticky="W")
+        self.number_of_segments_input.grid(row=1, column=1)
+
+        minutes_per_segment_label.grid(row=2, column=0, sticky="W")
+        self.minutes_per_segment_input.grid(row=2, column=1)
+
+        confirm_button.grid(row=3, column=0, sticky="E")
         cancel_button.grid(row=3, column=1, sticky="W")
 
     def generate_segments(self):
@@ -106,12 +110,69 @@ class MenuFrame(ttk.Frame):
                 num_videos=int(self.number_of_videos_input.get()),
             )
             self.master.timeline_component.timeline_text.insert(
-                END, random_segments_text)
-            self.master.status_component.set_and_log_status(
-                "random segments generated")
+                END, random_segments_text
+            )
+            self.master.status_component.set_and_log_status("random segments generated")
             self.close_modal()
         except Exception as err:
             logging.error(f"{self.__class__.__name__}: {str(err)}")
+
+    def show_export_youtube_timestamp_modal(self):
+        self.modal = Toplevel(self.master)
+        self.modal.title("export YouTube timestamp")
+
+        if SysUtils.is_macos():
+            self.modal.geometry("380x180")
+        elif SysUtils.is_win32():
+            self.modal.geometry("520x340")
+
+        # props
+        num_of_videos = len(self.master.video_component.video_list)
+        self.entries = []
+
+        self.modal.columnconfigure(0, weight=0)
+        self.modal.columnconfigure(1, weight=0)
+        self.modal.columnconfigure(2, weight=0)
+        for i in range(num_of_videos):
+            self.modal.rowconfigure(i, weight=0)
+            label = ttk.Label(self.modal, text=f"Label {i + 1}", padding=(20))
+            label.grid(row=i, column=0, sticky="EW")
+
+            entry = Entry(self.modal, font=self.master.default_font)
+            entry.grid(row=i, column=1, columnspan=2, sticky="EW")
+            self.entries.append(entry)
+
+        confirm_button = ttk.Button(
+            self.modal,
+            text="Copy to clipboard",
+            padding=(10),
+            command=self.export_youtube_timestamp,
+        )
+        cancel_button = ttk.Button(
+            self.modal, text="Cancel", padding=(10), command=self.close_modal
+        )
+
+        confirm_button.grid(row=num_of_videos, column=1, sticky="EW")
+        cancel_button.grid(row=num_of_videos, column=2, sticky="EW")
+
+    def export_youtube_timestamp(self):
+        timeline_text = self.master.timeline_component.get_timeline_text()
+
+        # get labels
+        labels = []
+        for entry in self.entries:
+            labels.append(entry.get())
+
+        # generate youtube timestamp
+        timestamp_text = TimelineUtils.generate_youtube_timestamp(timeline_text, labels)
+
+        # copy to clipboard
+        self.clipboard_clear()
+        self.clipboard_append(timestamp_text)
+        self.update()
+
+        # close modal
+        self.close_modal()
 
     def close_modal(self):
         self.modal.destroy()

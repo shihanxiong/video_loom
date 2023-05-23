@@ -13,37 +13,36 @@ class TimelineUtils:
     def __init__(self):
         pass
 
-    def parse_timeline(self, timeline_text):
+    @staticmethod
+    def parse_timeline(timeline_text):
         parsed_timeline_arr = []
         for timeline in timeline_text.splitlines():
             if timeline != "":
                 video, start, end = timeline.strip().split(",")
-                parsed_timeline_arr.append(
-                    [video.strip(), start.strip(), end.strip()])
+                parsed_timeline_arr.append([video.strip(), start.strip(), end.strip()])
 
         return parsed_timeline_arr
 
-    def validate_timeline(self, timeline_text):
+    @staticmethod
+    def validate_timeline(timeline_text):
         if timeline_text.replace("\n", "").replace("\t", "").replace(" ", "") == "":
-            return self._EMPTY_TIMELINE_ERROR_MESSAGE
+            return TimelineUtils._EMPTY_TIMELINE_ERROR_MESSAGE
 
         try:
-            parsed_timeline_arr = self.parse_timeline(timeline_text)
+            parsed_timeline_arr = TimelineUtils.parse_timeline(timeline_text)
 
             for idx, parsed_timeline in enumerate(parsed_timeline_arr):
                 video, start, end = parsed_timeline
-                start_in_time = datetime.datetime.strptime(
-                    start, "%H:%M:%S").time()
-                end_in_time = datetime.datetime.strptime(
-                    end, "%H:%M:%S").time()
+                start_in_time = datetime.datetime.strptime(start, "%H:%M:%S").time()
+                end_in_time = datetime.datetime.strptime(end, "%H:%M:%S").time()
 
                 if start_in_time >= end_in_time:
-                    return self._START_TIME_AFTER_END_TIME_ERROR_MESSAGE
+                    return TimelineUtils._START_TIME_AFTER_END_TIME_ERROR_MESSAGE
         except ValueError as e:
             if "not enough values to unpack" in str(e):
-                return self._MISS_VALUE_IN_TIMELINE_ERROR_MESSAGE
+                return TimelineUtils._MISS_VALUE_IN_TIMELINE_ERROR_MESSAGE
             elif "too many values to unpack" in str(e):
-                return self._REDUNDANT_VALUE_IN_TIMELINE_ERROR_MESSAGE
+                return TimelineUtils._REDUNDANT_VALUE_IN_TIMELINE_ERROR_MESSAGE
             else:
                 return e
 
@@ -58,9 +57,18 @@ class TimelineUtils:
 
         for i in range(num_segments):
             next_video_num = TimelineUtils.generate_next_video_num(
-                num_videos=num_videos, prev=prev)
-            end = str(datetime.timedelta(seconds=round(TimelineUtils.generate_next_segment_time(
-                min_per_segment=min_per_segment, prev_in_min=(i * min_per_segment)))))
+                num_videos=num_videos, prev=prev
+            )
+            end = str(
+                datetime.timedelta(
+                    seconds=round(
+                        TimelineUtils.generate_next_segment_time(
+                            min_per_segment=min_per_segment,
+                            prev_in_min=(i * min_per_segment),
+                        )
+                    )
+                )
+            )
 
             result += f"{next_video_num},{start},{end}\n"
 
@@ -74,7 +82,9 @@ class TimelineUtils:
         num = random.randint(1, num_videos)
 
         if num == prev:
-            return TimelineUtils.generate_next_video_num(num_videos=num_videos, prev=prev)
+            return TimelineUtils.generate_next_video_num(
+                num_videos=num_videos, prev=prev
+            )
         else:
             return num
 
@@ -82,3 +92,12 @@ class TimelineUtils:
     def generate_next_segment_time(min_per_segment, prev_in_min):
         margin_in_sec = random.randint(-30, 30)
         return (prev_in_min + min_per_segment) * 60 + margin_in_sec
+
+    @staticmethod
+    def generate_youtube_timestamp(timeline_text, labels):
+        parsed_timeline_arr = TimelineUtils.parse_timeline(timeline_text)
+        youtube_timestamp = ""
+        for timeline in parsed_timeline_arr:
+            label = labels[int(timeline[0]) - 1]
+            youtube_timestamp += f"{timeline[1]} {label}\n"
+        return youtube_timestamp

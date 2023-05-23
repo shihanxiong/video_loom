@@ -1,5 +1,9 @@
 # Versions
 
+### v1.7.0 (unreleased)
+
+- allow exporting timeline in YouTube format
+
 ### v1.6.4
 
 - added support of +/- 10 seconds and +/- 30 seconds control buttons

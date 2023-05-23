@@ -107,8 +107,7 @@ class VideoFrame(ttk.Frame):
         # video processing
         try:
             # validate timeline
-            timeline_utils = TimelineUtils()
-            error = timeline_utils.validate_timeline(
+            error = TimelineUtils.validate_timeline(
                 self.master.timeline_component.get_timeline_text()
             )
 
@@ -173,8 +172,7 @@ class VideoFrame(ttk.Frame):
 
     def process_trimmed_videos(self):
         try:
-            timeline_utils = TimelineUtils()
-            parsed_timeline_arr = timeline_utils.parse_timeline(
+            parsed_timeline_arr = TimelineUtils.parse_timeline(
                 self.master.timeline_component.get_timeline_text()
             )
 
