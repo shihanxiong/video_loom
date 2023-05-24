@@ -167,23 +167,28 @@ class MenuFrame(ttk.Frame):
         )
 
     def export_youtube_timestamp(self):
-        timeline_text = self.master.timeline_component.get_timeline_text()
+        try:
+            timeline_text = self.master.timeline_component.get_timeline_text()
 
-        # get labels
-        labels = []
-        for entry in self.entries:
-            labels.append(entry.get())
+            # get labels
+            labels = []
+            for entry in self.entries:
+                labels.append(entry.get())
 
-        # generate youtube timestamp
-        timestamp_text = TimelineUtils.generate_youtube_timestamp(timeline_text, labels)
+            # generate youtube timestamp
+            timestamp_text = TimelineUtils.generate_youtube_timestamp(
+                timeline_text, labels
+            )
 
-        # copy to clipboard
-        self.clipboard_clear()
-        self.clipboard_append(timestamp_text)
-        self.update()
+            # copy to clipboard
+            self.clipboard_clear()
+            self.clipboard_append(timestamp_text)
+            self.update()
 
-        # close modal
-        self.close_modal()
+            # close modal
+            self.close_modal()
+        except Exception as err:
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
 
     def close_modal(self):
         self.modal.destroy()
