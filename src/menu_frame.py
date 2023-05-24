@@ -7,6 +7,9 @@ from sys_utils import SysUtils
 
 # videos input
 class MenuFrame(ttk.Frame):
+    _MENU_CREATE_RANDOM_SEGMENTS = "create random segments"
+    _MENU_EXPORT_YOUTUBE_TIMESTAMP = "export YouTube timestamp"
+
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
@@ -15,32 +18,40 @@ class MenuFrame(ttk.Frame):
         self.master.config(menu=menubar)
 
         # file
-        file_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
+        self.file_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
         # file_menu.add_separator()
-        file_menu.add_command(
+        self.file_menu.add_command(
             label="Exit",
             font=self.master.default_font,
             command=self.master.destroy,
         )
 
         # segment
-        segment_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
-        segment_menu.add_command(
-            label="create random segments",
+        self.segment_menu = Menu(menubar, font=self.master.default_font, tearoff="off")
+        self.segment_menu.add_command(
+            label=self._MENU_CREATE_RANDOM_SEGMENTS,
             font=self.master.default_font,
             command=self.show_create_random_segments_modal,
         )
-        segment_menu.add_command(
-            label="export YouTube timestamp",
+        self.segment_menu.add_command(
+            label=self._MENU_EXPORT_YOUTUBE_TIMESTAMP,
             font=self.master.default_font,
             command=self.show_export_youtube_timestamp_modal,
+            state="disabled",
         )
 
-        menubar.add_cascade(label="File", menu=file_menu, underline=0)
-        menubar.add_cascade(label="Segment", menu=segment_menu, underline=0)
+        menubar.add_cascade(label="File", menu=self.file_menu, underline=0)
+        menubar.add_cascade(label="Segment", menu=self.segment_menu, underline=0)
 
     def refresh(self):
-        pass
+        if len(self.master.video_component.video_list) == 0:
+            self.segment_menu.entryconfig(
+                self._MENU_EXPORT_YOUTUBE_TIMESTAMP, state="disabled"
+            )
+        else:
+            self.segment_menu.entryconfig(
+                self._MENU_EXPORT_YOUTUBE_TIMESTAMP, state="active"
+            )
 
     def disable_menu_item(self, label):
         pass
@@ -50,7 +61,7 @@ class MenuFrame(ttk.Frame):
 
     def show_create_random_segments_modal(self):
         self.modal = Toplevel(self.master)
-        self.modal.title("create random segments")
+        self.modal.title(self._MENU_CREATE_RANDOM_SEGMENTS)
 
         if SysUtils.is_macos():
             self.modal.geometry("380x180")
@@ -119,12 +130,10 @@ class MenuFrame(ttk.Frame):
 
     def show_export_youtube_timestamp_modal(self):
         self.modal = Toplevel(self.master)
-        self.modal.title("export YouTube timestamp")
+        self.modal.title(self._MENU_EXPORT_YOUTUBE_TIMESTAMP)
 
         if SysUtils.is_macos():
             self.modal.geometry("380x180")
-        elif SysUtils.is_win32():
-            self.modal.geometry("520x340")
 
         # props
         num_of_videos = len(self.master.video_component.video_list)
@@ -139,7 +148,7 @@ class MenuFrame(ttk.Frame):
             label.grid(row=i, column=0, sticky="EW")
 
             entry = Entry(self.modal, font=self.master.default_font)
-            entry.grid(row=i, column=1, columnspan=2, sticky="EW")
+            entry.grid(row=i, column=1, columnspan=2, sticky="EW", padx=(0, 40))
             self.entries.append(entry)
 
         confirm_button = ttk.Button(
@@ -152,8 +161,10 @@ class MenuFrame(ttk.Frame):
             self.modal, text="Cancel", padding=(10), command=self.close_modal
         )
 
-        confirm_button.grid(row=num_of_videos, column=1, sticky="EW")
-        cancel_button.grid(row=num_of_videos, column=2, sticky="EW")
+        confirm_button.grid(row=num_of_videos, column=1, sticky="EW", pady=(0, 20))
+        cancel_button.grid(
+            row=num_of_videos, column=2, sticky="EW", padx=(0, 40), pady=(0, 20)
+        )
 
     def export_youtube_timestamp(self):
         timeline_text = self.master.timeline_component.get_timeline_text()
