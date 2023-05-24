@@ -3,6 +3,7 @@
 ### v1.7.0 (unreleased)
 
 - allow exporting timeline in YouTube format
+- use dynamic sizing for modals (win32/macos)
 
 ### v1.6.4
 
