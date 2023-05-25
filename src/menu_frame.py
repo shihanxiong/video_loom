@@ -121,9 +121,6 @@ class MenuFrame(ttk.Frame):
         self.modal = Toplevel(self.master)
         self.modal.title(self._MENU_EXPORT_YOUTUBE_TIMESTAMP)
 
-        if SysUtils.is_macos():
-            self.modal.geometry("380x180")
-
         # props
         num_of_videos = len(self.master.video_component.video_list)
         self.entries = []

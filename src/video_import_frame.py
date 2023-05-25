@@ -1,8 +1,10 @@
 import tkinter as tk
-from tkinter import ttk, filedialog as fd
+from tkinter import ttk, Toplevel, filedialog as fd
 
 
 class VideoImportFrame(ttk.Frame):
+    _TITLE_VIEW_VIDEO_LIST = "View Videos List"
+
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
@@ -14,11 +16,12 @@ class VideoImportFrame(ttk.Frame):
         self.video_import_button = ttk.Button(
             self, text="Import videos", padding=(10), command=self.select_file
         )
-        self.video_import_button.grid(row=1, column=0, sticky="EW")
-        self.clear_video_list_button = ttk.Button(
-            self, text="Clear video list", padding=(10), command=self.clear_video_list
+        self.view_video_list_button = ttk.Button(
+            self,
+            text="View video list",
+            padding=(10),
+            command=self.show_videos_list_modal,
         )
-        self.clear_video_list_button.grid(row=1, column=1, sticky="EW")
         self.play_pause_videos_button = ttk.Button(
             self,
             text="Play all videos",
@@ -26,7 +29,11 @@ class VideoImportFrame(ttk.Frame):
             padding=(10),
             command=self.play_pause,
         )
+
+        self.video_import_button.grid(row=1, column=0, sticky="EW")
+        self.view_video_list_button.grid(row=1, column=1, sticky="EW")
         self.play_pause_videos_button.grid(row=1, column=2, sticky="EW")
+
         self.is_playing = False
 
     def refresh(self):
@@ -58,6 +65,7 @@ class VideoImportFrame(ttk.Frame):
         self.master.video_list = []
         self.master.master.app_refresh()
         self.master.master.status_component.set_and_log_status("video list cleared")
+        self.close_modal()
 
     def play_pause(self):
         if self.play_pause_videos_button["state"] == "enable":
@@ -69,3 +77,52 @@ class VideoImportFrame(ttk.Frame):
                 self.master.video_renderer_component.play_all()
                 self.play_pause_videos_button.config(text="Pause all videos")
                 self.is_playing = True
+
+    def show_videos_list_modal(self):
+        self.modal = Toplevel(self.master.master)
+        self.modal.title(self._TITLE_VIEW_VIDEO_LIST)
+
+        # layout
+        self.modal.columnconfigure(0, weight=0)
+        self.modal.columnconfigure(1, weight=0)
+
+        for idx, video in enumerate(self.master.video_list):
+            self.modal.rowconfigure(idx, weight=0)
+            file_name = ttk.Label(self.modal, text=video, padding=(20))
+            file_name.grid(row=idx, column=0, sticky="EW")
+
+            delete_button = ttk.Button(
+                self.modal,
+                text="Remove",
+                padding=(10),
+                command=lambda: self.remove_file_from_list(idx),
+            )
+            delete_button.grid(row=idx, column=1, sticky="EW")
+
+        clear_videos_list_button = ttk.Button(
+            self.modal,
+            text="Clear video list",
+            padding=(10),
+            command=self.clear_video_list,
+        )
+        close_modal_button = ttk.Button(
+            self.modal,
+            text="Close",
+            padding=(10),
+            command=self.close_modal,
+        )
+
+        clear_videos_list_button.grid(
+            row=len(self.master.video_list), column=0, sticky="EW", padx=(10), pady=(10)
+        )
+        close_modal_button.grid(
+            row=len(self.master.video_list), column=1, sticky="EW", padx=(10), pady=(10)
+        )
+
+    def remove_file_from_list(self, idx):
+        del self.master.video_list[idx]
+        self.close_modal()
+
+    def close_modal(self):
+        self.master.master.app_refresh()
+        self.modal.destroy()
