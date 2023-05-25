@@ -53,18 +53,9 @@ class MenuFrame(ttk.Frame):
                 self._MENU_EXPORT_YOUTUBE_TIMESTAMP, state="active"
             )
 
-    def disable_menu_item(self, label):
-        pass
-
-    def enable_menu_item(self, label):
-        pass
-
     def show_create_random_segments_modal(self):
         self.modal = Toplevel(self.master)
         self.modal.title(self._MENU_CREATE_RANDOM_SEGMENTS)
-
-        if SysUtils.is_win32():
-            self.modal.geometry("520x260")
 
         # layout
         self.modal.rowconfigure(0, weight=0)
