@@ -97,7 +97,7 @@ class VideoImportFrame(ttk.Frame):
                 padding=(10),
                 command=lambda: self.remove_file_from_list(idx),
             )
-            delete_button.grid(row=idx, column=1, sticky="EW")
+            delete_button.grid(row=idx, column=1, sticky="EW", padx=(10))
 
         clear_videos_list_button = ttk.Button(
             self.modal,
