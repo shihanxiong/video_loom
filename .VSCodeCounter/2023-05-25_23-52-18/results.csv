@@ -1,0 +1,40 @@
+"filename", "language", "Markdown", "Ruby", "Python", "JSON", "JSON with Comments", "Shell Script", "YAML", "comment", "blank", "total"
+"e:\dev\github\video_loom\.github\workflows\pytest.yml", "YAML", 0, 0, 0, 0, 0, 0, 27, 2, 5, 34
+"e:\dev\github\video_loom\.prettierrc", "JSON", 0, 0, 0, 9, 0, 0, 0, 0, 0, 9
+"e:\dev\github\video_loom\.vscode_config\settings.json", "JSON with Comments", 0, 0, 0, 0, 10, 0, 0, 123, 0, 133
+"e:\dev\github\video_loom\README.md", "Markdown", 98, 0, 0, 0, 0, 0, 0, 0, 43, 141
+"e:\dev\github\video_loom\changelog.md", "Markdown", 83, 0, 0, 0, 0, 0, 0, 0, 55, 138
+"e:\dev\github\video_loom\src\app.macos.spec", "Ruby", 0, 47, 0, 0, 0, 0, 0, 1, 6, 54
+"e:\dev\github\video_loom\src\app.py", "Python", 0, 0, 83, 0, 0, 0, 0, 12, 17, 112
+"e:\dev\github\video_loom\src\app.win32.spec", "Ruby", 0, 40, 0, 0, 0, 0, 0, 1, 6, 47
+"e:\dev\github\video_loom\src\audio_setting_frame.py", "Python", 0, 0, 78, 0, 0, 0, 0, 7, 21, 106
+"e:\dev\github\video_loom\src\audio_utils.py", "Python", 0, 0, 23, 0, 0, 0, 0, 2, 7, 32
+"e:\dev\github\video_loom\src\bundle.sh", "Shell Script", 0, 0, 0, 0, 0, 5, 0, 4, 4, 13
+"e:\dev\github\video_loom\src\file_utils.py", "Python", 0, 0, 43, 0, 0, 0, 0, 2, 12, 57
+"e:\dev\github\video_loom\src\menu_frame.py", "Python", 0, 0, 140, 0, 0, 0, 0, 12, 29, 181
+"e:\dev\github\video_loom\src\sandbox\sandbox_app_logging.py", "Python", 0, 0, 16, 0, 0, 0, 0, 2, 7, 25
+"e:\dev\github\video_loom\src\sandbox\sandbox_filepath.py", "Python", 0, 0, 15, 0, 0, 0, 0, 2, 7, 24
+"e:\dev\github\video_loom\src\sandbox\sandbox_macos.py", "Python", 0, 0, 42, 0, 0, 0, 0, 10, 13, 65
+"e:\dev\github\video_loom\src\sandbox\sandbox_markdown.py", "Python", 0, 0, 7, 0, 0, 0, 0, 0, 4, 11
+"e:\dev\github\video_loom\src\sandbox\sandbox_win32.py", "Python", 0, 0, 21, 0, 0, 0, 0, 4, 7, 32
+"e:\dev\github\video_loom\src\settings_frame.py", "Python", 0, 0, 21, 0, 0, 0, 0, 4, 7, 32
+"e:\dev\github\video_loom\src\status_frame.py", "Python", 0, 0, 18, 0, 0, 0, 0, 3, 9, 30
+"e:\dev\github\video_loom\src\sys_utils.py", "Python", 0, 0, 17, 0, 0, 0, 0, 2, 6, 25
+"e:\dev\github\video_loom\src\test_audio_utils.py", "Python", 0, 0, 32, 0, 0, 0, 0, 1, 15, 48
+"e:\dev\github\video_loom\src\test_file_utils.py", "Python", 0, 0, 8, 0, 0, 0, 0, 0, 5, 13
+"e:\dev\github\video_loom\src\test_sys_utils.py", "Python", 0, 0, 3, 0, 0, 0, 0, 0, 3, 6
+"e:\dev\github\video_loom\src\test_time_utils.py", "Python", 0, 0, 8, 0, 0, 0, 0, 0, 5, 13
+"e:\dev\github\video_loom\src\test_timeline_utils.py", "Python", 0, 0, 87, 0, 0, 0, 0, 3, 23, 113
+"e:\dev\github\video_loom\src\test_video_utils.py", "Python", 0, 0, 9, 0, 0, 0, 0, 0, 3, 12
+"e:\dev\github\video_loom\src\time_utils.py", "Python", 0, 0, 10, 0, 0, 0, 0, 0, 5, 15
+"e:\dev\github\video_loom\src\timeline_frame.py", "Python", 0, 0, 22, 0, 0, 0, 0, 3, 9, 34
+"e:\dev\github\video_loom\src\timeline_utils.py", "Python", 0, 0, 84, 0, 0, 0, 0, 0, 20, 104
+"e:\dev\github\video_loom\src\toolbar_frame.py", "Python", 0, 0, 22, 0, 0, 0, 0, 2, 9, 33
+"e:\dev\github\video_loom\src\video_control_frame.py", "Python", 0, 0, 108, 0, 0, 0, 0, 5, 16, 129
+"e:\dev\github\video_loom\src\video_frame.py", "Python", 0, 0, 198, 0, 0, 0, 0, 25, 40, 263
+"e:\dev\github\video_loom\src\video_import_frame.py", "Python", 0, 0, 112, 0, 0, 0, 0, 2, 24, 138
+"e:\dev\github\video_loom\src\video_renderer_frame.py", "Python", 0, 0, 84, 0, 0, 0, 0, 8, 14, 106
+"e:\dev\github\video_loom\src\video_setting_frame.py", "Python", 0, 0, 25, 0, 0, 0, 0, 2, 9, 36
+"e:\dev\github\video_loom\src\video_utils.py", "Python", 0, 0, 21, 0, 0, 0, 0, 8, 2, 31
+"e:\dev\github\video_loom\src\windows.py", "Python", 0, 0, 6, 0, 0, 0, 0, 0, 1, 7
+"Total", "-", 181, 87, 1363, 9, 10, 5, 27, 252, 468, 2402
