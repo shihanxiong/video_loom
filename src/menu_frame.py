@@ -53,20 +53,9 @@ class MenuFrame(ttk.Frame):
                 self._MENU_EXPORT_YOUTUBE_TIMESTAMP, state="active"
             )
 
-    def disable_menu_item(self, label):
-        pass
-
-    def enable_menu_item(self, label):
-        pass
-
     def show_create_random_segments_modal(self):
         self.modal = Toplevel(self.master)
         self.modal.title(self._MENU_CREATE_RANDOM_SEGMENTS)
-
-        if SysUtils.is_macos():
-            self.modal.geometry("380x180")
-        elif SysUtils.is_win32():
-            self.modal.geometry("520x260")
 
         # layout
         self.modal.rowconfigure(0, weight=0)
@@ -102,16 +91,16 @@ class MenuFrame(ttk.Frame):
         )
 
         number_of_videos_label.grid(row=0, column=0, sticky="W")
-        self.number_of_videos_input.grid(row=0, column=1)
+        self.number_of_videos_input.grid(row=0, column=1, padx=(0, 40))
 
         number_of_segments_label.grid(row=1, column=0, sticky="W")
-        self.number_of_segments_input.grid(row=1, column=1)
+        self.number_of_segments_input.grid(row=1, column=1, padx=(0, 40))
 
         minutes_per_segment_label.grid(row=2, column=0, sticky="W")
-        self.minutes_per_segment_input.grid(row=2, column=1)
+        self.minutes_per_segment_input.grid(row=2, column=1, padx=(0, 40))
 
-        confirm_button.grid(row=3, column=0, sticky="E")
-        cancel_button.grid(row=3, column=1, sticky="W")
+        confirm_button.grid(row=3, column=0, sticky="E", pady=(0, 20))
+        cancel_button.grid(row=3, column=1, sticky="W", pady=(0, 20))
 
     def generate_segments(self):
         try:
@@ -131,9 +120,6 @@ class MenuFrame(ttk.Frame):
     def show_export_youtube_timestamp_modal(self):
         self.modal = Toplevel(self.master)
         self.modal.title(self._MENU_EXPORT_YOUTUBE_TIMESTAMP)
-
-        if SysUtils.is_macos():
-            self.modal.geometry("380x180")
 
         # props
         num_of_videos = len(self.master.video_component.video_list)
