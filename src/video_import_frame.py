@@ -85,11 +85,15 @@ class VideoImportFrame(ttk.Frame):
         # layout
         self.modal.columnconfigure(0, weight=0)
         self.modal.columnconfigure(1, weight=0)
+        self.modal.columnconfigure(2, weight=0)
 
         for idx, video in enumerate(self.master.video_list):
             self.modal.rowconfigure(idx, weight=0)
+            file_idx = ttk.Label(self.modal, text=f"video {idx + 1} -->", padding=(20))
+            file_idx.grid(row=idx, column=0, sticky="EW")
+
             file_name = ttk.Label(self.modal, text=video, padding=(20))
-            file_name.grid(row=idx, column=0, sticky="EW")
+            file_name.grid(row=idx, column=1, sticky="EW")
 
             delete_button = ttk.Button(
                 self.modal,
@@ -97,7 +101,7 @@ class VideoImportFrame(ttk.Frame):
                 padding=(10),
                 command=lambda: self.remove_file_from_list(idx),
             )
-            delete_button.grid(row=idx, column=1, sticky="EW", padx=(10))
+            delete_button.grid(row=idx, column=2, sticky="EW", padx=(10))
 
         clear_videos_list_button = ttk.Button(
             self.modal,
@@ -113,10 +117,15 @@ class VideoImportFrame(ttk.Frame):
         )
 
         clear_videos_list_button.grid(
-            row=len(self.master.video_list), column=0, sticky="EW", padx=(10), pady=(10)
+            row=len(self.master.video_list),
+            column=0,
+            columnspan=2,
+            sticky="EW",
+            padx=(10),
+            pady=(10),
         )
         close_modal_button.grid(
-            row=len(self.master.video_list), column=1, sticky="EW", padx=(10), pady=(10)
+            row=len(self.master.video_list), column=2, sticky="EW", padx=(10), pady=(10)
         )
 
     def remove_file_from_list(self, idx):
