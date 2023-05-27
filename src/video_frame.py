@@ -85,6 +85,10 @@ class VideoFrame(ttk.Frame, ComponentInterface):
         if self.is_filename_escaped == False:
             for idx, video in enumerate(self.video_list):
                 self.video_list[idx] = FileUtils.escape_file_name(video)
+
+            self.intro = FileUtils.escape_file_name(self.intro)
+            self.outro = FileUtils.escape_file_name(self.outro)
+
             self.is_filename_escaped = True
 
         # calculate output video resolution
