@@ -1,9 +1,10 @@
 import tkinter as tk
 from tkinter import ttk, END
+from component_interface import ComponentInterface
 
 
 # timeline
-class TimelineFrame(ttk.Frame):
+class TimelineFrame(ttk.Frame, ComponentInterface):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
@@ -17,12 +18,12 @@ class TimelineFrame(ttk.Frame):
         timeline_label = ttk.Label(self, text="Timeline", padding=(10))
         timeline_label.grid(row=0)
 
-        self.timeline_text = tk.Text(
-            self, height=14, font=self.master.default_font)
+        self.timeline_text = tk.Text(self, height=14, font=self.master.default_font)
         self.timeline_text.grid(row=1, column=0, sticky="EW")
 
         text_scroll = ttk.Scrollbar(
-            self, orient="vertical", command=self.timeline_text.yview)
+            self, orient="vertical", command=self.timeline_text.yview
+        )
         text_scroll.grid(row=1, column=1, sticky="NS")
         self.timeline_text["yscrollcommand"] = text_scroll.set
 

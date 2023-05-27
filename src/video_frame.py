@@ -7,16 +7,18 @@ from datetime import datetime
 from video_import_frame import VideoImportFrame
 from video_renderer_frame import VideoRendererFrame
 from video_control_frame import VideoControlFrame
+from video_intro_outro_frame import VideoIntroOutroFrame
 from time_utils import TimeUtils
 from file_utils import FileUtils
 from timeline_utils import TimelineUtils
 from audio_utils import AudioUtils
 from sys_utils import SysUtils
 from video_utils import VideoUtils
+from component_interface import ComponentInterface
 
 
 # videos input
-class VideoFrame(ttk.Frame):
+class VideoFrame(ttk.Frame, ComponentInterface):
     _PROCESS_VIDEO_ERROR_MESSAGE = "An error occurred while generating video :("
 
     def __init__(self, container, **args):
@@ -24,11 +26,10 @@ class VideoFrame(ttk.Frame):
 
         # variables
         self.max_num_of_videos = 4
+        self.intro = None
+        self.outro = None
         self.video_list = []
         self.trimmed_video_list = []
-        self.video_label_text = tk.StringVar(
-            value=f"Videos {len(self.video_list)} of 4"
-        )
         self.output_directory = os.getcwd()
         self.output_file_name = tk.StringVar(
             value=f"{TimeUtils.get_current_timestamp()}.mp4"
@@ -48,35 +49,31 @@ class VideoFrame(ttk.Frame):
         for c_idx in range(self.total_columns):
             self.columnconfigure(c_idx, weight=1)
 
-        # video label
-        video_label = ttk.Label(self, textvariable=self.video_label_text, padding=(10))
-        video_label.grid(row=0, columnspan=4, sticky="N")
-
         # video rendering
         self.video_renderer_component = VideoRendererFrame(self, padding=(10, 0))
         self.video_renderer_component.grid(row=2, columnspan=4, sticky="NEWS")
 
         # video import / clear
         self.video_import_component = VideoImportFrame(self, padding=(10, 0))
-        self.video_import_component.grid(row=1, columnspan=4, sticky="NEW")
+        self.video_import_component.grid(row=0, columnspan=4, sticky="NEW")
 
-        # video selection
+        # video intro / outro
+        self.video_intro_outro_component = VideoIntroOutroFrame(self, padding=(10, 0))
+        self.video_intro_outro_component.grid(row=1, columnspan=4, sticky="NEW")
+
+        # video control
         self.video_control_component = VideoControlFrame(self, padding=(10, 0))
-        self.video_control_component.grid(row=3, columnspan=4, sticky="SEW")
+        self.video_control_component.grid(row=3, columnspan=4, sticky="NEW")
 
         # register all components
         self.components = [
             self.video_import_component,
+            self.video_intro_outro_component,
             self.video_renderer_component,
             self.video_control_component,
         ]
 
     def refresh(self):
-        self.video_label_text.set(
-            f"Videos {len(self.video_list)} of {self.max_num_of_videos}"
-        )
-        logging.debug(f"imported videos {self.video_list}")
-
         for component in self.components:
             component.refresh()
 

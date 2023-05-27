@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 import logging
+from component_interface import ComponentInterface
 
 
 # application status
-class StatusFrame(ttk.Frame):
+class StatusFrame(ttk.Frame, ComponentInterface):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 
@@ -17,8 +18,12 @@ class StatusFrame(ttk.Frame):
         status_label = ttk.Label(self, text="Process status:", padding=(10))
         status_label.grid(row=0, columnspan=1)
 
-        status_text = ttk.Label(self, textvariable=self.status_variable, padding=(
-            10), wraplength=(self.master.window_width - 250))
+        status_text = ttk.Label(
+            self,
+            textvariable=self.status_variable,
+            padding=(10),
+            wraplength=(self.master.window_width - 250),
+        )
         status_text.grid(row=0, column=1, sticky="EW")
 
     def refresh(self):

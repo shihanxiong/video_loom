@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, Toplevel, filedialog as fd
+from component_interface import ComponentInterface
 
 
-class VideoImportFrame(ttk.Frame):
+class VideoImportFrame(ttk.Frame, ComponentInterface):
     _TITLE_VIEW_VIDEO_LIST = "View Videos List"
 
     def __init__(self, container, **args):
@@ -14,19 +15,17 @@ class VideoImportFrame(ttk.Frame):
         self.columnconfigure(2, weight=1)
 
         self.video_import_button = ttk.Button(
-            self, text="Import videos", padding=(10), command=self.select_file
+            self, text="Import videos", command=self.select_file
         )
         self.view_video_list_button = ttk.Button(
             self,
-            text="View video list",
-            padding=(10),
+            text="View video list (0 of 4)",
             command=self.show_videos_list_modal,
         )
         self.play_pause_videos_button = ttk.Button(
             self,
             text="Play all videos",
             state="disable",
-            padding=(10),
             command=self.play_pause,
         )
 
@@ -38,14 +37,18 @@ class VideoImportFrame(ttk.Frame):
 
     def refresh(self):
         if len(self.master.video_list) > 0:
-            self.play_pause_videos_button["state"] = "enable"
+            self.enable_button(self.play_pause_videos_button)
         else:
-            self.play_pause_videos_button["state"] = "disable"
+            self.disable_button(self.play_pause_videos_button)
 
         if len(self.master.video_list) == self.master.max_num_of_videos:
-            self.video_import_button["state"] = "disable"
+            self.disable_button(self.video_import_button)
         else:
-            self.video_import_button["state"] = "enable"
+            self.enable_button(self.video_import_button)
+
+        self.view_video_list_button.config(
+            text=f"View video list ({len(self.master.video_list)} of {self.master.max_num_of_videos})"
+        )
 
     def select_file(self):
         filetypes = (("video files", "*.mp4"), ("All files", "*.*"))

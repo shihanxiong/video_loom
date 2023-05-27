@@ -3,11 +3,12 @@ import pygame
 import logging
 from tkinter import ttk
 from tkVideoPlayer import TkinterVideo
+from component_interface import ComponentInterface
 from pdb import set_trace
 
 
 # video renderer
-class VideoRendererFrame(ttk.Frame):
+class VideoRendererFrame(ttk.Frame, ComponentInterface):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 

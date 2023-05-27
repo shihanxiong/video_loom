@@ -58,15 +58,16 @@ class VideoLoom(tk.Tk):
         component_padding = (10, 10)
         self.menu_component = MenuFrame(self)
         self.video_component = VideoFrame(self, padding=component_padding)
-        self.video_component.grid(row=0, sticky="NEWS")
         self.settings_component = SettingsFrame(self, padding=component_padding)
-        self.settings_component.grid(row=1, sticky="SEW")
         self.timeline_component = TimelineFrame(self, padding=component_padding)
-        self.timeline_component.grid(row=2, sticky="SEW")
         self.status_component = StatusFrame(self, padding=component_padding)
-        self.status_component.grid(row=3, sticky="SEW")
         self.toolbar_component = ToolbarFrame(self, padding=component_padding)
-        self.toolbar_component.grid(row=4, sticky="SEW")
+
+        self.video_component.grid(row=0, sticky="NEW")
+        self.settings_component.grid(row=1, sticky="NEW")
+        self.timeline_component.grid(row=2, sticky="NEW")
+        self.status_component.grid(row=3, sticky="NEW")
+        self.toolbar_component.grid(row=4, sticky="NEW")
 
         # register all components
         self.components = [
