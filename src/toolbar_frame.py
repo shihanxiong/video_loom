@@ -30,4 +30,4 @@ class ToolbarFrame(ttk.Frame, ComponentInterface):
         if len(self.master.video_component.video_list) == 0:
             self.disable_button(self.generate_button)
         else:
-            self.enable_button(self.enable_generate_button)
+            self.enable_button(self.generate_button)
