@@ -108,7 +108,8 @@ class VideoImportFrame(ttk.Frame, ComponentInterface):
                 self.modal,
                 text="Remove",
                 padding=(10),
-                command=lambda: self.remove_file_from_list(idx),
+                # below see https://stackoverflow.com/questions/10865116/tkinter-creating-buttons-in-for-loop-passing-command-arguments
+                command=lambda i=idx: self.remove_file_from_list(i),
             )
             delete_button.grid(row=idx, column=2, sticky="EW", padx=(10))
 
