@@ -6,11 +6,17 @@ from file_utils import FileUtils
 
 output_directory = os.path.join("src", "test")
 test_mp4_name = "2023_04_15_19_00_49.mp4"
+test_aac_name = "long_duration_audio.aac"
 output_name = "test_concatenate_videos.mp4"
 concatenated_video_path = FileUtils.get_file_path(
     os.path.join(output_directory, output_name)
 )
+output_combined_name = "test_combined.mp4"
+combined_video_path = FileUtils.get_file_path(
+    os.path.join(output_directory, output_combined_name)
+)
 test_video_path = FileUtils.get_file_path(os.path.join(output_directory, test_mp4_name))
+test_audio_path = FileUtils.get_file_path(os.path.join(output_directory, test_aac_name))
 
 
 @pytest.fixture(autouse=True)
@@ -29,6 +35,9 @@ def clean_up_test_files():
     if os.path.exists(concatenated_video_path):
         os.remove(concatenated_video_path)
 
+    if os.path.exists(combined_video_path):
+        os.remove(combined_video_path)
+
 
 def test_get_video_duration():
     assert VideoUtils.get_video_duration(test_video_path) == 15
@@ -45,6 +54,15 @@ def test_get_ffmpeg_preset_value_for_nvenc_h264():
 
 
 def test_concatenate_videos():
-    videos = [test_video_path, test_video_path]
-    assert VideoUtils.concatenate_videos(videos, output_directory, output_name)
-    assert os.path.exists(os.path.join(output_directory, output_name)) == True
+    videos = [test_video_path, test_video_path]  # each video duration = 15s
+    VideoUtils.concatenate_videos(videos, output_directory, output_name)
+    assert os.path.exists(concatenated_video_path) == True
+    assert VideoUtils.get_video_duration(concatenated_video_path) == 30
+
+
+def test_combine_mp4_aac_to_mp4():
+    VideoUtils.combine_mp4_aac_to_mp4(
+        test_video_path, test_audio_path, output_directory, output_combined_name
+    )
+    assert os.path.exists(combined_video_path) == True
+    assert VideoUtils.get_video_duration(combined_video_path) == 15

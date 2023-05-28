@@ -81,4 +81,38 @@ class VideoUtils:
 
             return output_file
         except Exception as err:
-            logging.error(f"{self.__class__.__name__}: {str(err)}")
+            logging.error(f"{VideoUtils.__name__}: {str(err)}")
+
+    @staticmethod
+    # returns [String] the path of the output file
+    def combine_mp4_aac_to_mp4(
+        source_video,
+        source_audio,
+        output_directory,
+        output_file,
+        ffmpeg_preset_value="ultrafast",
+    ):
+        try:
+            output_file_path = os.path.join(output_directory, output_file)
+            cmd = [
+                "ffmpeg",
+                "-i",
+                source_video,
+                "-i",
+                source_audio,
+                "-c:v",
+                "copy",
+                "-map",
+                "0:v",
+                "-map",
+                "1:a",
+                "-shortest",
+                "-preset",
+                ffmpeg_preset_value,
+                output_file_path,
+            ]
+            subprocess.run(cmd, text=True)
+
+            return output_file_path
+        except Exception as err:
+            logging.error(f"{VideoUtils.__name__}: {str(err)}")
