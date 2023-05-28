@@ -1,6 +1,7 @@
 import os
 import subprocess
 import logging
+import json
 from file_utils import FileUtils
 from sys_utils import SysUtils
 
@@ -8,6 +9,28 @@ from sys_utils import SysUtils
 class VideoUtils:
     def __init__(self):
         pass
+
+    @staticmethod
+    # returns [Integer] the duration of the video in seconds
+    def get_video_duration(video):
+        ffprobe_cmd = [
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "json",
+            video,
+        ]
+        result = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
+        output = result.stdout
+
+        try:
+            duration = json.loads(output)["format"]["duration"]
+            return int(float(duration))
+        except (json.JSONDecodeError, KeyError):
+            return None
 
     @staticmethod
     def get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value):

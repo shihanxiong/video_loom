@@ -10,9 +10,7 @@ output_name = "test_concatenate_videos.mp4"
 concatenated_video_path = FileUtils.get_file_path(
     os.path.join(output_directory, output_name)
 )
-video_path = FileUtils.get_file_path(
-    os.path.join(output_directory, "2023_04_15_19_00_49.mp4")
-)
+test_video_path = FileUtils.get_file_path(os.path.join(output_directory, test_mp4_name))
 
 
 @pytest.fixture(autouse=True)
@@ -32,6 +30,10 @@ def clean_up_test_files():
         os.remove(concatenated_video_path)
 
 
+def test_get_video_duration():
+    assert VideoUtils.get_video_duration(test_video_path) == 15
+
+
 def test_get_ffmpeg_preset_value_for_nvenc_h264():
     assert VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264("faster") == "fast"
     assert VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264("veryslow") == "slow"
@@ -43,6 +45,6 @@ def test_get_ffmpeg_preset_value_for_nvenc_h264():
 
 
 def test_concatenate_videos():
-    videos = [video_path, video_path]
+    videos = [test_video_path, test_video_path]
     assert VideoUtils.concatenate_videos(videos, output_directory, output_name)
     assert os.path.exists(os.path.join(output_directory, output_name)) == True
