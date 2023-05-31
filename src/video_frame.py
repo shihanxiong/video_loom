@@ -36,7 +36,6 @@ class VideoFrame(ttk.Frame, ComponentInterface):
         )
         self.output_width = 0
         self.output_height = 0
-        self.is_filename_escaped = False
 
         # layout - rows
         self.rowconfigure(0, weight=0)
@@ -81,16 +80,6 @@ class VideoFrame(ttk.Frame, ComponentInterface):
         # remove output file if exists
         FileUtils.clean_up_temp_files()
 
-        # for win32|macOS, wrap the video path w/ quotes
-        if self.is_filename_escaped == False:
-            for idx, video in enumerate(self.video_list):
-                self.video_list[idx] = FileUtils.escape_file_name(video)
-
-            self.intro = self.intro
-            self.outro = self.outro
-
-            self.is_filename_escaped = True
-
         # calculate output video resolution
         # this will scale all inputs to match the max width & max height
         self.calculate_output_resolutions()
@@ -122,8 +111,11 @@ class VideoFrame(ttk.Frame, ComponentInterface):
             self.ffmpeg_preset_value = (
                 self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()
             )
-            self.ffmpeg_preset_arg = f"-preset {self.ffmpeg_preset_value}"
-            self.ffmpeg_nvenc_preset_arg = f"-preset {VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(self.ffmpeg_preset_value)}"
+            self.ffmpeg_nvenc_preset_value = (
+                VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(
+                    self.ffmpeg_preset_value
+                )
+            )
 
             self.master.status_component.set_and_log_status(
                 f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
@@ -187,9 +179,9 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 )
                 self.trimmed_video_list.append(trimmed_output)
                 if SysUtils.is_win32():
-                    cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+                    cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy -preset {self.ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
                 elif SysUtils.is_macos():
-                    cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy {self.ffmpeg_nvenc_preset_arg} {FileUtils.escape_file_name(trimmed_output)}"
+                    cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy -preset {self.ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
                 subprocess.check_output(cmd, shell=True)
             self.master.status_component.set_and_log_status("completed trimming videos")
         except Exception as err:
@@ -225,7 +217,7 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 - 1
             ]
             AudioUtils.generate_aac_from_mp4(
-                input_video, output_sound, self.ffmpeg_preset_arg
+                input_video, output_sound, self.ffmpeg_preset_value
             )
             self.master.status_component.set_and_log_status(
                 f"completed processing {output_sound} from video {input_video}"

@@ -12,7 +12,7 @@ aac_path = FileUtils.get_file_path(os.path.join("src", "test", aac_output_filena
 mp4_path = FileUtils.get_file_path(
     os.path.join("src", "test", "2023_04_15_19_00_49.mp4")
 )
-ffmpeg_preset_arg = "-preset ultrafast"
+ffmpeg_preset_value = "ultrafast"
 
 
 def clean_up_test_files():
@@ -42,5 +42,5 @@ def test_generate_mp3_from_mp4():
 
 
 def test_generate_aac_from_mp4():
-    AudioUtils.generate_aac_from_mp4(mp4_path, aac_path, ffmpeg_preset_arg)
+    AudioUtils.generate_aac_from_mp4(mp4_path, aac_path, ffmpeg_preset_value)
     assert os.path.exists(aac_path) == True

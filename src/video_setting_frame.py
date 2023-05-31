@@ -14,7 +14,7 @@ class VideoSettingFrame(ttk.Frame, ComponentInterface):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
-        self.ffmpeg_preset_arg = tk.StringVar()
+        self.ffmpeg_preset_value = tk.StringVar()
 
         video_setting_label = ttk.Label(self, text="Video Settings", padding=(10))
         video_setting_label.grid(row=0, columnspan=2)
@@ -24,7 +24,7 @@ class VideoSettingFrame(ttk.Frame, ComponentInterface):
         ffmpeg_preset_selection = ttk.Combobox(
             self,
             width=14,
-            textvariable=self.ffmpeg_preset_arg,
+            textvariable=self.ffmpeg_preset_value,
             state="readonly",
             font=self.master.master.default_font,
         )
@@ -46,4 +46,4 @@ class VideoSettingFrame(ttk.Frame, ComponentInterface):
         pass
 
     def get_ffmpeg_preset_value(self):
-        return self.ffmpeg_preset_arg.get()
+        return self.ffmpeg_preset_value.get()
