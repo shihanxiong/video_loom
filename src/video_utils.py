@@ -139,6 +139,7 @@ class VideoUtils:
             ffmpeg_nvenc_preset_value = (
                 VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)
             )
+            cmd = []
             if SysUtils.is_macos() or SysUtils.is_other():
                 cmd = [
                     "ffmpeg",
