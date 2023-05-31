@@ -23,7 +23,7 @@ class VideoUtils:
             "json",
             video,
         ]
-        result = subprocess.run(ffprobe_cmd, capture_output=True, text=True)
+        result = subprocess.run(ffprobe_cmd, capture_output=True, text=True, check=True)
         output = result.stdout
 
         try:
@@ -61,24 +61,30 @@ class VideoUtils:
 
     @staticmethod
     def concatenate_videos(
-        videos, output_directory, output_name, ffmpeg_preset_arg="-preset ultrafast"
+        videos, output_directory, output_name, ffmpeg_preset_value="ultrafast"
     ):
         try:
             output_file = os.path.join(output_directory, output_name)
-            input_args = ""
-            video_count = len(videos)
-            ffmpeg_filter = f"'[0:v][1:v]concat=n={video_count}:v=1:a=0'"
+            cmd = ["ffmpeg"]
 
             for video in videos:
-                input_args += f"-i {FileUtils.escape_file_name(video)} "
+                cmd.extend(["-i", video])
 
-            if SysUtils.is_win32():
-                # remove the single quote ' if it's windows
-                ffmpeg_filter = f"[0:v][1:v]concat=n={video_count}:v=1:a=0"
+            cmd.extend(
+                [
+                    "-filter_complex",
+                    "concat=n={}:v=1:a=1".format(len(videos)),
+                    "-c:v",
+                    "libx264",
+                    "-c:a",
+                    "aac",
+                    "-preset",
+                    ffmpeg_preset_value,
+                    output_file,
+                ]
+            )
 
-            cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
-            subprocess.check_output(cmd, shell=True)
-
+            subprocess.run(cmd, text=True, check=True)
             return output_file
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
@@ -111,8 +117,8 @@ class VideoUtils:
                 ffmpeg_preset_value,
                 output_file_path,
             ]
-            subprocess.run(cmd, text=True)
 
+            subprocess.run(cmd, text=True, check=True)
             return output_file_path
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")

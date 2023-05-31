@@ -86,8 +86,8 @@ class VideoFrame(ttk.Frame, ComponentInterface):
             for idx, video in enumerate(self.video_list):
                 self.video_list[idx] = FileUtils.escape_file_name(video)
 
-            self.intro = FileUtils.escape_file_name(self.intro)
-            self.outro = FileUtils.escape_file_name(self.outro)
+            self.intro = self.intro
+            self.outro = self.outro
 
             self.is_filename_escaped = True
 
@@ -119,11 +119,11 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 return
 
             # determine processing speed
-            ffmpeg_preset_value = (
+            self.ffmpeg_preset_value = (
                 self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()
             )
-            self.ffmpeg_preset_arg = f"-preset {ffmpeg_preset_value}"
-            self.ffmpeg_nvenc_preset_arg = f"-preset {VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)}"
+            self.ffmpeg_preset_arg = f"-preset {self.ffmpeg_preset_value}"
+            self.ffmpeg_nvenc_preset_arg = f"-preset {VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(self.ffmpeg_preset_value)}"
 
             self.master.status_component.set_and_log_status(
                 f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
@@ -141,7 +141,10 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 output_sound = self.process_audio()
 
                 # combine video and audio into final file
-                self.finalize_video(output_file, output_sound)
+                final_file = self.finalize_video(output_file, output_sound)
+
+                # add intro and outro if exists
+                self.add_intro_outro(final_file)
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 "An error occurred while generating video :("
@@ -197,23 +200,12 @@ class VideoFrame(ttk.Frame, ComponentInterface):
 
     def concatenate_trimmed_videos(self):
         try:
-            output_file = os.path.join(self.output_directory, "output.mp4")
-            input_args = ""
-            ffmpeg_filter = (
-                f"'[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0'"
+            output_file = VideoUtils.concatenate_videos(
+                self.trimmed_video_list,
+                self.output_directory,
+                "output.mp4",
+                self.ffmpeg_preset_value,
             )
-
-            for trimmed_video in self.trimmed_video_list:
-                input_args += f"-i {FileUtils.escape_file_name(trimmed_video)} "
-
-            if SysUtils.is_win32():
-                # remove the single quote ' if it's windows
-                ffmpeg_filter = (
-                    f"[0:v][1:v]concat=n={len(self.trimmed_video_list)}:v=1:a=0"
-                )
-
-            cmd = f"ffmpeg {input_args} -filter_complex {ffmpeg_filter} -c:v libx264 -crf 23 -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(output_file)}"
-            subprocess.check_output(cmd, shell=True)
             self.master.status_component.set_and_log_status(
                 "completed concatenating trimmed videos"
             )
@@ -248,14 +240,42 @@ class VideoFrame(ttk.Frame, ComponentInterface):
 
     def finalize_video(self, output_file, output_sound):
         try:
-            final_file = os.path.join(
-                self.output_directory, self.output_file_name.get()
+            final_file = VideoUtils.combine_mp4_aac_to_mp4(
+                output_file,
+                output_sound,
+                self.output_directory,
+                self.output_file_name.get(),
             )
-            cmd = f"ffmpeg -i {FileUtils.escape_file_name(output_file)} -i {FileUtils.escape_file_name(output_sound)} -map 0:v -map 1:a -c copy -shortest -y -vsync 2 {self.ffmpeg_preset_arg} {FileUtils.escape_file_name(final_file)}"
-            subprocess.check_output(cmd, shell=True)
             self.master.status_component.set_and_log_status(
                 "video is processed and ready for use"
             )
+            return final_file
+        except Exception as err:
+            self.master.status_component.set_and_log_status(
+                self._PROCESS_VIDEO_ERROR_MESSAGE
+            )
+            logging.error(f"{self.__class__.__name__}: {str(err)}")
+
+    def add_intro_outro(self, final_file):
+        try:
+            videos = []
+
+            if self.intro != None:
+                videos.append(self.intro)
+
+            videos.append(final_file)
+
+            if self.outro != None:
+                videos.append(self.outro)
+
+            # if intro or outro is detected, we concatenate them into the final video
+            if len(videos) > 1:
+                VideoUtils.concatenate_videos(
+                    videos,
+                    self.output_directory,
+                    f"{TimeUtils.get_current_timestamp()}.mp4",
+                    self.ffmpeg_preset_value,
+                )
         except Exception as err:
             self.master.status_component.set_and_log_status(
                 self._PROCESS_VIDEO_ERROR_MESSAGE
