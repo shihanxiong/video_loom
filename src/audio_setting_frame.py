@@ -105,9 +105,7 @@ class AudioSettingFrame(ttk.Frame, ComponentInterface):
             self.get_audio_track() - 1
         ]
         audio_preview_output = self.get_audio_preview_filename()
-        AudioUtils.generate_mp3_from_mp4(
-            FileUtils.escape_file_name(video_input), audio_preview_output
-        )
+        AudioUtils.generate_mp3_from_mp4(video_input, audio_preview_output)
 
         # refresh app state
         self.master.master.app_refresh()
