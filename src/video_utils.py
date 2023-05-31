@@ -183,3 +183,28 @@ class VideoUtils:
             subprocess.run(cmd, text=True, check=True)
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
+
+    @staticmethod
+    def get_video_resolution(video):
+        try:
+            cmd = [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "stream=width,height",
+                "-of",
+                "csv=p=0",
+                video,
+            ]
+
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            output = result.stdout
+
+            try:
+                width, height = output.split(",")
+                return int(width), int(height)
+            except (json.JSONDecodeError, KeyError):
+                return None, None
+        except Exception as err:
+            logging.error(f"{VideoUtils.__name__}: {str(err)}")

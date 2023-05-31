@@ -85,3 +85,9 @@ def test_trim_mp4_by_timestamp():
     )
     assert os.path.exists(trimmed_video_path) == True
     assert VideoUtils.get_video_duration(trimmed_video_path) == 5
+
+
+def test_get_video_resolution():
+    width, height = VideoUtils.get_video_resolution(test_video_path)
+    assert width == 1920
+    assert height == 1080

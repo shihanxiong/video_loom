@@ -151,11 +151,9 @@ class VideoFrame(ttk.Frame, ComponentInterface):
 
         # Get information about the videos
         for video in self.video_list:
-            cmd = f"ffprobe -v error -show_entries stream=width,height -of csv=p=0 {video}"
-            output = subprocess.check_output(cmd, shell=True)
-            width, height = output.decode().strip().split(",")
-            self.output_width = max(self.output_width, int(width))
-            self.output_height = max(self.output_height, int(height))
+            width, height = VideoUtils.get_video_resolution(video)
+            self.output_width = max(self.output_width, width)
+            self.output_height = max(self.output_height, height)
 
         self.master.status_component.set_and_log_status(
             f"output resolution is determined at {self.output_width} x {self.output_height}"
@@ -266,7 +264,7 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 VideoUtils.concatenate_videos(
                     videos,
                     self.output_directory,
-                    f"{TimeUtils.get_current_timestamp()}.mp4",
+                    f"{TimeUtils.get_current_timestamp()}_with_intro_outro.mp4",
                     self.ffmpeg_preset_value,
                 )
         except Exception as err:
