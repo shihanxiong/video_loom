@@ -111,11 +111,6 @@ class VideoFrame(ttk.Frame, ComponentInterface):
             self.ffmpeg_preset_value = (
                 self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()
             )
-            self.ffmpeg_nvenc_preset_value = (
-                VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(
-                    self.ffmpeg_preset_value
-                )
-            )
 
             self.master.status_component.set_and_log_status(
                 f"Setting processing speed to be {self.master.settings_component.video_setting_component.get_ffmpeg_preset_value()}"
@@ -168,6 +163,11 @@ class VideoFrame(ttk.Frame, ComponentInterface):
 
     def process_trimmed_videos(self):
         try:
+            ffmpeg_nvenc_preset_value = (
+                VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(
+                    self.ffmpeg_preset_value
+                )
+            )
             parsed_timeline_arr = TimelineUtils.parse_timeline(
                 self.master.timeline_component.get_timeline_text()
             )
@@ -179,9 +179,9 @@ class VideoFrame(ttk.Frame, ComponentInterface):
                 )
                 self.trimmed_video_list.append(trimmed_output)
                 if SysUtils.is_win32():
-                    cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy -preset {self.ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
+                    cmd = f"ffmpeg -hwaccel cuvid -c:v h264_cuvid -i {self.video_list[int(video) - 1]} -c:v h264_nvenc -ss {start} -to {end} -vf scale_cuda={self.output_width}:{self.output_height} -c:a copy -preset {ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
                 elif SysUtils.is_macos():
-                    cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy -preset {self.ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
+                    cmd = f"ffmpeg -i {self.video_list[int(video) - 1]} -ss {start} -to {end} -vf scale={self.output_width}:{self.output_height} -c:a copy -preset {ffmpeg_nvenc_preset_value} {FileUtils.escape_file_name(trimmed_output)}"
                 subprocess.check_output(cmd, shell=True)
             self.master.status_component.set_and_log_status("completed trimming videos")
         except Exception as err:

@@ -122,3 +122,64 @@ class VideoUtils:
             return output_file_path
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
+
+    @staticmethod
+    # this method uttilize GPU hardware acceleration for performance enhancement
+    # TODO: add param to toggle video trimming via CPU or GPU
+    def trim_mp4_by_timestamp(
+        video,
+        start_time,
+        end_time,
+        output_width,
+        output_height,
+        ffmpeg_preset_value,
+        output_file,
+    ):
+        try:
+            ffmpeg_nvenc_preset_value = (
+                VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)
+            )
+            if SysUtils.is_macos():
+                cmd = [
+                    "ffmpeg",
+                    "-i",
+                    video,
+                    "-ss",
+                    start_time,
+                    "-to",
+                    end_time,
+                    "-vf",
+                    "scale={}:{}".format(output_width, output_height),
+                    "-c:a",
+                    "copy",
+                    "-preset",
+                    ffmpeg_nvenc_preset_value,
+                    output_file,
+                ]
+            elif SysUtils.is_win32():
+                cmd = [
+                    "ffmpeg",
+                    "-hwaccel",
+                    "cuvid",
+                    "-c:v",
+                    "h264_cuvid",
+                    "-i",
+                    video,
+                    "-c:v",
+                    "h264_nvenc",
+                    "-ss",
+                    start_time,
+                    "-to",
+                    end_time,
+                    "-vf",
+                    "scale_cuda={}:{}".format(output_width, output_height),
+                    "-c:a",
+                    "copy",
+                    "-preset",
+                    ffmpeg_nvenc_preset_value,
+                    output_file,
+                ]
+
+            subprocess.run(cmd, text=True, check=True)
+        except Exception as err:
+            logging.error(f"{VideoUtils.__name__}: {str(err)}")
