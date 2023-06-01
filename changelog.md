@@ -1,10 +1,11 @@
 # Versions
 
-### v1.7.0 (unreleased)
+### v1.7.0
 
 - allow exporting timeline in YouTube format
 - use dynamic sizing for modals (win32/macos)
 - app now supports viewing the video list, user can remove a video from the imported list
+- support customized intro / outro imports
 
 ### v1.6.4
 

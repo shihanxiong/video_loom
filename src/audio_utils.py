@@ -9,11 +9,22 @@ class AudioUtils:
 
     @staticmethod
     def generate_mp3_from_mp4(
-        mp4_input_filename, mp3_output_filename, ffmpeg_preset_arg="-preset ultrafast"
+        mp4_input_filename, mp3_output_filename, ffmpeg_preset_value="ultrafast"
     ):
-        # using preset = ultrafast as the audio is for preview only
-        cmd = f"ffmpeg -i {mp4_input_filename} -vn -preset ultrafast -acodec mp3 {ffmpeg_preset_arg} {FileUtils.escape_file_name(mp3_output_filename)}"
-        subprocess.check_output(cmd, shell=True)
+        # using preset=ultrafast as the audio is for preview only
+        cmd = [
+            "ffmpeg",
+            "-i",
+            mp4_input_filename,
+            "-vn",
+            "-acodec",
+            "mp3",
+            "-preset",
+            ffmpeg_preset_value,
+            mp3_output_filename,
+        ]
+
+        subprocess.run(cmd, text=True, check=True)
         # TODO: do logging via status_component instead
         logging.debug(
             f"generated {mp3_output_filename} from video {mp4_input_filename}"
@@ -23,9 +34,20 @@ class AudioUtils:
 
     @staticmethod
     def generate_aac_from_mp4(
-        mp4_input_filename, aac_output_filename, ffmpeg_preset_arg
+        mp4_input_filename, aac_output_filename, ffmpeg_preset_value
     ):
-        cmd = f"ffmpeg -i {mp4_input_filename} -vn -acodec copy -shortest {ffmpeg_preset_arg} {FileUtils.escape_file_name(aac_output_filename)}"
-        subprocess.check_output(cmd, shell=True)
+        cmd = [
+            "ffmpeg",
+            "-i",
+            mp4_input_filename,
+            "-vn",
+            "-acodec",
+            "copy",
+            "-shortest",
+            "-preset",
+            ffmpeg_preset_value,
+            aac_output_filename,
+        ]
+        subprocess.run(cmd, text=True, check=True)
 
         return aac_output_filename

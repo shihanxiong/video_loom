@@ -22,6 +22,9 @@ class FileUtils:
 
     @staticmethod
     def escape_file_name(filename):
+        if filename == None:
+            return None
+
         return f'"{filename}"'
 
     @staticmethod

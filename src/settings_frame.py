@@ -2,10 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 from audio_setting_frame import AudioSettingFrame
 from video_setting_frame import VideoSettingFrame
+from component_interface import ComponentInterface
 
 
 # settings
-class SettingsFrame(ttk.Frame):
+class SettingsFrame(ttk.Frame, ComponentInterface):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 

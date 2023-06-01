@@ -1,9 +1,10 @@
 import tkinter as tk
 import datetime
 from tkinter import ttk
+from component_interface import ComponentInterface
 
 
-class VideoControlFrame(ttk.Frame):
+class VideoControlFrame(ttk.Frame, ComponentInterface):
     def __init__(self, container, **args):
         super().__init__(container, **args)
 

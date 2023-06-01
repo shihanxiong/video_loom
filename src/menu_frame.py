@@ -2,11 +2,11 @@ import tkinter as tk
 import logging
 from tkinter import ttk, Menu, Toplevel, Entry, END
 from timeline_utils import TimelineUtils
-from sys_utils import SysUtils
+from component_interface import ComponentInterface
 
 
 # videos input
-class MenuFrame(ttk.Frame):
+class MenuFrame(ttk.Frame, ComponentInterface):
     _MENU_CREATE_RANDOM_SEGMENTS = "create random segments"
     _MENU_EXPORT_YOUTUBE_TIMESTAMP = "export YouTube timestamp"
 

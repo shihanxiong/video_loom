@@ -32,3 +32,4 @@ yarn-error.log*
 
 # do not ignore
 !/src/test/*.mp4
+!/src/test/*.aac
