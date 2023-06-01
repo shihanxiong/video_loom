@@ -139,25 +139,24 @@ class VideoUtils:
             ffmpeg_nvenc_preset_value = (
                 VideoUtils.get_ffmpeg_preset_value_for_nvenc_h264(ffmpeg_preset_value)
             )
-            cmd = []
-            if SysUtils.is_macos() or SysUtils.is_other():
-                cmd = [
-                    "ffmpeg",
-                    "-i",
-                    video,
-                    "-ss",
-                    start_time,
-                    "-to",
-                    end_time,
-                    "-vf",
-                    "scale={}:{}".format(output_width, output_height),
-                    "-c:a",
-                    "copy",
-                    "-preset",
-                    ffmpeg_nvenc_preset_value,
-                    output_file,
-                ]
-            elif SysUtils.is_win32():
+            cmd = [
+                "ffmpeg",
+                "-i",
+                video,
+                "-ss",
+                start_time,
+                "-to",
+                end_time,
+                "-vf",
+                "scale={}:{}".format(output_width, output_height),
+                "-c:a",
+                "copy",
+                "-preset",
+                ffmpeg_nvenc_preset_value,
+                output_file,
+            ]
+
+            if SysUtils.is_win32():
                 cmd = [
                     "ffmpeg",
                     "-hwaccel",

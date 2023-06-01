@@ -22,7 +22,3 @@ class SysUtils:
     @staticmethod
     def is_macos():
         return platform == "darwin"
-
-    @staticmethod
-    def is_other():
-        return SysUtils.is_win32 == False and SysUtils.is_macos == False
