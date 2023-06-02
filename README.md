@@ -117,7 +117,7 @@ $pip3 install pytest freezegun
 
 ```bash
 # running tests
-$pytest -vv -s
+$pytest -vvs
 ```
 
 ## Packaging
