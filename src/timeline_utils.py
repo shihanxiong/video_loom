@@ -1,5 +1,6 @@
 import datetime
 import random
+from time_utils import TimeUtils
 
 
 class TimelineUtils:
@@ -9,6 +10,9 @@ class TimelineUtils:
         "Invalid timeline - start time is equal/after end time"
     )
     _EMPTY_TIMELINE_ERROR_MESSAGE = "Invalid timeline - timeline cannot be empty"
+    _END_TIME_EXCEEDS_VIDEO_DURATION_ERROR_MESSAGE = (
+        "Invalid timeline - end time exceeds video duration"
+    )
 
     def __init__(self):
         pass
@@ -24,7 +28,7 @@ class TimelineUtils:
         return parsed_timeline_arr
 
     @staticmethod
-    def validate_timeline(timeline_text):
+    def validate_timeline(timeline_text, video_durations):
         if timeline_text.replace("\n", "").replace("\t", "").replace(" ", "") == "":
             return TimelineUtils._EMPTY_TIMELINE_ERROR_MESSAGE
 
@@ -33,11 +37,13 @@ class TimelineUtils:
 
             for idx, parsed_timeline in enumerate(parsed_timeline_arr):
                 video, start, end = parsed_timeline
-                start_in_time = datetime.datetime.strptime(start, "%H:%M:%S").time()
-                end_in_time = datetime.datetime.strptime(end, "%H:%M:%S").time()
+                start_time = TimeUtils.convert_duration_to_seconds(start)
+                end_time = TimeUtils.convert_duration_to_seconds(end)
 
-                if start_in_time >= end_in_time:
+                if start_time >= end_time:
                     return TimelineUtils._START_TIME_AFTER_END_TIME_ERROR_MESSAGE
+                elif end_time > video_durations[int(video)]:
+                    return TimelineUtils._END_TIME_EXCEEDS_VIDEO_DURATION_ERROR_MESSAGE
         except ValueError as e:
             if "not enough values to unpack" in str(e):
                 return TimelineUtils._MISS_VALUE_IN_TIMELINE_ERROR_MESSAGE

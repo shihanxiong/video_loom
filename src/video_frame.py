@@ -84,6 +84,9 @@ class VideoFrame(ttk.Frame, ComponentInterface):
         # this will scale all inputs to match the max width & max height
         self.calculate_output_resolutions()
 
+        # calculate output video max durations
+        self.calculate_video_durations()
+
         # logging
         start_time = datetime.now()
         logging.info("kicking off video processing, hang tight")
@@ -98,7 +101,7 @@ class VideoFrame(ttk.Frame, ComponentInterface):
         try:
             # validate timeline
             error = TimelineUtils.validate_timeline(
-                self.master.timeline_component.get_timeline_text()
+                self.master.timeline_component.get_timeline_text(), self.video_durations
             )
 
             if error is None:
@@ -157,6 +160,18 @@ class VideoFrame(ttk.Frame, ComponentInterface):
 
         self.master.status_component.set_and_log_status(
             f"output resolution is determined at {self.output_width} x {self.output_height}"
+        )
+
+    def calculate_video_durations(self):
+        self.video_durations = {}
+
+        # Get video durations
+        for idx, video in enumerate(self.video_list):
+            duration = VideoUtils.get_video_duration(video)
+            self.video_durations[idx + 1] = duration
+
+        self.master.status_component.set_and_log_status(
+            f"output durations info processed"
         )
 
     def process_trimmed_videos(self):

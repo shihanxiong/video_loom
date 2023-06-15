@@ -1,5 +1,9 @@
 # Versions
 
+### v1.7.1 (unreleased)
+
+- displays error if endtime exceeds the duration of the video
+
 ### v1.7.0
 
 - allow exporting timeline in YouTube format
