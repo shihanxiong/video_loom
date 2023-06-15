@@ -1,5 +1,7 @@
 from timeline_utils import TimelineUtils
 
+video_durations = {1: 100, 2: 200, 3: 300}
+
 
 def test_parse_timeline_valid():
     timeline_text = "1,0:00:01,0:00:05\n2,0:00:05,0:00:10\n3,0:00:10,0:00:15"
@@ -40,7 +42,7 @@ def test_parse_timeline_extra_eol():
 def test_validate_timeline_empty():
     timeline_text = " \n \n\n   \n\n\n"
     assert (
-        TimelineUtils.validate_timeline(timeline_text)
+        TimelineUtils.validate_timeline(timeline_text, video_durations)
         == "Invalid timeline - timeline cannot be empty"
     )
 
@@ -49,14 +51,14 @@ def test_validate_timeline():
     # when timeline is missing a timestamp
     timeline_text_1 = "1,0:00:01,0:00:05\n2,0:00:10\n3,0:00:10,0:00:15"
     assert (
-        TimelineUtils.validate_timeline(timeline_text_1)
+        TimelineUtils.validate_timeline(timeline_text_1, video_durations)
         == "Missing timeline value - ensure the timeline is in format '<video_number>,<start_time>,<end_time>' and separated by comma ','"
     )
 
     # when timeline has additional element
     timeline_text_2 = "1,0:00:01,0:00:05\n2,0:00:10,0:00:20\n3,0:00:10,0:00:15,0:00:15"
     assert (
-        TimelineUtils.validate_timeline(timeline_text_2)
+        TimelineUtils.validate_timeline(timeline_text_2, video_durations)
         == "Redundant timeline value - ensure the timeline is in format '<video_number>,<start_time>,<end_time>' and separated by comma ','"
     )
 
@@ -64,12 +66,19 @@ def test_validate_timeline():
     timeline_text_3 = "1,0:00:01,0:00:05\n2,0:00:10,0:00:09\n3,0:00:10,0:00:15"
     timeline_text_4 = "1,0:00:01,0:00:05\n2,0:00:10,0:00:10\n3,0:00:10,0:00:15"
     assert (
-        TimelineUtils.validate_timeline(timeline_text_3)
+        TimelineUtils.validate_timeline(timeline_text_3, video_durations)
         == "Invalid timeline - start time is equal/after end time"
     )
     assert (
-        TimelineUtils.validate_timeline(timeline_text_4)
+        TimelineUtils.validate_timeline(timeline_text_4, video_durations)
         == "Invalid timeline - start time is equal/after end time"
+    )
+
+    # when timeline end time exceeds video duration
+    timeline_text_5 = "1,0:00:01,0:00:05\n2,0:00:10,0:00:19\n3,0:00:10,0:05:15"
+    assert (
+        TimelineUtils.validate_timeline(timeline_text_5, video_durations)
+        == "Invalid timeline - end time exceeds video duration"
     )
 
 
