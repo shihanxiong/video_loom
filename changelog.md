@@ -3,6 +3,8 @@
 ### v1.7.1 (unreleased)
 
 - displays error if endtime exceeds the duration of the video
+- code refactoring
+  - moved modals into separate Frames
 
 ### v1.7.0
 
