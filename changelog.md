@@ -1,8 +1,9 @@
 # Versions
 
-### v1.7.1 (unreleased)
+### v1.7.1
 
 - displays error if endtime exceeds the duration of the video
+- fixed a performance issue during video concatenation
 - code refactoring
   - moved modals into separate Frames
 
