@@ -80,6 +80,8 @@ class VideoUtils:
                     "aac",
                     "-preset",
                     ffmpeg_preset_value,
+                    "-vsync",
+                    "2",
                     output_file,
                 ]
             )
