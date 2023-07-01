@@ -23,7 +23,13 @@ class VideoUtils:
             "json",
             video,
         ]
-        result = subprocess.run(ffprobe_cmd, capture_output=True, text=True, check=True)
+        result = subprocess.run(
+            ffprobe_cmd,
+            capture_output=True,
+            text=True,
+            check=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+        )
         output = result.stdout
 
         try:
@@ -86,7 +92,12 @@ class VideoUtils:
                 ]
             )
 
-            subprocess.run(cmd, text=True, check=True)
+            subprocess.run(
+                cmd,
+                text=True,
+                check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+            )
             return output_file
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
@@ -120,7 +131,12 @@ class VideoUtils:
                 output_file_path,
             ]
 
-            subprocess.run(cmd, text=True, check=True)
+            subprocess.run(
+                cmd,
+                text=True,
+                check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+            )
             return output_file_path
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
@@ -182,7 +198,12 @@ class VideoUtils:
                     output_file,
                 ]
 
-            subprocess.run(cmd, text=True, check=True)
+            subprocess.run(
+                cmd,
+                text=True,
+                check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+            )
         except Exception as err:
             logging.error(f"{VideoUtils.__name__}: {str(err)}")
 
@@ -200,7 +221,13 @@ class VideoUtils:
                 video,
             ]
 
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=True,
+                creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+            )
             output = result.stdout
 
             try:
