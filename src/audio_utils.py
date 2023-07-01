@@ -1,6 +1,6 @@
 import subprocess
 import logging
-from file_utils import FileUtils
+from sys_utils import SysUtils
 
 
 class AudioUtils:
@@ -24,7 +24,12 @@ class AudioUtils:
             mp3_output_filename,
         ]
 
-        subprocess.run(cmd, text=True, check=True)
+        subprocess.run(
+            cmd,
+            text=True,
+            check=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+        )
         # TODO: do logging via status_component instead
         logging.debug(
             f"generated {mp3_output_filename} from video {mp4_input_filename}"
@@ -48,6 +53,11 @@ class AudioUtils:
             ffmpeg_preset_value,
             aac_output_filename,
         ]
-        subprocess.run(cmd, text=True, check=True)
+        subprocess.run(
+            cmd,
+            text=True,
+            check=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if SysUtils.is_win32() else 0,
+        )
 
         return aac_output_filename
