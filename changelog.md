@@ -2,7 +2,7 @@
 
 ### v1.7.2
 
-- fixed an issue where console windows pops up during video / audio processing
+- fixed an issue where console windows pops up during video / audio processing in win32 OS
 
 ### v1.7.1
 
