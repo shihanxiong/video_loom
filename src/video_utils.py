@@ -2,7 +2,6 @@ import os
 import subprocess
 import logging
 import json
-from file_utils import FileUtils
 from sys_utils import SysUtils
 
 

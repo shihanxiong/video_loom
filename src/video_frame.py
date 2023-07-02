@@ -1,5 +1,4 @@
 import os
-import subprocess
 import logging
 import tkinter as tk
 from tkinter import ttk
@@ -12,7 +11,6 @@ from time_utils import TimeUtils
 from file_utils import FileUtils
 from timeline_utils import TimelineUtils
 from audio_utils import AudioUtils
-from sys_utils import SysUtils
 from video_utils import VideoUtils
 from component_interface import ComponentInterface
 
