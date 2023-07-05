@@ -1,5 +1,9 @@
 # Versions
 
+### v1.8.0 (unreleased)
+
+- add support to concatenate audios
+
 ### v1.7.2
 
 - fixed an issue where console windows pops up during video / audio processing in win32 OS
