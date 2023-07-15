@@ -25,15 +25,11 @@ This is a portable / multi-platform application that helps you trim videos. Say 
 
 1. Open `powershell` on windows w/ administration access
 2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
-3. Type this command
+3. Execute this command
 
    ```st
    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
    ```
-
-   and click enter
-
-4. wait till the installation to complete
 
 #### How to install `ffmpeg`
 
