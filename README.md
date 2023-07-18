@@ -25,15 +25,11 @@ This is a portable / multi-platform application that helps you trim videos. Say 
 
 1. Open `powershell` on windows w/ administration access
 2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
-3. Type this command
+3. Execute this command
 
    ```st
    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
    ```
-
-   and click enter
-
-4. wait till the installation to complete
 
 #### How to install `ffmpeg`
 
@@ -104,33 +100,34 @@ $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
    (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VSCode terminal)
 7. Now you can run `python3 <app_name>.py` to execute programs.
 
-## Testing
-
-> Ensure `pytest, freezegun` are installed
+## Install dependencies
 
 ```bash
-# install pytest
-$pip3 install pytest freezegun
+# ensure python3.10+ is installed
+
+# install pip dependencies
+$pip3 install tkvideoplayer pygame
 ```
 
-> Running tests
+## Testing
 
 ```bash
+# install pytest & dependencies
+$pip3 install pytest freezegun
+
 # running tests
 $pytest -vvs
 ```
 
 ## Packaging
 
-> Ensure `pyinstaller` is installed
-
 ```bash
+# install pyinstaller
 $pip3 install pyinstaller
-```
 
-> Generate executables (note: executables will automatically be determined by the OS. e.g. `.exe` for Windows and `.app` for MacOS)
+# Generate executables
+# note: executables will automatically be determined by the OS. e.g. '.exe' for Windows and '.app' for MacOS
 
-```bash
 $cd src
 $./bundle.sh <app.win32.spec | app.macos.spec>
 ```

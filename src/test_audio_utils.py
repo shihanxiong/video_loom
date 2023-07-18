@@ -9,6 +9,8 @@ mp3_output_filename = "test_generate_mp3_from_mp4.mp3"
 aac_output_filename = "test_generate_aac_from_mp4.aac"
 mp3_path = FileUtils.get_file_path(os.path.join("src", "test", mp3_output_filename))
 aac_path = FileUtils.get_file_path(os.path.join("src", "test", aac_output_filename))
+audio_1_path = FileUtils.get_file_path(os.path.join("src", "test", "audio_1.aac"))
+audio_2_path = FileUtils.get_file_path(os.path.join("src", "test", "audio_2.aac"))
 mp4_path = FileUtils.get_file_path(
     os.path.join("src", "test", "2023_04_15_19_00_49.mp4")
 )
@@ -44,3 +46,8 @@ def test_generate_mp3_from_mp4():
 def test_generate_aac_from_mp4():
     AudioUtils.generate_aac_from_mp4(mp4_path, aac_path, ffmpeg_preset_value)
     assert os.path.exists(aac_path) == True
+
+
+def test_get_audio_duration():
+    assert AudioUtils.get_audio_duration(audio_1_path) == 5
+    assert AudioUtils.get_audio_duration(audio_2_path) == 10
