@@ -1,0 +1,5 @@
+freezegun
+pytest
+pygame
+tkvideoplayer
+pyinstaller

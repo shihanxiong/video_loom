@@ -106,15 +106,12 @@ $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
 # ensure python3.10+ is installed
 
 # install pip dependencies
-$pip3 install tkvideoplayer pygame
+$pip3 install -r requirements.txt
 ```
 
 ## Testing
 
 ```bash
-# install pytest & dependencies
-$pip3 install pytest freezegun
-
 # running tests
 $pytest -vvs
 ```
@@ -122,9 +119,6 @@ $pytest -vvs
 ## Packaging
 
 ```bash
-# install pyinstaller
-$pip3 install pyinstaller
-
 # Generate executables
 # note: executables will automatically be determined by the OS. e.g. '.exe' for Windows and '.app' for MacOS
 
