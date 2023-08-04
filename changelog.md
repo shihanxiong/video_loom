@@ -3,6 +3,7 @@
 ### v1.8.0 (unreleased)
 
 - add support to concatenate audios
+- YouTube timestamp will auto-offset if intro is included
 
 ### v1.7.2
 
