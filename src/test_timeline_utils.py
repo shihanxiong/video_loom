@@ -119,3 +119,9 @@ def test_generate_youtube_timestamp():
         )
         == "0:00:01 Dan\n0:00:10 Hank\n0:00:15 Lindsay\n"
     )
+    assert (
+        TimelineUtils.generate_youtube_timestamp(
+            timeline_text, ["Dan", "Hank", "Lindsay"], 1
+        )
+        == "0:00:02 Dan\n0:00:11 Hank\n0:00:16 Lindsay\n"
+    )

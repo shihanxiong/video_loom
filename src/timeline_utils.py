@@ -100,10 +100,27 @@ class TimelineUtils:
         return (prev_in_min + min_per_segment) * 60 + margin_in_sec
 
     @staticmethod
-    def generate_youtube_timestamp(timeline_text, labels):
+    def generate_youtube_timestamp(timeline_text, labels, offset=None):
+        """Generate YouTube format timestamp from timeline
+
+        Args:
+            timeline_text (str): timeline text from UI
+            labels (str): label for each timeline segment
+            offset (int, optional): offset duration in seconds, typically used with intro duration. Defaults to None.
+
+        Returns:
+            str: YouTube format timestamp
+        """
         parsed_timeline_arr = TimelineUtils.parse_timeline(timeline_text)
         youtube_timestamp = ""
         for timeline in parsed_timeline_arr:
             label = labels[int(timeline[0]) - 1]
-            youtube_timestamp += f"{timeline[1]} {label}\n"
+
+            time = timeline[1]
+            if offset != None:
+                time = TimeUtils.convert_seconds_to_duration(
+                    TimeUtils.convert_duration_to_seconds(time) + offset
+                )
+
+            youtube_timestamp += f"{time} {label}\n"
         return youtube_timestamp
