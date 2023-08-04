@@ -1,6 +1,7 @@
 import logging
 from tkinter import ttk, Toplevel, Entry
 from timeline_utils import TimelineUtils
+from video_utils import VideoUtils
 
 
 class ExportYoutubeTimestampModalFrame(Toplevel):
@@ -51,9 +52,16 @@ class ExportYoutubeTimestampModalFrame(Toplevel):
             for entry in self.entries:
                 labels.append(entry.get())
 
+            # check offset if intro exists
+            offset = 0
+            if self.master.video_component.intro != None:
+                offset = VideoUtils.get_video_duration(
+                    self.master.video_component.intro
+                )
+
             # generate youtube timestamp
             timestamp_text = TimelineUtils.generate_youtube_timestamp(
-                timeline_text, labels
+                timeline_text, labels, offset
             )
 
             # copy to clipboard
