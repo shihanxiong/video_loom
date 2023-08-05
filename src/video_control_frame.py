@@ -2,6 +2,7 @@ import tkinter as tk
 import datetime
 from tkinter import ttk
 from component_interface import ComponentInterface
+from tktooltip import ToolTip
 
 
 class VideoControlFrame(ttk.Frame, ComponentInterface):
@@ -60,6 +61,11 @@ class VideoControlFrame(ttk.Frame, ComponentInterface):
             text="Copy timestamp",
             padding=(5),
             command=lambda: self.copy_current_timestamp_to_clipboard(),
+        )
+        ToolTip(
+            self.copy_timestamp_button,
+            msg="Copy current timestamp to clipboard (in h:mm:ss format)",
+            delay=0,
         )
 
         self.start_time.grid(row=0, column=0, sticky="EW")

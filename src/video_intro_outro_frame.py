@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from component_interface import ComponentInterface
+from tktooltip import ToolTip
 
 
 class VideoIntroOutroFrame(ttk.Frame, ComponentInterface):
@@ -19,8 +20,18 @@ class VideoIntroOutroFrame(ttk.Frame, ComponentInterface):
         self.import_intro_button = ttk.Button(
             self, text=self._BUTTON_TEXT_IMPORT_INTRO, command=self.import_intro
         )
+        ToolTip(
+            self.import_intro_button,
+            msg="Import a video as intro for the final generated video, it will be using its own audio track",
+            delay=0,
+        )
         self.import_outro_button = ttk.Button(
             self, text=self._BUTTON_TEXT_IMPORT_OUTRO, command=self.import_outro
+        )
+        ToolTip(
+            self.import_outro_button,
+            msg="Import a video as outro for the final generated video, it will be using its own audio track",
+            delay=0,
         )
 
         self.import_intro_button.grid(row=0, column=0, sticky="EW")

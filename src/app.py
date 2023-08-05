@@ -2,6 +2,7 @@ import os
 from sys import platform
 import tkinter as tk
 import logging
+from async_tkinter_loop import async_mainloop
 from tkinter import ttk
 from windows import set_dpi_awareness
 from menu_frame import MenuFrame
@@ -109,4 +110,5 @@ if SysUtils.is_running_in_pyinstaller_bundle():
 else:
     root.iconbitmap(FileUtils.get_file_path(os.path.join("img", "app_logo.ico")))
 
-root.mainloop()
+
+async_mainloop(root)

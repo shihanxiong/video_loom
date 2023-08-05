@@ -96,16 +96,19 @@ $export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
 ```
 
 6. (optional) If you are running application using `code-runner` in `VSCode`. You can configure `"code-runner.runInTerminal": true` in `settings.json`. As well as setting `python` command as `python3 -m`. See below
+
    <img src="./img/vscode_1.png" width="450" height="320" />
+
    (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VSCode terminal)
+
 7. Now you can run `python3 <app_name>.py` to execute programs.
 
 ## Install dependencies
 
 ```bash
 # ensure python3.10+ is installed
-
 # install pip dependencies
+
 $pip3 install -r requirements.txt
 ```
 

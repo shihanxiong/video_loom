@@ -4,6 +4,7 @@ from tkinter import ttk
 from audio_utils import AudioUtils
 from file_utils import FileUtils
 from component_interface import ComponentInterface
+from tktooltip import ToolTip
 
 
 # audio setting
@@ -39,9 +40,19 @@ class AudioSettingFrame(ttk.Frame, ComponentInterface):
         self.generate_audio_preview_button = ttk.Button(
             self, text="Generate preview", command=self.generate_audio_preview
         )
+        ToolTip(
+            self.generate_audio_preview_button,
+            msg="Generate audio preview from a specific video source, this may take a minute",
+            delay=0,
+        )
         self.generate_audio_preview_button.grid(row=1, column=2)
         self.remove_audio_preview_button = ttk.Button(
             self, text="Remove preview", command=self.remove_audio_preview
+        )
+        ToolTip(
+            self.remove_audio_preview_button,
+            msg="Remove generated audio preview file",
+            delay=0,
         )
         self.remove_audio_preview_button.grid(row=1, column=3, sticky="W")
         self.disable_button(self.remove_audio_preview_button)

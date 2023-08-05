@@ -111,7 +111,7 @@ class AudioUtils:
                 cmd.extend(["-i", audio])
 
             # Add the concatenate filter
-            filter_string = "concat:" + "|".join(f"[{i}:0]" for i in range(len(audios)))
+            filter_string = "concat=n={}:v=0:a=1[out]".format(len(audios))
             cmd.extend(["-filter_complex", filter_string, "-c:a", "copy"])
 
             # Set the output file
