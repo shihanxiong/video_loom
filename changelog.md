@@ -1,6 +1,6 @@
 # Versions
 
-### v1.8.0
+### v1.8.0 (unreleased)
 
 - add support to concatenate audios
 - updated readme with dependencies installation guide
