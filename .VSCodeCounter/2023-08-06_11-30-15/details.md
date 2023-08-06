@@ -1,10 +1,10 @@
 # Details
 
-Date : 2023-08-06 11:16:24
+Date : 2023-08-06 11:30:15
 
 Directory /Users/shihanxiong/dev/video_loom
 
-Total : 47 files,  2349 codes, 284 comments, 603 blanks, all 3236 lines
+Total : 47 files,  2351 codes, 284 comments, 603 blanks, all 3238 lines
 
 [Summary](results.md) / Details / [Diff Summary](diff.md) / [Diff Details](diff-details.md)
 
@@ -21,7 +21,7 @@ Total : 47 files,  2349 codes, 284 comments, 603 blanks, all 3236 lines
 | [src/app.py](/src/app.py) | Python | 84 | 12 | 19 | 115 |
 | [src/app.win32.spec](/src/app.win32.spec) | Ruby | 40 | 1 | 6 | 47 |
 | [src/audio_setting_frame.py](/src/audio_setting_frame.py) | Python | 98 | 7 | 21 | 126 |
-| [src/audio_utils.py](/src/audio_utils.py) | Python | 105 | 8 | 16 | 129 |
+| [src/audio_utils.py](/src/audio_utils.py) | Python | 107 | 8 | 16 | 131 |
 | [src/bundle.sh](/src/bundle.sh) | Shell Script | 5 | 4 | 4 | 13 |
 | [src/component_interface.py](/src/component_interface.py) | Python | 25 | 0 | 12 | 37 |
 | [src/create_random_segments_modal_frame.py](/src/create_random_segments_modal_frame.py) | Python | 58 | 2 | 12 | 72 |
