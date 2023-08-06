@@ -1,26 +1,22 @@
 # Diff Summary
 
-Date : 2023-07-01 21:26:20
+Date : 2023-08-06 11:30:15
 
 Directory /Users/shihanxiong/dev/video_loom
 
-Total : 16 files,  131 codes, 3 comments, 40 blanks, all 174 lines
+Total : 1 files,  2 codes, 0 comments, 0 blanks, all 2 lines
 
 [Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)
 
 ## Languages
 | language | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Python | 15 | 124 | 3 | 36 | 163 |
-| Markdown | 1 | 7 | 0 | 4 | 11 |
+| Python | 1 | 2 | 0 | 0 | 2 |
 
 ## Directories
 | path | files | code | comment | blank | total |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| . | 16 | 131 | 3 | 40 | 174 |
-| . (Files) | 1 | 7 | 0 | 4 | 11 |
-| src | 15 | 124 | 3 | 36 | 163 |
-| src (Files) | 13 | 120 | 3 | 32 | 155 |
-| src/sandbox | 2 | 4 | 0 | 4 | 8 |
+| . | 1 | 2 | 0 | 0 | 2 |
+| src | 1 | 2 | 0 | 0 | 2 |
 
 [Summary](results.md) / [Details](details.md) / Diff Summary / [Diff Details](diff-details.md)

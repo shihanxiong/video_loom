@@ -1,6 +1,7 @@
 from tkinter import ttk
 from component_interface import ComponentInterface
 from video_list_modal_frame import VideoListModalFrame
+from tktooltip import ToolTip
 
 
 class VideoImportFrame(ttk.Frame, ComponentInterface):
@@ -19,10 +20,20 @@ class VideoImportFrame(ttk.Frame, ComponentInterface):
         self.video_import_button = ttk.Button(
             self, text="Import videos", command=self.import_videos
         )
+        ToolTip(
+            self.video_import_button,
+            msg="Select video files to import",
+            delay=0,
+        )
         self.view_video_list_button = ttk.Button(
             self,
             text="View video list (0 of 4)",
             command=self.show_videos_list_modal,
+        )
+        ToolTip(
+            self.view_video_list_button,
+            msg="Display / manage videos currently imported",
+            delay=0,
         )
         self.play_pause_videos_button = ttk.Button(
             self,

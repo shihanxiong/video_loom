@@ -104,15 +104,17 @@ class AudioUtils:
             output_file = os.path.join(output_directory, output_name)
 
             # Prepare the ffmpeg command
-            cmd = ["ffmpeg"]
+            cmd = ["ffmpeg", "-i"]
 
             # Add input options for each file
-            for audio in audios:
-                cmd.extend(["-i", audio])
+            filter_string = "concat:"
+            for idx, audio in enumerate(audios):
+                if idx != 0:
+                    filter_string += "|"
+                filter_string += audio
 
             # Add the concatenate filter
-            filter_string = "concat:" + "|".join(f"[{i}:0]" for i in range(len(audios)))
-            cmd.extend(["-filter_complex", filter_string, "-c:a", "copy"])
+            cmd.extend([filter_string, "-c", "copy"])
 
             # Set the output file
             cmd.append(output_file)
