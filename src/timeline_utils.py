@@ -113,6 +113,11 @@ class TimelineUtils:
         """
         parsed_timeline_arr = TimelineUtils.parse_timeline(timeline_text)
         youtube_timestamp = ""
+
+        # if intro offset is present, add 0:00:00 Intro at the beginining for YouTube to render correctly
+        if offset != None:
+            youtube_timestamp += "0:00:00 Intro\n"
+
         for timeline in parsed_timeline_arr:
             label = labels[int(timeline[0]) - 1]
 
