@@ -4,7 +4,8 @@
 # pyinstaller app.py --onefile --debug=imports --hidden-import av --hidden-import chardet --log-level=DEBUG --noconsole
 
 # updated bash script w/ specified .spec file
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ] || [ $1 != "app.win32.spec" ] && [ $1 != "app.macos.spec" ]
+then
   echo "Please provide a spec file (app.win32.spec | app.macos.spec)"
   exit
 fi
