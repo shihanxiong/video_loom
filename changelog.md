@@ -4,6 +4,7 @@
 
 - add support to concatenate audios
 - updated readme with dependencies installation guide
+- updated bundle script to accept version as arg
 
 ### v1.7.3
 

@@ -126,7 +126,8 @@ $pytest -vvs
 # note: executables will automatically be determined by the OS. e.g. '.exe' for Windows and '.app' for MacOS
 
 $cd src
-$./bundle.sh <app.win32.spec | app.macos.spec>
+$./bundle.sh <app.win32.spec | app.macos.spec> <v_[major][minor][patch]>
+# e.g. ./bundle.sh app.win32.spec v1.9.13
 ```
 
 ## Change log
