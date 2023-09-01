@@ -100,15 +100,21 @@ class VideoLoom(tk.Tk):
             component.refresh()
 
 
-# start app
-root = VideoLoom()
+try:
+    if __name__ == "__main__":
+        # start app
+        root = VideoLoom()
 
+        # set app logo in UI
+        if SysUtils.is_running_in_pyinstaller_bundle():
+            root.iconbitmap(
+                FileUtils.get_bundled_file_path(os.path.join("app_logo.ico"))
+            )
+        else:
+            root.iconbitmap(
+                FileUtils.get_file_path(os.path.join("img", "app_logo.ico"))
+            )
 
-# set app logo in UI
-if SysUtils.is_running_in_pyinstaller_bundle():
-    root.iconbitmap(FileUtils.get_bundled_file_path(os.path.join("app_logo.ico")))
-else:
-    root.iconbitmap(FileUtils.get_file_path(os.path.join("img", "app_logo.ico")))
-
-
-async_mainloop(root)
+        async_mainloop(root)
+except Exception as err:
+    logging.error(f"app.py: {str(err)}")
