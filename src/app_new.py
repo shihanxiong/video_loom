@@ -18,7 +18,7 @@ class App(QMainWindow):
         super().__init__()
 
         # app config
-        self.setGeometry(400, 400, 1000, 600)
+        self.setGeometry(400, 400, 1000, 700)
         self.setWindowTitle(
             f"Video Loom - {FileUtils.get_latest_version_from_changelog()}"
         )
