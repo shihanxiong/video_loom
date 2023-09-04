@@ -30,7 +30,9 @@ class AudioSettingWidget(QWidget):
             self.on_audio_track_selection_activated
         )
         self.generate_audio_preview_button = QPushButton("Generate preview", self)
+        self.generate_audio_preview_button.setEnabled(False)
         self.remove_audio_preview_button = QPushButton("Remove preview", self)
+        self.remove_audio_preview_button.setEnabled(False)
 
         # component layout
         main_layout = QVBoxLayout(self)
