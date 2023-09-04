@@ -1,10 +1,24 @@
-from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QVBoxLayout, QTextEdit
+from PyQt6.QtCore import Qt
+from global_state import GlobalState
 
 
 class TimelineWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.button = QPushButton("placeholder for timeline widget", self)
+        # state
+        self.state = GlobalState()
+
+        # components
+        self.timeline_label = QLabel("Timeline", self)
+        self.timeline_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.timeline_text = QTextEdit()
+        self.timeline_text.setPlaceholderText(
+            "Enter timeline here, each line stands for a segment. For example:\n2, 0:00:00, 0:00:10\n1, 0:00:10, 0:01:05"
+        )
+
+        # component layout
         self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.button)
+        self.layout.addWidget(self.timeline_label)
+        self.layout.addWidget(self.timeline_text)

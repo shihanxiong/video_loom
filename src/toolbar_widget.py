@@ -7,6 +7,7 @@ class ToolbarWidget(QWidget):
         super().__init__()
 
         self.generate_button = QPushButton("Generate Video", self)
+        self.generate_button.setEnabled(False)  # TODO
         self.quit_button = QPushButton("Quit", self)
         self.quit_button.clicked.connect(QCoreApplication.quit)
 
