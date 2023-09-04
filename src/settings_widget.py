@@ -1,10 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QPushButton, QHBoxLayout
+from audio_setting_widget import AudioSettingWidget
+from video_setting_widget import VideoSettingWidget
 
 
 class SettingsWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.button = QPushButton("placeholder for settings widget", self)
-        self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.button)
+        # components
+        self.audio_setting_component = AudioSettingWidget()
+        self.video_setting_component = VideoSettingWidget()
+
+        # component layout
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.audio_setting_component)
+        self.layout.addWidget(self.video_setting_component)

@@ -10,5 +10,7 @@ class GlobalState:
                 "video_list": [],
                 "intro": None,
                 "outro": None,
+                "timeline": None,
+                "audio_track_selection": 0,
             }
         return cls._instance

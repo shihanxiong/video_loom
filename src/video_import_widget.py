@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QPushButton, QHBoxLayout, QFileDialog, QGridLayout
+from PyQt6.QtWidgets import QWidget, QPushButton, QFileDialog, QGridLayout
 from PyQt6.QtCore import Qt
 from global_state import GlobalState
 

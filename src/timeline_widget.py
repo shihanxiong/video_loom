@@ -17,8 +17,13 @@ class TimelineWidget(QWidget):
         self.timeline_text.setPlaceholderText(
             "Enter timeline here, each line stands for a segment. For example:\n2, 0:00:00, 0:00:10\n1, 0:00:10, 0:01:05"
         )
+        self.timeline_text.textChanged.connect(self.on_text_changed)
 
         # component layout
         self.layout = QVBoxLayout(self)
         self.layout.addWidget(self.timeline_label)
         self.layout.addWidget(self.timeline_text)
+
+    def on_text_changed(self):
+        timeline_text = self.timeline_text.toPlainText()
+        self.state.data["timeline"] = timeline_text
