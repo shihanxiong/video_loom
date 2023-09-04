@@ -13,7 +13,7 @@ from status_widget import StatusWidget
 from toolbar_widget import ToolbarWidget
 
 
-class App(QWidget):
+class App(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -52,10 +52,11 @@ class App(QWidget):
         root_logger.addHandler(console_handler)
 
         # components
-        self.video_component = VideoWidget()
+        self.central_widget = QWidget()
+        self.video_component = VideoWidget(self)
         self.settings_component = SettingsWidget()
         self.timeline_component = TimelineWidget()
-        self.status_component = StatusWidget()
+        self.status_component = StatusWidget(self)
         self.toolbar_component = ToolbarWidget()
 
         # app layout
@@ -65,7 +66,8 @@ class App(QWidget):
         grid.addWidget(self.timeline_component)
         grid.addWidget(self.status_component)
         grid.addWidget(self.toolbar_component)
-        self.setLayout(grid)
+        self.central_widget.setLayout(grid)
+        self.setCentralWidget(self.central_widget)
 
 
 try:

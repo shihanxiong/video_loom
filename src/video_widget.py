@@ -6,11 +6,11 @@ from video_control_widget import VideoControlWidget
 
 
 class VideoWidget(QWidget):
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
 
         # components
-        self.video_import_component = VideoImportWidget()
+        self.video_import_component = VideoImportWidget(main_window)
         self.video_intro_outro_component = VideoIntroOutroWidget()
         self.video_renderer_component = VideoRendererWidget()
         self.video_control_component = VideoControlWidget()
