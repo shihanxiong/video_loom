@@ -1,10 +1,11 @@
 # Versions
 
-### v1.8.0 (unreleased)
+### v2.0.0 (unreleased)
 
 - add support to concatenate audios
 - updated readme with dependencies installation guide
 - updated bundle script to accept version as arg
+- migrate to PyQt6 Framework
 
 ### v1.7.3
 
