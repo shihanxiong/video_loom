@@ -17,7 +17,9 @@ class VideoImportWidget(QWidget):
         self.main_window = main_window
         self.video_import_button = QPushButton("Import videos", self)
         self.video_import_button.clicked.connect(self.import_videos)
-        self.view_video_list_button = QPushButton("View video list (0 of 4)", self)
+        self.view_video_list_button = QPushButton(
+            f"View video list ({len(self.state.data['video_list'])} of 4)", self
+        )
         self.play_pause_videos_button = QPushButton(
             self._BUTTON_TEXT_PLAY_ALL_VIDEOS, self
         )

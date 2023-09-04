@@ -11,7 +11,7 @@ class VideoWidget(QWidget):
 
         # components
         self.video_import_component = VideoImportWidget(main_window)
-        self.video_intro_outro_component = VideoIntroOutroWidget()
+        self.video_intro_outro_component = VideoIntroOutroWidget(main_window)
         self.video_renderer_component = VideoRendererWidget()
         self.video_control_component = VideoControlWidget()
 
