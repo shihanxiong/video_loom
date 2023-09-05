@@ -10,7 +10,8 @@ class GlobalState:
                 "video_list": [],
                 "intro": None,
                 "outro": None,
-                "timeline": None,
+                "timeline": "",
                 "audio_track_selection": 0,
+                "ffmpeg_preset_value": "ultrafast",
             }
         return cls._instance

@@ -21,11 +21,9 @@ class AudioSettingWidget(QWidget):
         self.audio_setting_label = QLabel("Audio Settings", self)
         self.audio_setting_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.audio_track_label = QLabel("audio track:", self)
+        self.audio_track_label.setContentsMargins(0, 0, 0, 4)
         self.audio_track_selection = QComboBox()
-        self.audio_track_selection.addItem("1")
-        self.audio_track_selection.addItem("2")
-        self.audio_track_selection.addItem("3")
-        self.audio_track_selection.addItem("4")
+        self.audio_track_selection.addItems(["1", "2", "3", "4"])
         self.audio_track_selection.activated.connect(
             self.on_audio_track_selection_activated
         )
