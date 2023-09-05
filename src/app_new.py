@@ -22,11 +22,9 @@ class App(QMainWindow):
         self.setWindowTitle(
             f"Video Loom - {FileUtils.get_latest_version_from_changelog()}"
         )
-        icon_path = FileUtils.get_file_path(
-            os.path.join("src", "assets", "img", "app_logo.png")
-        )
+        icon_path = FileUtils.get_file_path(os.path.join("img", "app_logo.ico"))
         if SysUtils.is_running_in_pyinstaller_bundle():
-            icon_path = FileUtils.get_bundled_file_path(os.path.join("app_logo.png"))
+            icon_path = FileUtils.get_bundled_file_path(os.path.join("app_logo.ico"))
 
         self.setWindowIcon(QIcon(QPixmap(icon_path)))
 
