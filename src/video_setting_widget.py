@@ -22,7 +22,7 @@ class VideoSettingWidget(QWidget):
         self.video_setting_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.ffmpeg_preset_label = QLabel("process speed:", self)
         self.ffmpeg_preset_label.setAlignment(Qt.AlignmentFlag.AlignRight)
-        self.ffmpeg_preset_label.setContentsMargins(0, 4, 0, 0)
+        self.ffmpeg_preset_label.setContentsMargins(0, 3, 0, 0)
         self.ffmpeg_preset_selection = QComboBox()
         self.ffmpeg_preset_selection.addItems(
             [
