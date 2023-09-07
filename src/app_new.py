@@ -62,8 +62,8 @@ class App(QMainWindow):
         grid.addWidget(self.video_component)
         grid.addWidget(self.settings_component)
         grid.addWidget(self.timeline_component)
-        grid.addWidget(self.status_component)
         grid.addWidget(self.toolbar_component)
+        grid.addWidget(self.status_component)
         self.central_widget.setLayout(grid)
         self.setCentralWidget(self.central_widget)
 

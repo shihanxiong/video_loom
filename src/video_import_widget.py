@@ -23,13 +23,13 @@ class VideoImportWidget(QWidget):
         self.video_import_button = QPushButton("Import videos", self)
         self.video_import_button.clicked.connect(self.import_videos)
         self.view_video_list_button = QPushButton(
-            f"View video list ({len(self.state.data['video_list'])} of 4)", self
+            f"View video list ({len(self.state.data['video_list'])} imported)", self
         )
-        self.view_video_list_button.setEnabled(False)  # TODO
+        self.view_video_list_button.setEnabled(False)
         self.play_pause_videos_button = QPushButton(
             self._BUTTON_TEXT_PLAY_ALL_VIDEOS, self
         )
-        self.play_pause_videos_button.setEnabled(False)  # TODO
+        self.play_pause_videos_button.setEnabled(False)
         self.import_intro_button = QPushButton(self._BUTTON_TEXT_IMPORT_INTRO, self)
         self.import_intro_button.clicked.connect(
             lambda: self.import_intro_or_outro(self._INTRO)
@@ -49,11 +49,17 @@ class VideoImportWidget(QWidget):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.layout.setSpacing(0)
 
+    def update_view_video_list_button_text(self):
+        self.view_video_list_button.setText(
+            f"View video list ({len(self.state.data['video_list'])} imported)"
+        )
+
     def import_videos(self):
         files, _ = QFileDialog.getOpenFileNames(
             self, "Open Files", "", "Video Files (*.mp4);;All Files (*)"
         )
         self.state.data["video_list"] = files
+        self.update_view_video_list_button_text()
 
         if files:
             for file in files:
@@ -69,6 +75,7 @@ class VideoImportWidget(QWidget):
         elif type == self._OUTRO:
             self.state.data["outro"] = file
 
-        self.main_window.status_component.set_and_log_status(
-            f"Imported {file} as {type}"
-        )
+        if file:
+            self.main_window.status_component.set_and_log_status(
+                f"Imported {file} as {type}"
+            )

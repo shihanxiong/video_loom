@@ -14,4 +14,5 @@ class GlobalState:
                 "audio_track_selection": 0,
                 "ffmpeg_preset_value": "ultrafast",
             }
+
         return cls._instance
