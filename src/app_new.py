@@ -52,10 +52,10 @@ class App(QMainWindow):
         # components
         self.central_widget = QWidget()
         self.video_component = VideoWidget(self)
-        self.settings_component = SettingsWidget()
+        self.settings_component = SettingsWidget(self)
         self.timeline_component = TimelineWidget()
         self.status_component = StatusWidget(self)
-        self.toolbar_component = ToolbarWidget()
+        self.toolbar_component = ToolbarWidget(self)
 
         # app layout
         grid = QVBoxLayout()

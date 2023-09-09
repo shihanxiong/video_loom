@@ -4,11 +4,12 @@ from video_setting_widget import VideoSettingWidget
 
 
 class SettingsWidget(QWidget):
-    def __init__(self):
+    def __init__(self, main_window):
         super().__init__()
 
         # components
-        self.audio_setting_component = AudioSettingWidget()
+        self.main_window = main_window
+        self.audio_setting_component = AudioSettingWidget(main_window)
         self.video_setting_component = VideoSettingWidget()
 
         # component layout
