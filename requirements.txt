@@ -4,7 +4,6 @@ pytest-mock
 pygame
 tkvideoplayer
 pyinstaller
-tkinter-tooltip
 async-tkinter-loop
 PyQt6
 pyqt6-tools; sys_platform == 'win32'
