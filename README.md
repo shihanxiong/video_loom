@@ -4,132 +4,132 @@
   <img src="./img/app_logo.png" width="450" height="450" />
 </p>
 
-## What does video loom do?
+## What does Video Loom do?
 
-This is a portable / multi-platform application that helps you trim videos. Say you have 4 cameras shooting a scene simultaneously, video loom can cut these videos by timestamps and combine them into the dynamic final product, try it out!
+Video Loom is a portable, multi-platform application that helps you trim and combine videos. Say you have 4 cameras shooting a scene simultaneously—Video Loom can cut these videos by timestamps and combine them into a dynamic final product. Try it out!
 
 ## User guide
 
-> Before start using the software, be sure to have following softwares installed on your local machine.
+> Before starting to use the software, ensure the following software is installed on your local machine.
 >
-> windows - `chocolatey` and `ffmpeg`
+> **Windows** - `chocolatey` and `ffmpeg`
 >
-> - for NVidia graphics cards users, the minimum required Nvidia driver for nvenc is 522.25 or newer
-> - python v3.9+
+> - For NVIDIA graphics card users, the minimum required NVIDIA driver for NVENC is 522.25 or newer
+> - Python v3.9+
 >
-> mac - `ffmpeg`
+> **macOS** - `ffmpeg`
 
 ### Windows
 
-#### How to install `chocolatey` on windows
+#### How to install `chocolatey` on Windows
 
-1. Open `powershell` on windows w/ administration access
-2. In `powershell`, type `Set-ExecutionPolicy AllSigned` then click enter
-3. Execute this command
+1. Open PowerShell on Windows with administrator access
+2. In PowerShell, type `Set-ExecutionPolicy AllSigned`, then press Enter
+3. Execute this command:
 
-   ```st
+   ```powershell
    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
    ```
 
-#### How to install `ffmpeg`
+#### How to install `ffmpeg` on Windows
 
-1. open `powershell` on windows w/ administration access
-2. In `powershell`, type `choco install ffmpeg-full`, then click enter
-3. wait till the installation process is complete
-4. (optional) to verify `ffmpeg` is installed, reopen another `powershell` terminal and type `ffmpeg` and click enter. You should not see any error messages.
+1. Open PowerShell on Windows with administrator access
+2. In PowerShell, type `choco install ffmpeg-full`, then press Enter
+3. Wait until the installation process is complete
+4. (Optional) To verify `ffmpeg` is installed, reopen another PowerShell terminal and type `ffmpeg`, then press Enter. You should not see any error messages.
 
-### Mac
+### macOS
 
-#### How to install `ffmpeg`
+#### How to install `ffmpeg` on macOS
 
-1. in terminal. run `brew install ffmpeg`
+1. In Terminal, run `brew install ffmpeg`
 
 ### How to run the application
 
-- download the .exe (windows) or .app (macOS) file [here](https://github.com/shihanxiong/video_loom/tree/main/src/dist)
-- open the application
-- click on "Import files" button and start importing videos (up to 4)
-  - <img src="./img/user_guide_1.png" width="450" height="450" />
-- click on "Play all videos" and "Pause all videos" to play all video files simutaneously
-  - use skip -5 / +5 buttons to skip backward and forward
-  - (optional) if you want to play video with audio. Choose an audio track, then click on "generate preview" button under "Audio settings"
-    - <img src="./img/user_guide_3.png" width="450" height="450" />
-    - Wait till the application prompts you the preview generation is complete. Now when you play vidoes, you can hear the audio from the video simutenously
-- In the text box, type in the segments of the videos you want to trim
+1. Download the `.exe` (Windows) or `.app` (macOS) file from [here](https://github.com/shihanxiong/video_loom/tree/main/src/dist)
+2. Open the application
+3. Click on the "Import files" button and start importing videos (up to 4)
+   - <img src="./img/user_guide_1.png" width="450" height="450" />
+4. Click on "Play all videos" and "Pause all videos" to play all video files simultaneously
+   - Use skip -5 / +5 buttons to skip backward and forward
+   - (Optional) If you want to play videos with audio: Choose an audio track, then click on the "Generate preview" button under "Audio settings"
+     - <img src="./img/user_guide_3.png" width="450" height="450" />
+     - Wait until the application prompts you that the preview generation is complete. Now when you play videos, you can hear the audio from the videos simultaneously
+5. In the text box, type in the segments of the videos you want to trim
 
-  - e.g. If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2. Then the text would look like (as shown below):
+   - Example: If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2, then the text would look like (as shown below):
 
-  ```bash
-  1,0:00:00,0:10:00
-  2,0:10:00,0:15:05
-  ```
+   ```bash
+   1,0:00:00,0:10:00
+   2,0:10:00,0:15:05
+   ```
 
-  - <img src="./img/user_guide_2.png" width="450" height="450" />
+   - <img src="./img/user_guide_2.png" width="450" height="450" />
 
-- select the audio you would like to use for the final video
-- then click "generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
+6. Select the audio you would like to use for the final video
+7. Click "Generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
 
 ## Environment setup (for developers)
 
-### windows (WSL2)
+### Windows (WSL2)
 
-1. In order to allow rendering in WSL2. We need to ensure Xming is installed.
-2. Before starting development, launch application "XLaunch"
-3. Follow below steps, for `Additional parameters for VcXsrv`, type `-ac`
+1. In order to allow rendering in WSL2, we need to ensure Xming is installed
+2. Before starting development, launch the application "XLaunch"
+3. Follow the steps below. For `Additional parameters for VcXsrv`, type `-ac`:
    <img src="./img/xlaunch_1.png" width="400" height="300" />
    <img src="./img/xlaunch_2.png" width="400" height="300" />
    <img src="./img/xlaunch_3.png" width="400" height="300" />
 
-4. After above steps, click `Finish` and launch Xming
-5. Once Xming is launched, we'll need to configure the `$DISPLAY` variable to point to the local machine's IP. To do that, open a terminal and follow below steps:
+4. After the above steps, click `Finish` and launch Xming
+5. Once Xming is launched, we'll need to configure the `$DISPLAY` variable to point to the local machine's IP. To do that, open a terminal and follow the steps below:
 
 ```bash
-$cat /etc/resolv.conf
+$ cat /etc/resolv.conf
 
-# this is what you will see
+# This is what you will see:
 # # This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
 # # [network]
 # # generateResolvConf = false
 # nameserver 172.27.176.1
 
-$export DISPLAY=172.27.176.1:0 # ensure :0 appended in the end
+$ export DISPLAY=172.27.176.1:0  # Ensure :0 is appended at the end
 ```
 
-6. (optional) If you are running application using `code-runner` in `VSCode`. You can configure `"code-runner.runInTerminal": true` in `settings.json`. As well as setting `python` command as `python3 -m`. See below
+6. (Optional) If you are running the application using `code-runner` in VS Code, you can configure `"code-runner.runInTerminal": true` in `settings.json`, as well as setting the `python` command as `python3 -m`. See below:
 
    <img src="./img/vscode_1.png" width="450" height="320" />
 
-   (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VSCode terminal)
+   (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VS Code terminal)
 
-7. Now you can run `python3 <app_name>.py` to execute programs.
+7. Now you can run `python3 <app_name>.py` to execute programs
 
 ## Install dependencies
 
 ```bash
-# ensure python3.10+ is installed
-# install pip dependencies
+# Ensure Python 3.9+ is installed
+# Install pip dependencies
 
-$pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 ## Testing
 
 ```bash
-# running tests
-$pytest -vvs
+# Running tests
+$ pytest -vvs
 ```
 
 ## Packaging
 
 ```bash
 # Generate executables
-# note: executables will automatically be determined by the OS. e.g. '.exe' for Windows and '.app' for MacOS
+# Note: Executables will automatically be determined by the OS (e.g., '.exe' for Windows and '.app' for macOS)
 
-$cd src
-$./bundle.sh <app.win32.spec | app.macos.spec> <v_[major][minor][patch]>
-# e.g. ./bundle.sh app.win32.spec v1.9.13
+$ cd src
+$ ./bundle.sh <app.win32.spec | app.macos.spec> <v_[major][minor][patch]>
+# Example: ./bundle.sh app.win32.spec v1.9.13
 ```
 
-## Change log
+## Changelog
 
-> change logs can be found [here](changelog.md)
+> Changelog can be found [here](changelog.md)
