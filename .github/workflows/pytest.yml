@@ -41,7 +41,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install flake8 pytest freezegun
-          if [ -f video_loom_v1/requirements.txt ]; then pip install -r video_loom_v1/requirements.txt; fi
+          # Install dependencies except tkvideoplayer (which requires av that doesn't build on Python 3.12)
+          # Tests don't use tkvideoplayer, so we can skip it
+          if [ -f video_loom_v1/requirements.txt ]; then
+            # Create a temporary requirements file without tkvideoplayer
+            grep -v "^tkvideoplayer" video_loom_v1/requirements.txt > /tmp/requirements_test.txt
+            pip install -r /tmp/requirements_test.txt
+            # Try to install tkvideoplayer, but don't fail if it doesn't work
+            pip install tkvideoplayer || echo "Warning: tkvideoplayer installation failed (not needed for tests)"
+          fi
       - name: Test with pytest
         working-directory: video_loom_v1/src
         run: |
