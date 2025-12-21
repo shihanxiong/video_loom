@@ -27,7 +27,8 @@ jobs:
           sudo apt install ffmpeg
           python -m pip install --upgrade pip
           pip install flake8 pytest freezegun
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f video_loom_v1/requirements.txt ]; then pip install -r video_loom_v1/requirements.txt; fi
       - name: Test with pytest
+        working-directory: video_loom_v1/src
         run: |
-          pytest -vv -s
+          pytest test_*.py -vv -s

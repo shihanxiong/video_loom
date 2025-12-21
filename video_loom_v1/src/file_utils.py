@@ -57,7 +57,10 @@ class FileUtils:
             if SysUtils.is_running_in_pyinstaller_bundle():
                 changelog_path = FileUtils.get_bundled_file_path(filename)
             else:
-                changelog_path = FileUtils.get_file_path(filename)
+                # Look for changelog.md in repo root (two levels up from src/)
+                changelog_path = FileUtils.get_file_path(
+                    os.path.join("..", "..", filename)
+                )
 
             with open(changelog_path, "r") as f:
                 text = f.read()

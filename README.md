@@ -174,7 +174,25 @@ This creates a video with:
 
 ## Development
 
-### Setup
+### Quick Setup
+
+Run the installation script to install all dependencies for both v1 and v2:
+
+```bash
+./install.sh
+```
+
+The script will:
+
+- Check for required dependencies (Python, Go, Node.js, FFmpeg)
+- Install missing dependencies where possible
+- Install Python packages for v1
+- Install Go modules and npm packages for v2
+- Generate Wails bindings for v2
+
+### Manual Setup
+
+#### Video Loom v1 (Python/Tkinter)
 
 1. **Clone the repository**
 
@@ -187,15 +205,27 @@ This creates a video with:
 
    ```bash
    # Ensure Python 3.9+ is installed
+   cd video_loom_v1
    pip3 install -r requirements.txt
    ```
 
 3. **Run the application**
 
    ```bash
-   cd src
+   cd video_loom_v1/src
    python3 app.py
    ```
+
+4. **Run tests**
+
+   ```bash
+   cd video_loom_v1/src
+   python3 -m pytest test_*.py -vvs
+   ```
+
+#### Video Loom v2 (Wails/Go)
+
+See [video_loom_v2/README.md](video_loom_v2/README.md) for detailed v2 setup instructions.
 
 ### Windows (WSL2) Setup
 
@@ -242,20 +272,29 @@ For development on Windows using WSL2, you'll need to configure X11 forwarding:
 
 ## Testing
 
+### Video Loom v1
+
 Run the test suite:
 
 ```bash
-pytest -vvs
+cd video_loom_v1/src
+python3 -m pytest test_*.py -vvs
 ```
 
-Test files are located in `src/test/` and cover utility functions for audio, video, timeline, file operations, and system utilities.
+Test files are located in `video_loom_v1/src/` and cover utility functions for audio, video, timeline, file operations, and system utilities.
+
+### Video Loom v2
+
+Tests for v2 are pending (see [video_loom_v2/README.md](video_loom_v2/README.md)).
 
 ## Packaging
+
+### Video Loom v1
 
 Build platform-specific executables using PyInstaller:
 
 ```bash
-cd src
+cd video_loom_v1/src
 ./bundle.sh <app.win32.spec | app.macos.spec> <version>
 ```
 
@@ -275,6 +314,17 @@ cd src
 - macOS: `dist/macos_video_loom_1_9_13.app`
 
 > **Note**: Executables are automatically determined by the OS (`.exe` for Windows, `.app` for macOS)
+
+### Video Loom v2
+
+Build using Wails:
+
+```bash
+cd video_loom_v2
+wails build
+```
+
+See [video_loom_v2/README.md](video_loom_v2/README.md) for details.
 
 ## Changelog
 

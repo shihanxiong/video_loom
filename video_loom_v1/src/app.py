@@ -112,7 +112,7 @@ try:
             )
         else:
             root.iconbitmap(
-                FileUtils.get_file_path(os.path.join("img", "app_logo.ico"))
+                FileUtils.get_file_path(os.path.join("..", "img", "app_logo.ico"))
             )
 
         async_mainloop(root)

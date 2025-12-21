@@ -9,8 +9,8 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('../changelog.md', '.'),
-        ('../img/app_logo.ico', '.')
+        ('../../changelog.md', '.'),
+        ('../../img/app_logo.ico', '.')
     ],
     hiddenimports=['av', 'chardet'],
     hookspath=[],
@@ -48,6 +48,6 @@ exe = EXE(
 app = BUNDLE(
     exe,
     name='video_loom.app',
-    icon="/Users/shihanxiong/dev/video_loom/img/app_logo.ico",
+    icon="../../img/app_logo.ico",
     bundle_identifier=None,
 )

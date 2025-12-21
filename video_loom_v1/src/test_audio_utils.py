@@ -5,20 +5,18 @@ from file_utils import FileUtils
 from pdb import set_trace  # call set_trace() inline to setup debugger
 
 
-output_directory = os.path.join("src", "test")
+output_directory = os.path.join("test")
 mp3_output_filename = "test_generate_mp3_from_mp4.mp3"
 aac_output_filename = "test_generate_aac_from_mp4.aac"
-mp3_path = FileUtils.get_file_path(os.path.join("src", "test", mp3_output_filename))
-aac_path = FileUtils.get_file_path(os.path.join("src", "test", aac_output_filename))
-audio_1_path = FileUtils.get_file_path(os.path.join("src", "test", "audio_1.aac"))
-audio_2_path = FileUtils.get_file_path(os.path.join("src", "test", "audio_2.aac"))
+mp3_path = FileUtils.get_file_path(os.path.join("test", mp3_output_filename))
+aac_path = FileUtils.get_file_path(os.path.join("test", aac_output_filename))
+audio_1_path = FileUtils.get_file_path(os.path.join("test", "audio_1.aac"))
+audio_2_path = FileUtils.get_file_path(os.path.join("test", "audio_2.aac"))
 concatenated_aac_name = "test_concatenate_audios.aac"
 concatenated_audio_path = FileUtils.get_file_path(
     os.path.join(output_directory, concatenated_aac_name)
 )
-mp4_path = FileUtils.get_file_path(
-    os.path.join("src", "test", "2023_04_15_19_00_49.mp4")
-)
+mp4_path = FileUtils.get_file_path(os.path.join("test", "2023_04_15_19_00_49.mp4"))
 ffmpeg_preset_value = "ultrafast"
 
 

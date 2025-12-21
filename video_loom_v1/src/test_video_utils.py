@@ -4,7 +4,7 @@ from video_utils import VideoUtils
 from file_utils import FileUtils
 
 
-output_directory = os.path.join("src", "test")
+output_directory = os.path.join("test")
 test_mp4_name = "2023_04_15_19_00_49.mp4"  # this video has a duration of 15 seconds
 test_aac_name = "long_duration_audio.aac"
 output_name = "test_concatenate_videos.mp4"
