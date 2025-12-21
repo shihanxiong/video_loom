@@ -24,7 +24,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt install ffmpeg
+          sudo apt-get install -y ffmpeg \
+            libavformat-dev \
+            libavcodec-dev \
+            libavdevice-dev \
+            libavutil-dev \
+            libavfilter-dev \
+            libswscale-dev \
+            libswresample-dev \
+            pkg-config
           python -m pip install --upgrade pip
           pip install flake8 pytest freezegun
           if [ -f video_loom_v1/requirements.txt ]; then pip install -r video_loom_v1/requirements.txt; fi

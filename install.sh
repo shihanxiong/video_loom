@@ -58,6 +58,20 @@ get_python_version_from_tool_versions() {
     fi
 }
 
+# Read Node.js version from .tool-versions
+get_nodejs_version_from_tool_versions() {
+    if [ -f ".tool-versions" ]; then
+        NODEJS_VERSION_LINE=$(grep "^nodejs " .tool-versions | head -n1)
+        if [ -n "$NODEJS_VERSION_LINE" ]; then
+            echo "$NODEJS_VERSION_LINE" | awk '{print $2}'
+        else
+            echo ""
+        fi
+    else
+        echo ""
+    fi
+}
+
 # Get the script directory (repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
@@ -373,21 +387,121 @@ if [ "$INSTALL_V2" = true ]; then
         print_success "Go is installed: $GO_VERSION"
 
         # Check for Node.js and npm
-        if ! command_exists node; then
-            print_error "Node.js is not installed. Please install Node.js 16 or later."
-            print_info "Visit: https://nodejs.org/"
+        REQUIRED_NODEJS_VERSION=$(get_nodejs_version_from_tool_versions)
+        USE_ASDF_NODEJS=false
+        
+        if [ -n "$REQUIRED_NODEJS_VERSION" ]; then
+            print_info "Found .tool-versions with Node.js version: $REQUIRED_NODEJS_VERSION"
+            
+            if command_exists asdf; then
+                print_success "asdf is installed"
+                
+                # Check if Node.js plugin is installed
+                if asdf plugin list 2>/dev/null | grep -q "^nodejs$"; then
+                    print_success "asdf Node.js plugin is installed"
+                    USE_ASDF_NODEJS=true
+                    
+                    # Check if the required Node.js version is installed via asdf
+                    if asdf list nodejs 2>/dev/null | grep -q "^  $REQUIRED_NODEJS_VERSION"; then
+                        print_success "Node.js $REQUIRED_NODEJS_VERSION is installed via asdf"
+                        # Activate the version for current directory
+                        asdf local nodejs "$REQUIRED_NODEJS_VERSION" 2>/dev/null || true
+                        asdf reshim nodejs 2>/dev/null || true
+                    else
+                        print_info "Installing Node.js $REQUIRED_NODEJS_VERSION via asdf..."
+                        if asdf install nodejs "$REQUIRED_NODEJS_VERSION" 2>/dev/null; then
+                            print_success "Node.js $REQUIRED_NODEJS_VERSION installed via asdf"
+                            asdf local nodejs "$REQUIRED_NODEJS_VERSION" 2>/dev/null || true
+                            asdf reshim nodejs 2>/dev/null || true
+                        else
+                            print_error "Failed to install Node.js $REQUIRED_NODEJS_VERSION via asdf"
+                            print_warning "Falling back to system Node.js..."
+                            USE_ASDF_NODEJS=false
+                        fi
+                    fi
+                else
+                    print_warning "asdf Node.js plugin is not installed"
+                    print_info "Install it with: asdf plugin add nodejs"
+                    print_info "Then run: asdf install nodejs $REQUIRED_NODEJS_VERSION"
+                    print_warning "Falling back to system Node.js..."
+                fi
+            else
+                print_warning "asdf is not installed, but .tool-versions specifies Node.js $REQUIRED_NODEJS_VERSION"
+                print_info "Consider installing asdf: https://asdf-vm.com/guide/getting-started.html"
+                print_info "Or ensure Node.js $REQUIRED_NODEJS_VERSION is installed system-wide"
+            fi
+        else
+            print_info "No .tool-versions found or no Node.js version specified"
+            print_info "Will use system Node.js if available"
+        fi
+        
+        # Determine which Node.js command to use
+        NODE_CMD="node"
+        NPM_CMD="npm"
+        
+        if [ "$USE_ASDF_NODEJS" = true ] && [ -n "$REQUIRED_NODEJS_VERSION" ]; then
+            # Try to use asdf's Node.js (asdf should be in PATH and activated)
+            if command_exists node; then
+                NODE_VERSION_CHECK=$(node --version 2>&1 | sed 's/v//')
+                if [ "$NODE_VERSION_CHECK" = "$REQUIRED_NODEJS_VERSION" ]; then
+                    NODE_CMD="node"
+                    NPM_CMD="npm"
+                    print_info "Using Node.js from asdf: $NODE_CMD ($REQUIRED_NODEJS_VERSION)"
+                fi
+            fi
+            
+            # Fallback: try to get the path directly
+            if [ "$NODE_CMD" = "node" ]; then
+                ASDF_NODE_PATH=$(asdf which node 2>/dev/null || echo "")
+                if [ -n "$ASDF_NODE_PATH" ] && [ -f "$ASDF_NODE_PATH" ]; then
+                    NODE_CMD="$ASDF_NODE_PATH"
+                    # npm should be in the same directory or available via PATH
+                    ASDF_NPM_PATH="${ASDF_NODE_PATH%node}npm"
+                    if [ -f "$ASDF_NPM_PATH" ]; then
+                        NPM_CMD="$ASDF_NPM_PATH"
+                    fi
+                    print_info "Using Node.js from asdf: $NODE_CMD"
+                fi
+            fi
+        fi
+        
+        if ! command_exists "$NODE_CMD"; then
+            if [ "$USE_ASDF_NODEJS" = true ]; then
+                print_error "Node.js $REQUIRED_NODEJS_VERSION is not available via asdf."
+                print_info "Trying to install it: asdf install nodejs $REQUIRED_NODEJS_VERSION"
+            else
+                print_error "Node.js is not installed. Please install Node.js 16 or later."
+                if [ -n "$REQUIRED_NODEJS_VERSION" ]; then
+                    print_info "Required version: $REQUIRED_NODEJS_VERSION (from .tool-versions)"
+                fi
+                print_info "Visit: https://nodejs.org/"
+            fi
             print_warning "Skipping v2 installation."
             INSTALL_V2=false
         else
-            NODE_VERSION=$(node --version)
+            NODE_VERSION=$($NODE_CMD --version 2>&1)
             print_success "Node.js is installed: $NODE_VERSION"
+            
+            if [ -n "$REQUIRED_NODEJS_VERSION" ]; then
+                INSTALLED_VERSION=$($NODE_CMD --version 2>&1 | sed 's/v//')
+                if [ "$INSTALLED_VERSION" != "$REQUIRED_NODEJS_VERSION" ]; then
+                    print_warning "Node.js version mismatch:"
+                    print_warning "  Required: $REQUIRED_NODEJS_VERSION (from .tool-versions)"
+                    print_warning "  Installed: $INSTALLED_VERSION"
+                    if [ "$USE_ASDF_NODEJS" = false ]; then
+                        print_info "Consider installing asdf to manage Node.js versions"
+                    fi
+                else
+                    print_success "Node.js version matches .tool-versions: $REQUIRED_NODEJS_VERSION"
+                fi
+            fi
 
-            if ! command_exists npm; then
+            if ! command_exists "$NPM_CMD"; then
                 print_error "npm is not installed. Please install npm."
                 print_warning "Skipping v2 installation."
                 INSTALL_V2=false
             else
-                NPM_VERSION=$(npm --version)
+                NPM_VERSION=$($NPM_CMD --version 2>&1)
                 print_success "npm is installed: $NPM_VERSION"
 
                 # Check for Wails CLI
@@ -425,10 +539,17 @@ if [ "$INSTALL_V2" = true ]; then
                 if [ -d "video_loom_v2/frontend" ] && [ -f "video_loom_v2/frontend/package.json" ]; then
                     print_info "Installing frontend dependencies for v2..."
                     cd video_loom_v2/frontend
-                    set -e  # Exit on error for critical steps
-                    npm install
-                    set +e  # Don't exit on error for remaining steps
-                    print_success "Frontend dependencies installed"
+                    set +e  # Don't exit on error - we'll check the result
+                    $NPM_CMD install
+                    NPM_INSTALL_EXIT_CODE=$?
+                    set -e  # Re-enable exit on error
+                    
+                    if [ $NPM_INSTALL_EXIT_CODE -eq 0 ]; then
+                        print_success "Frontend dependencies installed"
+                    else
+                        print_error "Failed to install frontend dependencies"
+                        print_warning "Continuing with installation, but v2 may not work correctly"
+                    fi
                     cd ../..
                 else
                     print_warning "video_loom_v2/frontend directory or package.json not found, skipping frontend dependencies"
