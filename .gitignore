@@ -4,11 +4,22 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/__pycache__/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
 
 # testing
 /coverage
-/src/Test/__pycache__/
 
 # production
 src/build/

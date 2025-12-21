@@ -24,7 +24,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          # Install ffmpeg from Ubuntu repositories
+          # Install ffmpeg with all codecs from Ubuntu repositories
           sudo apt-get install -y \
             ffmpeg \
             libavformat-dev \
@@ -34,6 +34,11 @@ jobs:
             libavfilter-dev \
             libswscale-dev \
             libswresample-dev \
+            libmp3lame-dev \
+            libx264-dev \
+            libx265-dev \
+            libvpx-dev \
+            libfdk-aac-dev \
             pkg-config \
             python3-dev \
             build-essential \
@@ -45,6 +50,7 @@ jobs:
           which ffprobe
           ffmpeg -version | head -n 1
           ffprobe -version | head -n 1
+          ffmpeg -codecs | head -n 5
           echo "ffmpeg and ffprobe are installed and accessible"
       - name: Install Python dependencies
         run: |
