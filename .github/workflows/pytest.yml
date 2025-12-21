@@ -24,6 +24,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
+          # Install ffmpeg from Ubuntu repositories
           sudo apt-get install -y \
             ffmpeg \
             libavformat-dev \
@@ -37,6 +38,14 @@ jobs:
             python3-dev \
             build-essential \
             cython3
+      - name: Verify ffmpeg installation
+        run: |
+          echo "Checking ffmpeg installation..."
+          which ffmpeg
+          which ffprobe
+          ffmpeg -version | head -n 1
+          ffprobe -version | head -n 1
+          echo "ffmpeg and ffprobe are installed and accessible"
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
@@ -49,6 +58,14 @@ jobs:
             pip install -r /tmp/requirements_test.txt
             # Try to install tkvideoplayer, but don't fail if it doesn't work
             pip install tkvideoplayer || echo "Warning: tkvideoplayer installation failed (not needed for tests)"
+          fi
+      - name: Verify test files exist
+        working-directory: video_loom_v1/src
+        run: |
+          echo "Checking for test files..."
+          ls -la test/ || echo "test directory not found"
+          if [ -d test ]; then
+            ls -la test/*.mp4 test/*.aac 2>&1 || echo "Some test files missing"
           fi
       - name: Test with pytest
         working-directory: video_loom_v1/src

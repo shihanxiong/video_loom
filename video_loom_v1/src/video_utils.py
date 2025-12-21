@@ -125,10 +125,11 @@ class VideoUtils:
                 "-map",
                 "1:a",
                 "-shortest",
-                "-preset",
-                ffmpeg_preset_value,
                 output_file_path,
             ]
+            # Note: -preset is for video encoding, not for copying streams.
+            # When using -c:v copy, we're copying the video stream without re-encoding,
+            # so -preset doesn't apply.
 
             subprocess.run(
                 cmd,
@@ -166,6 +167,8 @@ class VideoUtils:
                 end_time,
                 "-vf",
                 "scale={}:{}".format(output_width, output_height),
+                "-c:v",
+                "libx264",
                 "-c:a",
                 "copy",
                 "-preset",

@@ -14,7 +14,8 @@ class AudioUtils:
         mp4_input_filename, mp3_output_filename, ffmpeg_preset_value="ultrafast"
     ):
         try:
-            # using preset=ultrafast as the audio is for preview only
+            # Note: -preset is for video encoding, not audio. For MP3 encoding,
+            # we use -q:a for quality instead. Using -q:a 2 for high quality.
             cmd = [
                 "ffmpeg",
                 "-i",
@@ -22,8 +23,8 @@ class AudioUtils:
                 "-vn",
                 "-acodec",
                 "mp3",
-                "-preset",
-                ffmpeg_preset_value,
+                "-q:a",
+                "2",
                 mp3_output_filename,
             ]
 
@@ -55,10 +56,10 @@ class AudioUtils:
                 "-acodec",
                 "copy",
                 "-shortest",
-                "-preset",
-                ffmpeg_preset_value,
                 aac_output_filename,
             ]
+            # Note: -preset is for video encoding, not audio. When using -acodec copy,
+            # we're copying the stream without re-encoding, so -preset doesn't apply.
             subprocess.run(
                 cmd,
                 text=True,
@@ -103,21 +104,22 @@ class AudioUtils:
         try:
             output_file = os.path.join(output_directory, output_name)
 
-            # Prepare the ffmpeg command
-            cmd = ["ffmpeg", "-i"]
-
-            # Add input options for each file
-            filter_string = "concat:"
+            # Use concat demuxer for simple concatenation
+            # Format: concat:file1|file2|file3
+            concat_string = "concat:"
             for idx, audio in enumerate(audios):
                 if idx != 0:
-                    filter_string += "|"
-                filter_string += audio
+                    concat_string += "|"
+                concat_string += audio
 
-            # Add the concatenate filter
-            cmd.extend([filter_string, "-c", "copy"])
-
-            # Set the output file
-            cmd.append(output_file)
+            cmd = [
+                "ffmpeg",
+                "-i",
+                concat_string,
+                "-c",
+                "copy",
+                output_file,
+            ]
 
             # Run the ffmpeg command
             subprocess.run(

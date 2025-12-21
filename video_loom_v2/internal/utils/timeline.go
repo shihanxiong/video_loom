@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 )
 
 // TimelineUtils provides timeline-related utility functions
@@ -103,7 +102,6 @@ func (t *TimelineUtils) ValidateTimeline(timelineText string, videoDurations map
 
 // GenerateRandomSegments generates random timeline segments
 func (t *TimelineUtils) GenerateRandomSegments(numSegments, minPerSegment, numVideos int) string {
-	rand.Seed(time.Now().UnixNano())
 	var result strings.Builder
 	prev := 0
 	start := "0:00:00"
