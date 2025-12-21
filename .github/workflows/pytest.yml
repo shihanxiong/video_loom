@@ -17,14 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v3
+      - name: Set up Python 3.12.1
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
-      - name: Install dependencies
+          python-version: '3.12.1'
+      - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg \
+          sudo apt-get install -y \
+            ffmpeg \
             libavformat-dev \
             libavcodec-dev \
             libavdevice-dev \
@@ -32,8 +33,13 @@ jobs:
             libavfilter-dev \
             libswscale-dev \
             libswresample-dev \
-            pkg-config
-          python -m pip install --upgrade pip
+            pkg-config \
+            python3-dev \
+            build-essential \
+            cython3
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
           pip install flake8 pytest freezegun
           if [ -f video_loom_v1/requirements.txt ]; then pip install -r video_loom_v1/requirements.txt; fi
       - name: Test with pytest
