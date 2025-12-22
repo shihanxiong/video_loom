@@ -45,7 +45,7 @@ The system design document covers:
 - User interface layout and component interactions
 - Platform-specific implementations (Windows, macOS)
 - Utilities and services
-- Known limitations and recommendations for v2
+- Known limitations and recommendations
 
 ## Prerequisites
 
@@ -56,12 +56,14 @@ Before using Video Loom, ensure the following software is installed on your loca
 - **Package Manager**: [Chocolatey](https://chocolatey.org/)
 - **Video Processing**: FFmpeg
 - **GPU Acceleration** (optional): NVIDIA driver 522.25 or newer for NVENC support
-- **Python**: v3.9+ (for development)
+- **Go**: v1.18+ (for development)
+- **Node.js**: v16+ (for frontend development)
 
 ### macOS
 
 - **Video Processing**: FFmpeg
-- **Python**: v3.9+ (for development)
+- **Go**: v1.18+ (for development)
+- **Node.js**: v16+ (for frontend development)
 
 ### Installation Instructions
 
@@ -176,7 +178,7 @@ This creates a video with:
 
 ### Quick Setup
 
-Run the installation script to install all dependencies for both v1 and v2:
+Run the installation script to install all dependencies:
 
 ```bash
 ./install.sh
@@ -184,138 +186,29 @@ Run the installation script to install all dependencies for both v1 and v2:
 
 The script will:
 
-- Check for required dependencies (Python, Go, Node.js, FFmpeg)
+- Check for required dependencies (Go, Node.js, FFmpeg)
 - Install missing dependencies where possible
-- Install Python packages for v1
-- Install Go modules and npm packages for v2
-- Generate Wails bindings for v2
+- Install Go modules and npm packages
+- Generate Wails bindings
 
 ### Manual Setup
 
-#### Video Loom v1 (Python/Tkinter)
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/shihanxiong/video_loom.git
-   cd video_loom
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   # Ensure Python 3.9+ is installed
-   cd video_loom_v1
-   pip3 install -r requirements.txt
-   ```
-
-3. **Run the application**
-
-   ```bash
-   cd video_loom_v1/src
-   python3 app.py
-   ```
-
-4. **Run tests**
-
-   ```bash
-   cd video_loom_v1/src
-   python3 -m pytest test_*.py -vvs
-   ```
-
-#### Video Loom v2 (Wails/Go)
-
-See [video_loom_v2/README.md](video_loom_v2/README.md) for detailed v2 setup instructions.
-
-### Windows (WSL2) Setup
-
-For development on Windows using WSL2, you'll need to configure X11 forwarding:
-
-1. **Install Xming**
-
-   - Download and install [Xming](https://sourceforge.net/projects/xming/)
-
-2. **Configure XLaunch**
-
-   - Launch XLaunch
-   - Follow the setup wizard
-   - For `Additional parameters for VcXsrv`, enter: `-ac`
-
-   <img src="./img/xlaunch_1.png" width="400" height="300" alt="XLaunch configuration 1" />
-   <img src="./img/xlaunch_2.png" width="400" height="300" alt="XLaunch configuration 2" />
-   <img src="./img/xlaunch_3.png" width="400" height="300" alt="XLaunch configuration 3" />
-
-3. **Set DISPLAY variable**
-
-   - Find your Windows IP address:
-
-     ```bash
-     cat /etc/resolv.conf
-     # Look for nameserver IP (e.g., 172.27.176.1)
-     ```
-
-   - Export DISPLAY variable:
-
-     ```bash
-     export DISPLAY=172.27.176.1:0
-     ```
-
-4. **VS Code Configuration (Optional)**
-
-   - Configure `code-runner` to run in terminal:
-     - Set `"code-runner.runInTerminal": true` in `settings.json`
-     - Set Python command to `python3 -m`
-
-   <img src="./img/vscode_1.png" width="450" height="320" alt="VS Code configuration" />
-
-   > **Note**: If you encounter `$DISPLAY` errors, ensure you've exported the DISPLAY variable in your VS Code terminal.
+See [video_loom_v2/README.md](video_loom_v2/README.md) for detailed setup instructions.
 
 ## Testing
-
-### Video Loom v1
 
 Run the test suite:
 
 ```bash
-cd video_loom_v1/src
-python3 -m pytest test_*.py -vvs
+cd video_loom_v2
+go test ./...
 ```
 
-Test files are located in `video_loom_v1/src/` and cover utility functions for audio, video, timeline, file operations, and system utilities.
+Test files are located in `video_loom_v2/internal/utils/` and cover utility functions for audio, video, timeline, file operations, and system utilities.
 
-### Video Loom v2
-
-Tests for v2 are pending (see [video_loom_v2/README.md](video_loom_v2/README.md)).
+See [video_loom_v2/README.md](video_loom_v2/README.md) for more details.
 
 ## Packaging
-
-### Video Loom v1
-
-Build platform-specific executables using PyInstaller:
-
-```bash
-cd video_loom_v1/src
-./bundle.sh <app.win32.spec | app.macos.spec> <version>
-```
-
-**Examples:**
-
-```bash
-# Windows
-./bundle.sh app.win32.spec v1.9.13
-
-# macOS
-./bundle.sh app.macos.spec v1.9.13
-```
-
-**Output:**
-
-- Windows: `dist/win32_video_loom_1_9_13.exe`
-- macOS: `dist/macos_video_loom_1_9_13.app`
-
-> **Note**: Executables are automatically determined by the OS (`.exe` for Windows, `.app` for macOS)
-
-### Video Loom v2
 
 Build using Wails:
 
@@ -323,6 +216,12 @@ Build using Wails:
 cd video_loom_v2
 wails build
 ```
+
+**Output:**
+
+- macOS: `build/bin/video_loom_v2.app`
+- Windows: `build/bin/video_loom_v2.exe`
+- Linux: `build/bin/video_loom_v2`
 
 See [video_loom_v2/README.md](video_loom_v2/README.md) for details.
 

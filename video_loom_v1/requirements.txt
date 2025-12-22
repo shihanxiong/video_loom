@@ -1,8 +1,0 @@
-freezegun
-pytest
-pytest-mock
-pygame
-tkvideoplayer
-pyinstaller
-tkinter-tooltip
-async-tkinter-loop
