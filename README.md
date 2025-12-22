@@ -1,135 +1,230 @@
-# VIDEO LOOM
+# Video Loom
 
 <p align="center">
-  <img src="./img/app_logo.png" width="450" height="450" />
+  <img src="./img/app_logo.png" width="450" height="450" alt="Video Loom Logo" />
 </p>
 
-## What does Video Loom do?
+<p align="center">
+  <strong>A portable, multi-platform application for trimming and combining videos</strong>
+</p>
 
-Video Loom is a portable, multi-platform application that helps you trim and combine videos. Say you have 4 cameras shooting a scene simultaneously—Video Loom can cut these videos by timestamps and combine them into a dynamic final product. Try it out!
+## Overview
 
-## User guide
+Video Loom is a desktop application that helps you trim and combine multiple video files based on timestamp specifications. Perfect for scenarios where you have multiple cameras shooting simultaneously—Video Loom can cut these videos by timestamps and combine them into a single dynamic final product.
 
-> Before starting to use the software, ensure the following software is installed on your local machine.
->
-> **Windows** - `chocolatey` and `ffmpeg`
->
-> - For NVIDIA graphics card users, the minimum required NVIDIA driver for NVENC is 522.25 or newer
-> - Python v3.9+
->
-> **macOS** - `ffmpeg`
+### Key Features
+
+- 🎬 Import and preview up to 4 video files simultaneously
+- ▶️ Synchronized multi-video playback with audio preview
+- ✂️ Timeline-based video trimming and concatenation
+- 🎞️ Custom intro/outro support
+- ⚡ GPU-accelerated video processing (Windows with NVIDIA)
+- 🎲 Random segment generation
+- 📋 YouTube timestamp export
+- 💻 Cross-platform support (Windows, macOS)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [System Design](#system-design)
+- [Prerequisites](#prerequisites)
+- [User Guide](#user-guide)
+- [Development](#development)
+- [Testing](#testing)
+- [Packaging](#packaging)
+- [Changelog](#changelog)
+
+## System Design
+
+For a detailed technical analysis of the codebase architecture, components, data flow, and implementation details, see [SYSTEM_DESIGN.md](SYSTEM_DESIGN.md).
+
+The system design document covers:
+
+- Architecture overview and component structure
+- Video processing pipeline and FFmpeg integration
+- User interface layout and component interactions
+- Platform-specific implementations (Windows, macOS)
+- Utilities and services
+- Known limitations and recommendations
+
+## Prerequisites
+
+Before using Video Loom, ensure the following software is installed on your local machine.
 
 ### Windows
 
-#### How to install `chocolatey` on Windows
+- **Package Manager**: [Chocolatey](https://chocolatey.org/)
+- **Video Processing**: FFmpeg
+- **GPU Acceleration** (optional): NVIDIA driver 522.25 or newer for NVENC support
+- **Go**: v1.18+ (for development)
+- **Node.js**: v16+ (for frontend development)
 
-1. Open PowerShell on Windows with administrator access
-2. In PowerShell, type `Set-ExecutionPolicy AllSigned`, then press Enter
-3. Execute this command:
+### macOS
+
+- **Video Processing**: FFmpeg
+- **Go**: v1.18+ (for development)
+- **Node.js**: v16+ (for frontend development)
+
+### Installation Instructions
+
+#### Windows
+
+**Install Chocolatey:**
+
+1. Open PowerShell with administrator access
+2. Run the following command:
 
    ```powershell
    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
    ```
 
-#### How to install `ffmpeg` on Windows
+**Install FFmpeg:**
 
-1. Open PowerShell on Windows with administrator access
-2. In PowerShell, type `choco install ffmpeg-full`, then press Enter
-3. Wait until the installation process is complete
-4. (Optional) To verify `ffmpeg` is installed, reopen another PowerShell terminal and type `ffmpeg`, then press Enter. You should not see any error messages.
+1. Open PowerShell with administrator access
+2. Run:
 
-### macOS
-
-#### How to install `ffmpeg` on macOS
-
-1. In Terminal, run `brew install ffmpeg`
-
-### How to run the application
-
-1. Download the `.exe` (Windows) or `.app` (macOS) file from [here](https://github.com/shihanxiong/video_loom/tree/main/src/dist)
-2. Open the application
-3. Click on the "Import files" button and start importing videos (up to 4)
-   - <img src="./img/user_guide_1.png" width="450" height="450" />
-4. Click on "Play all videos" and "Pause all videos" to play all video files simultaneously
-   - Use skip -5 / +5 buttons to skip backward and forward
-   - (Optional) If you want to play videos with audio: Choose an audio track, then click on the "Generate preview" button under "Audio settings"
-     - <img src="./img/user_guide_3.png" width="450" height="450" />
-     - Wait until the application prompts you that the preview generation is complete. Now when you play videos, you can hear the audio from the videos simultaneously
-5. In the text box, type in the segments of the videos you want to trim
-
-   - Example: If you'd like to use 0:00:00 - 0:10:00 from video 1, and 0:10:00 - 0:15:05 from video 2, then the text would look like (as shown below):
-
-   ```bash
-   1,0:00:00,0:10:00
-   2,0:10:00,0:15:05
+   ```powershell
+   choco install ffmpeg-full
    ```
 
-   - <img src="./img/user_guide_2.png" width="450" height="450" />
+3. Verify installation by running `ffmpeg` in a new terminal (should display version information)
 
-6. Select the audio you would like to use for the final video
-7. Click "Generate video" to start generating the final output. The output file will be in `.mp4` format and named after the current timestamp
+#### macOS
 
-## Environment setup (for developers)
-
-### Windows (WSL2)
-
-1. In order to allow rendering in WSL2, we need to ensure Xming is installed
-2. Before starting development, launch the application "XLaunch"
-3. Follow the steps below. For `Additional parameters for VcXsrv`, type `-ac`:
-   <img src="./img/xlaunch_1.png" width="400" height="300" />
-   <img src="./img/xlaunch_2.png" width="400" height="300" />
-   <img src="./img/xlaunch_3.png" width="400" height="300" />
-
-4. After the above steps, click `Finish` and launch Xming
-5. Once Xming is launched, we'll need to configure the `$DISPLAY` variable to point to the local machine's IP. To do that, open a terminal and follow the steps below:
+**Install FFmpeg:**
 
 ```bash
-$ cat /etc/resolv.conf
-
-# This is what you will see:
-# # This file was automatically generated by WSL. To stop automatic generation of this file, add the following entry to /etc/wsl.conf:
-# # [network]
-# # generateResolvConf = false
-# nameserver 172.27.176.1
-
-$ export DISPLAY=172.27.176.1:0  # Ensure :0 is appended at the end
+brew install ffmpeg
 ```
 
-6. (Optional) If you are running the application using `code-runner` in VS Code, you can configure `"code-runner.runInTerminal": true` in `settings.json`, as well as setting the `python` command as `python3 -m`. See below:
+## User Guide
 
-   <img src="./img/vscode_1.png" width="450" height="320" />
+### Getting Started
 
-   (If you are seeing errors related to `$DISPLAY`, make sure to run `export DISPLAY=172.27.176.1:0` in your VS Code terminal)
+1. **Download the Application**
 
-7. Now you can run `python3 <app_name>.py` to execute programs
+   - Download the `.exe` (Windows) or `.app` (macOS) file from the [releases](https://github.com/shihanxiong/video_loom/tree/main/src/dist)
+   - Launch the application
 
-## Install dependencies
+2. **Import Videos**
+
+   - Click the **"Import videos"** button
+   - Select up to 4 video files (`.mp4` format)
+   - Videos will appear in the preview area
+
+   <img src="./img/user_guide_1.png" width="450" height="450" alt="Import videos interface" />
+
+3. **Playback Controls**
+
+   - Click **"Play all videos"** to start synchronized playback
+   - Use skip buttons (-30s, -10s, -5s, +5s, +10s, +30s) to navigate
+   - Click **"Pause all videos"** to pause playback
+
+4. **Audio Preview (Optional)**
+
+   - Select an audio track from the dropdown (1-4, corresponding to imported videos)
+   - Click **"Generate preview"** under Audio Settings
+   - Wait for the preview to generate
+   - Audio will play synchronized with video playback
+
+   <img src="./img/user_guide_3.png" width="450" height="450" alt="Audio settings interface" />
+
+5. **Create Timeline**
+
+   - In the timeline text box, enter video segments in the format: `video_number,start_time,end_time`
+   - Each segment on a new line
+   - Example:
+
+     ```text
+     1,0:00:00,0:10:00
+     2,0:10:00,0:15:05
+     ```
+
+   <img src="./img/user_guide_2.png" width="450" height="450" alt="Timeline input interface" />
+
+6. **Generate Final Video**
+   - Select the audio track for the final video
+   - (Optional) Add intro/outro videos
+   - Click **"Generate Video"**
+   - The output file will be saved as `.mp4` with a timestamp-based filename
+
+### Timeline Format
+
+The timeline uses a simple text format:
+
+```
+video_number,start_time,end_time
+```
+
+- **video_number**: 1-4 (corresponding to imported videos)
+- **start_time**: Start timestamp in `H:MM:SS` format
+- **end_time**: End timestamp in `H:MM:SS` format
+
+**Example:**
+
+```text
+1,0:00:00,0:10:00
+2,0:10:00,0:15:05
+3,0:15:05,0:20:30
+```
+
+This creates a video with:
+
+- 0:00:00 to 0:10:00 from video 1
+- 0:10:00 to 0:15:05 from video 2
+- 0:15:05 to 0:20:30 from video 3
+
+## Development
+
+### Quick Setup
+
+Run the installation script to install all dependencies:
 
 ```bash
-# Ensure Python 3.9+ is installed
-# Install pip dependencies
-
-$ pip3 install -r requirements.txt
+./install.sh
 ```
+
+The script will:
+
+- Check for required dependencies (Go, Node.js, FFmpeg)
+- Install missing dependencies where possible
+- Install Go modules and npm packages
+- Generate Wails bindings
+
+### Manual Setup
+
+See [video_loom_v2/README.md](video_loom_v2/README.md) for detailed setup instructions.
 
 ## Testing
 
+Run the test suite:
+
 ```bash
-# Running tests
-$ pytest -vvs
+cd video_loom_v2
+go test ./...
 ```
+
+Test files are located in `video_loom_v2/internal/utils/` and cover utility functions for audio, video, timeline, file operations, and system utilities.
+
+See [video_loom_v2/README.md](video_loom_v2/README.md) for more details.
 
 ## Packaging
 
-```bash
-# Generate executables
-# Note: Executables will automatically be determined by the OS (e.g., '.exe' for Windows and '.app' for macOS)
+Build using Wails:
 
-$ cd src
-$ ./bundle.sh <app.win32.spec | app.macos.spec> <v_[major][minor][patch]>
-# Example: ./bundle.sh app.win32.spec v1.9.13
+```bash
+cd video_loom_v2
+wails build
 ```
+
+**Output:**
+
+- macOS: `build/bin/video_loom_v2.app`
+- Windows: `build/bin/video_loom_v2.exe`
+- Linux: `build/bin/video_loom_v2`
+
+See [video_loom_v2/README.md](video_loom_v2/README.md) for details.
 
 ## Changelog
 
-> Changelog can be found [here](changelog.md)
+See [changelog.md](changelog.md) for version history and release notes.
