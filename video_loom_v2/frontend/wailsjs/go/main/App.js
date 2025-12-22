@@ -74,12 +74,24 @@ export function HasAudioPreview() {
   return window['go']['main']['App']['HasAudioPreview']();
 }
 
+export function OpenOutputDirectory() {
+  return window['go']['main']['App']['OpenOutputDirectory']();
+}
+
+export function OpenVideoDialog() {
+  return window['go']['main']['App']['OpenVideoDialog']();
+}
+
 export function RemoveAudioPreview() {
   return window['go']['main']['App']['RemoveAudioPreview']();
 }
 
 export function RemoveVideo(arg1) {
   return window['go']['main']['App']['RemoveVideo'](arg1);
+}
+
+export function SelectOutputDirectory() {
+  return window['go']['main']['App']['SelectOutputDirectory']();
 }
 
 export function SetAudioTrack(arg1) {

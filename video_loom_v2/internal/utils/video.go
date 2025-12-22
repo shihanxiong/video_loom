@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -153,7 +154,7 @@ func (v *VideoUtils) TrimMP4ByTimestamp(videoPath, startTime, endTime string, ou
 
 // ConcatenateVideos concatenates multiple videos
 func (v *VideoUtils) ConcatenateVideos(videoPaths []string, outputDirectory, outputName, ffmpegPresetValue string) (string, error) {
-	outputFile := fmt.Sprintf("%s/%s", outputDirectory, outputName)
+	outputFile := filepath.Join(outputDirectory, outputName)
 
 	cmd := exec.Command("ffmpeg")
 	for _, video := range videoPaths {
@@ -178,7 +179,7 @@ func (v *VideoUtils) ConcatenateVideos(videoPaths []string, outputDirectory, out
 
 // CombineMP4AACToMP4 combines video and audio streams
 func (v *VideoUtils) CombineMP4AACToMP4(sourceVideo, sourceAudio, outputDirectory, outputFile, ffmpegPresetValue string) (string, error) {
-	outputFilePath := fmt.Sprintf("%s/%s", outputDirectory, outputFile)
+	outputFilePath := filepath.Join(outputDirectory, outputFile)
 
 	cmd := exec.Command("ffmpeg",
 		"-i", sourceVideo,

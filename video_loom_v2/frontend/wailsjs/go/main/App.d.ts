@@ -37,9 +37,15 @@ export function GetVideoList():Promise<Array<string>>;
 
 export function HasAudioPreview():Promise<boolean>;
 
+export function OpenOutputDirectory():Promise<void>;
+
+export function OpenVideoDialog():Promise<Array<string>>;
+
 export function RemoveAudioPreview():Promise<void>;
 
 export function RemoveVideo(arg1:number):Promise<void>;
+
+export function SelectOutputDirectory():Promise<string>;
 
 export function SetAudioTrack(arg1:number):Promise<void>;
 

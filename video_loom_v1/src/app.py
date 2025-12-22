@@ -105,6 +105,20 @@ try:
         # start app
         root = VideoLoom()
 
+        # Initialize queue processor for video rendering (must be done after root is created)
+        # This ensures background threads can schedule Tkinter operations
+        try:
+            # Import the module to access its globals
+            import video_renderer_frame
+
+            # Set root window reference for background threads (CRITICAL: must be set before videos load)
+            video_renderer_frame._root_window = root
+            logging.info(
+                "Set root window reference for video rendering queue processor"
+            )
+        except Exception as e:
+            logging.warning(f"Failed to set root window reference: {e}")
+
         # set app logo in UI
         if SysUtils.is_running_in_pyinstaller_bundle():
             root.iconbitmap(
@@ -112,7 +126,7 @@ try:
             )
         else:
             root.iconbitmap(
-                FileUtils.get_file_path(os.path.join("..", "img", "app_logo.ico"))
+                FileUtils.get_file_path(os.path.join("img", "app_logo.ico"))
             )
 
         async_mainloop(root)

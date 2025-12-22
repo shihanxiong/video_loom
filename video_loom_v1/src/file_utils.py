@@ -46,9 +46,15 @@ class FileUtils:
     @staticmethod
     def get_file_path(filename):
         try:
-            return os.path.join(os.getcwd(), filename)
+            # Get the directory where this file is located (src/)
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            # Go up to video_loom_v1, then to repo root
+            repo_root = os.path.dirname(os.path.dirname(script_dir))
+            return os.path.join(repo_root, filename)
         except Exception as err:
             logging.error(f"{FileUtils.__name__}: {str(err)}")
+            # Fallback to cwd if there's an error
+            return os.path.join(os.getcwd(), filename)
 
     @staticmethod
     def get_latest_version_from_changelog():
@@ -57,10 +63,8 @@ class FileUtils:
             if SysUtils.is_running_in_pyinstaller_bundle():
                 changelog_path = FileUtils.get_bundled_file_path(filename)
             else:
-                # Look for changelog.md in repo root (two levels up from src/)
-                changelog_path = FileUtils.get_file_path(
-                    os.path.join("..", "..", filename)
-                )
+                # Look for changelog.md in repo root
+                changelog_path = FileUtils.get_file_path(filename)
 
             with open(changelog_path, "r") as f:
                 text = f.read()

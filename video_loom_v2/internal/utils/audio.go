@@ -2,8 +2,8 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 )
 
@@ -88,7 +88,7 @@ func (a *AudioUtils) GetAudioDuration(audioPath string) (int, error) {
 
 // ConcatenateAudios concatenates multiple audio files
 func (a *AudioUtils) ConcatenateAudios(audioPaths []string, outputDirectory, outputName string) (string, error) {
-	outputFile := fmt.Sprintf("%s/%s", outputDirectory, outputName)
+	outputFile := filepath.Join(outputDirectory, outputName)
 
 	// Build filter string
 	filterString := "concat:"

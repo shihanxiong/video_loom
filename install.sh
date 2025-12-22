@@ -207,14 +207,57 @@ if [ "$INSTALL_V1" = true ]; then
                 print_success "asdf Python plugin is installed"
                 USE_ASDF=true
                 
+                # Check for Tcl/Tk (required for Tkinter support)
+                if [[ "$OSTYPE" == "darwin"* ]]; then
+                    if ! command_exists brew; then
+                        print_warning "Homebrew is not installed. Tkinter support may not be available."
+                    else
+                        # Check if tcl-tk@8 is installed (compatible with Python 3.12+)
+                        if ! brew list tcl-tk@8 >/dev/null 2>&1; then
+                            print_info "Installing tcl-tk@8 for Tkinter support..."
+                            if brew install tcl-tk@8 >/dev/null 2>&1; then
+                                print_success "tcl-tk@8 installed for Tkinter support"
+                            else
+                                print_warning "Failed to install tcl-tk@8. Tkinter may not work."
+                            fi
+                        else
+                            print_success "tcl-tk@8 is installed (Tkinter support available)"
+                        fi
+                    fi
+                fi
+                
                 # Check if the required Python version is installed via asdf
                 if asdf list python 2>/dev/null | grep -q "^  $REQUIRED_PYTHON_VERSION"; then
-                    print_success "Python $REQUIRED_PYTHON_VERSION is installed via asdf"
+                    # Check if Tkinter is available
+                    if python3 -c "import tkinter" 2>/dev/null; then
+                        print_success "Python $REQUIRED_PYTHON_VERSION is installed via asdf with Tkinter support"
+                    else
+                        print_warning "Python $REQUIRED_PYTHON_VERSION is installed but Tkinter is not available"
+                        if [[ "$OSTYPE" == "darwin"* ]] && command_exists brew && brew list tcl-tk@8 >/dev/null 2>&1; then
+                            print_info "Reinstalling Python $REQUIRED_PYTHON_VERSION with Tkinter support..."
+                            export PATH="$(brew --prefix tcl-tk@8)/bin:$PATH"
+                            export LDFLAGS="-L$(brew --prefix tcl-tk@8)/lib"
+                            export CPPFLAGS="-I$(brew --prefix tcl-tk@8)/include"
+                            asdf uninstall python "$REQUIRED_PYTHON_VERSION" 2>/dev/null || true
+                            if asdf install python "$REQUIRED_PYTHON_VERSION" 2>/dev/null; then
+                                print_success "Python $REQUIRED_PYTHON_VERSION reinstalled with Tkinter support"
+                            else
+                                print_error "Failed to reinstall Python with Tkinter support"
+                            fi
+                        fi
+                    fi
                     # Activate the version for current directory
                     asdf local python "$REQUIRED_PYTHON_VERSION" 2>/dev/null || true
                     asdf reshim python 2>/dev/null || true
                 else
                     print_info "Installing Python $REQUIRED_PYTHON_VERSION via asdf..."
+                    # Set up Tcl/Tk environment for macOS
+                    if [[ "$OSTYPE" == "darwin"* ]] && command_exists brew && brew list tcl-tk@8 >/dev/null 2>&1; then
+                        export PATH="$(brew --prefix tcl-tk@8)/bin:$PATH"
+                        export LDFLAGS="-L$(brew --prefix tcl-tk@8)/lib"
+                        export CPPFLAGS="-I$(brew --prefix tcl-tk@8)/include"
+                        print_info "Using tcl-tk@8 for Tkinter support"
+                    fi
                     if asdf install python "$REQUIRED_PYTHON_VERSION" 2>/dev/null; then
                         print_success "Python $REQUIRED_PYTHON_VERSION installed via asdf"
                         asdf local python "$REQUIRED_PYTHON_VERSION" 2>/dev/null || true
@@ -340,12 +383,35 @@ if [ "$INSTALL_V1" = true ]; then
             if [ -f "video_loom_v1/requirements.txt" ]; then
                 print_info "Installing Python dependencies from requirements.txt..."
                 set +e  # Don't exit on error - we'll check the result
-                $PIP_CMD install -r video_loom_v1/requirements.txt
+                
+                # Upgrade pip first
+                $PIP_CMD install --upgrade pip >/dev/null 2>&1
+                
+                # Install newer av version first (compatible with Python 3.12+)
+                # tkvideoplayer requires av==9.2.0 which doesn't build on Python 3.12
+                # We'll install a newer av version and then tkvideoplayer without strict dependency
+                print_info "Installing av package (newer version for Python 3.12 compatibility)..."
+                $PIP_CMD install 'av>=12.0.0' >/dev/null 2>&1
+                
+                # Install dependencies except tkvideoplayer (which has strict av==9.2.0 requirement)
+                print_info "Installing other Python dependencies..."
+                grep -v "^tkvideoplayer" video_loom_v1/requirements.txt > /tmp/requirements_v1.txt
+                $PIP_CMD install -r /tmp/requirements_v1.txt
                 PIP_EXIT_CODE=$?
+                
+                # Try to install tkvideoplayer without strict dependency checking
+                if [ $PIP_EXIT_CODE -eq 0 ]; then
+                    print_info "Installing tkvideoplayer (may show version warning, but should work)..."
+                    $PIP_CMD install --no-deps tkvideoplayer >/dev/null 2>&1
+                    # Install Pillow if not already installed (required by tkvideoplayer)
+                    $PIP_CMD install Pillow >/dev/null 2>&1
+                fi
+                
                 set -e  # Re-enable exit on error
                 
                 if [ $PIP_EXIT_CODE -eq 0 ]; then
                     print_success "Python dependencies installed"
+                    print_info "Note: Using av>=12.0.0 instead of av==9.2.0 for Python 3.12 compatibility"
                 else
                     print_error "Failed to install some Python dependencies"
                     print_warning "This may be due to missing system dependencies (e.g., pkg-config for PyAV)"

@@ -1,159 +1,169 @@
-# Versions
+# Changelog
 
-### v1.8.0 (unreleased)
+## v2.0.0 (unreleased)
 
-- add support to concatenate audios
-- updated readme with dependencies installation guide
-- updated bundle script to accept version as arg
+- Complete rewrite in Wails v2 (Go + TypeScript)
+- Modern web-based UI with improved UX
+- Native file dialogs for video and directory selection
+- Enhanced status updates with detailed progress tracking
+- Improved video playback with custom HTTP handler
+- Better error handling and user feedback
+- Cross-platform support (macOS, Windows, Linux)
 
-### v1.7.3
+## v1.8.0
 
-- YouTube timestamp will auto-offset if intro is included
+- Added support for audio concatenation
+- Updated README with dependencies installation guide
+- Updated bundle script to accept version as argument
 
-### v1.7.2
+## v1.7.3
 
-- fixed an issue where console windows pops up during video / audio processing in win32 OS
+- YouTube timestamp export now auto-offsets when intro is included
 
-### v1.7.1
+## v1.7.2
 
-- displays error if endtime exceeds the duration of the video
-- fixed a performance issue during video concatenation
-- code refactoring
-  - moved modals into separate Frames
+- Fixed issue where console windows pop up during video/audio processing on Windows
 
-### v1.7.0
+## v1.7.1
 
-- allow exporting timeline in YouTube format
-- use dynamic sizing for modals (win32/macos)
-- app now supports viewing the video list, user can remove a video from the imported list
-- support customized intro / outro imports
+- Display error when end time exceeds video duration
+- Fixed performance issue during video concatenation
+- Code refactoring
+  - Moved modals into separate frames
 
-### v1.6.4
+## v1.7.0
 
-- added support of +/- 10 seconds and +/- 30 seconds control buttons
+- Added support for exporting timeline in YouTube format
+- Implemented dynamic sizing for modals (Windows/macOS)
+- Added video list viewer with ability to remove videos from imported list
+- Added support for customized intro/outro imports
 
-### v1.6.3
+## v1.6.4
 
-- improved app error handling
-- combined play / pause buttons into a single button
+- Added support for +/- 10 seconds and +/- 30 seconds control buttons
 
-### v1.6.2
+## v1.6.3
 
-- fix the encoder issue on macos (use `ffmpeg encoders` to find all availabe encoders)
-- now allows trimming a single segment
-- fix the error when audio is shorter than output.mp4
+- Improved application error handling
+- Combined play/pause buttons into a single toggle button
 
-### v1.6.1
+## v1.6.2
 
-- adjusted segment modal size
-- ffmpeg now uses GPU acceleration instead of CPU for video trimming
-- fixed an issue when video is paused, switching audio track does not play the audio preview
+- Fixed encoder issue on macOS (use `ffmpeg encoders` to find all available encoders)
+- Added support for trimming a single segment
+- Fixed error when audio is shorter than output video
 
-### v1.6.0
+## v1.6.1
 
-- added application menu
-- now application supports random :game_die: timeline generation with
-  - number of videos
-  - minutes per segment
-  - total number of segments
+- Adjusted segment modal size
+- FFmpeg now uses GPU acceleration instead of CPU for video trimming
+- Fixed issue where audio preview doesn't play when switching audio track while video is paused
 
-### v1.5.1
+## v1.6.0
 
-- application now disables play / pause buttons to dis-allow double clicking
-- fixed the issue where removing audio preview is not allowed once audio mixer is loaded
-- fixed the issue when filenames are not escaped while generating audios
+- Added application menu
+- Added random timeline generation feature with:
+  - Number of videos
+  - Minutes per segment
+  - Total number of segments
 
-### v1.5.0
+## v1.5.1
 
-- updated readme w/ updated UI
-- application now supports audio preview while playing videos
+- Disabled play/pause buttons to prevent double-clicking
+- Fixed issue where audio preview cannot be removed once audio mixer is loaded
+- Fixed issue where filenames are not escaped during audio generation
 
-### v1.4.3
+## v1.5.0
 
-- newer logo design
-- enabled app resizing, this will allow videos display to enlarge/shrink
-- auto displays current application version per changelog
-- adjusted layout
+- Updated README with updated UI documentation
+- Added audio preview support while playing videos
 
-### v1.4.2
+## v1.4.3
 
-- shows error message when timeline text is blank
+- Updated logo design
+- Enabled application resizing (allows video display to enlarge/shrink)
+- Auto-display current application version from changelog
+- Adjusted layout
 
-### v1.4.1
+## v1.4.2
 
-- fixed the dropdown menu font size issue in windows system
+- Display error message when timeline text is blank
 
-### v1.4.0
+## v1.4.1
 
-- audio track selection is now a dropdown control, the list in the dropdown is based on the number of videos imported
+- Fixed dropdown menu font size issue on Windows
 
-### v1.3.0
+## v1.4.0
 
-- now allows user to select a video processing speed (higher speed leads to more quality loss)
+- Changed audio track selection to dropdown control (list based on number of imported videos)
 
-### v1.2.2
+## v1.3.0
 
-- fixed a output naming issue
+- Added video processing speed selection (higher speed leads to more quality loss)
 
-### v1.2.1
+## v1.2.2
 
-- fixed the issue when timeline parse incorrectly when extra spaces / EOL were included
+- Fixed output naming issue
 
-### v1.2.0
+## v1.2.1
 
-- added logging system, now all app info can be viewed in the log files
-- application will no longer have a terminal running the background
+- Fixed issue where timeline parsed incorrectly when extra spaces or EOL characters were included
 
-### v1.1.0
+## v1.2.0
 
-- added timeline validation (video processing will be skipped if timeline is invalid)
+- Added logging system (all application info can be viewed in log files)
+- Application no longer requires a terminal running in the background
 
-### v1.0.1
+## v1.1.0
 
-- :file_folder: added user documentation
+- Added timeline validation (video processing will be skipped if timeline is invalid)
 
-### v1.0.0
+## v1.0.1
 
-- :loudspeaker: official release of video loom v1.0.0
-- when copy the current timestamp, auto-formats to time delta format
+- Added user documentation
 
-### v0.9.3-beta
+## v1.0.0
 
-- solved the app portability issue in Win32 (:heavy_check_mark: win32 tested)
-- fixed path issue on macOS (:heavy_check_mark: macOS tested)
+- Official release of Video Loom v1.0.0
+- Auto-format current timestamp to time delta format when copying to clipboard
 
-### v0.9.2-beta
+## v0.9.3-beta
 
-- fixed the issue when ffmpeg file path could be unidentified in Win32
-- fixed the issue when imported filenames are too long that caused rendering section to be cutoff
-- bundle script now accepts specific os spec files
+- Fixed application portability issue on Windows (tested)
+- Fixed path issue on macOS (tested)
 
-### v0.9.1-beta
+## v0.9.2-beta
 
-- fixed the issue when the output video has resolution loss
-- using ffmpeg instead of moviepy for video processing
+- Fixed issue where FFmpeg file path could be unidentified on Windows
+- Fixed issue where long imported filenames caused rendering section to be cut off
+- Bundle script now accepts specific OS spec files
 
-### v0.9.0-beta
+## v0.9.1-beta
 
-- added time progress bar to display current video duration
-- added start time / end time
-- added skip buttons to jump +/- 5 seconds
-- added support to copy current timestamp into clipboard
+- Fixed issue where output video had resolution loss
+- Switched from MoviePy to FFmpeg for video processing
 
-### v0.8.1-beta
+## v0.9.0-beta
 
-- added default resolution for Linux system (now app supports Win, MacOS, and Linux)
+- Added time progress bar to display current video duration
+- Added start time and end time display
+- Added skip buttons to jump +/- 5 seconds
+- Added support for copying current timestamp to clipboard
 
-### v0.8.0-beta
+## v0.8.1-beta
 
-- application now can render up to 4 videos in preview
-- adjusted app resolution to ensure video ratio is unchanged in preview
+- Added default resolution for Linux system (application now supports Windows, macOS, and Linux)
 
-### v0.7.0-beta
+## v0.8.0-beta
 
-- application now supports up to 4 video tracks + 4 audio tracks
-- application can generate video splicing using timeline text
+- Application can now render up to 4 videos in preview
+- Adjusted application resolution to ensure video aspect ratio is unchanged in preview
 
-### v0.6.0-alpha
+## v0.7.0-beta
 
-- application now can only render 2 videos simutaneously
+- Application now supports up to 4 video tracks and 4 audio tracks
+- Application can generate video splicing using timeline text
+
+## v0.6.0-alpha
+
+- Application can now render 2 videos simultaneously

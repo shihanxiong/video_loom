@@ -9,13 +9,17 @@ import {
   GetFFmpegPreset,
   GetIntro,
   GetOutro,
+  GetOutputDirectory,
   GetStatus,
   GetTimeline,
   GetVersion,
   GetVideoList,
   HasAudioPreview,
+  OpenOutputDirectory,
+  OpenVideoDialog,
   RemoveAudioPreview,
   RemoveVideo,
+  SelectOutputDirectory,
   SetAudioTrack,
   SetFFmpegPreset,
   SetIntro,
@@ -25,7 +29,6 @@ import {
   ShowMessage,
   ValidateTimeline,
 } from '../wailsjs/go/main/App';
-// Note: File path resolution will be handled by the backend
 
 export class App {
   private videoList: string[] = [];
@@ -36,12 +39,26 @@ export class App {
   private audioTrack: number = 1;
   private ffmpegPreset: string = 'medium';
   private statusUpdateInterval: number | null = null;
+  private outputDirectorySelected: boolean = false;
+
+  // Cached DOM elements for better performance
+  private cachedElements: {
+    statusText?: HTMLElement | null;
+    outputDirPath?: HTMLElement | null;
+    generateVideoBtn?: HTMLButtonElement | null;
+    playPauseBtn?: HTMLButtonElement | null;
+    viewVideoListBtn?: HTMLElement | null;
+    audioTrackSelect?: HTMLSelectElement | null;
+    presetSelect?: HTMLSelectElement | null;
+    timelineTextarea?: HTMLTextAreaElement | null;
+  } = {};
 
   async init() {
     await this.loadState();
     this.setupUI();
     this.setupEventListeners();
     this.startStatusUpdates();
+    await this.loadOutputDirectory();
   }
 
   private async loadState() {
@@ -69,7 +86,7 @@ export class App {
     app.innerHTML = `
             <div class="app-container">
                 <header class="app-header">
-                    <h1>Video Loom</h1>
+                    <h2>Video Loom</h2>
                     <div class="version" id="version"></div>
                 </header>
 
@@ -80,12 +97,6 @@ export class App {
                             <button id="import-videos-btn" class="btn btn-primary">Import Videos</button>
                             <button id="view-video-list-btn" class="btn btn-secondary">View Video List (0 of 4)</button>
                             <button id="play-pause-btn" class="btn btn-primary" disabled>Play All Videos</button>
-                        </div>
-                    </section>
-
-                    <!-- Intro/Outro Section -->
-                    <section class="section intro-outro-section">
-                        <div class="button-group">
                             <button id="import-intro-btn" class="btn btn-secondary">Add Intro</button>
                             <button id="import-outro-btn" class="btn btn-secondary">Add Outro</button>
                         </div>
@@ -127,9 +138,7 @@ export class App {
                                 </select>
                                 <button id="generate-audio-preview-btn" class="btn btn-secondary">Generate Preview</button>
                                 <button id="remove-audio-preview-btn" class="btn btn-secondary" disabled>Remove Preview</button>
-                            </div>
-                            <div class="setting-group">
-                                <label>Process Speed:</label>
+                                <label style="margin-left: 1rem;">Process Speed:</label>
                                 <select id="ffmpeg-preset-select" class="select">
                                     <option value="ultrafast">Ultrafast</option>
                                     <option value="superfast">Superfast</option>
@@ -167,8 +176,13 @@ export class App {
                     <!-- Toolbar Section -->
                     <section class="section toolbar-section">
                         <div class="button-group">
-                            <button id="generate-video-btn" class="btn btn-primary btn-large" disabled>Generate Video</button>
-                            <button id="quit-btn" class="btn btn-secondary btn-large">Quit</button>
+                            <button id="select-output-dir-btn" class="btn btn-primary">Select Output Directory</button>
+                            <button id="generate-video-btn" class="btn btn-primary" disabled>Generate Video</button>
+                            <button id="open-output-dir-btn" class="btn btn-secondary" disabled>Open Output Folder</button>
+                            <button id="quit-btn" class="btn btn-secondary">Quit</button>
+                        </div>
+                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">
+                            <strong>Output Directory:</strong> <span id="output-dir-path">Not selected</span>
                         </div>
                     </section>
                 </div>
@@ -285,7 +299,9 @@ export class App {
       ?.addEventListener('click', () => this.showYouTubeTimestampModal());
 
     // Toolbar
+    document.getElementById('select-output-dir-btn')?.addEventListener('click', () => this.selectOutputDirectory());
     document.getElementById('generate-video-btn')?.addEventListener('click', () => this.generateVideo());
+    document.getElementById('open-output-dir-btn')?.addEventListener('click', () => this.openOutputDirectory());
     document.getElementById('quit-btn')?.addEventListener('click', () => window.close());
 
     // Modals
@@ -313,10 +329,10 @@ export class App {
       ?.addEventListener('click', () => this.closeModal('youtube-timestamp-modal'));
     document.getElementById('copy-youtube-timestamp-btn')?.addEventListener('click', () => this.copyYouTubeTimestamp());
 
-    // Close modals on outside click
+    // Close modals on outside click (except random-segments-modal)
     document.querySelectorAll('.modal').forEach((modal) => {
       modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal && modal.id !== 'random-segments-modal') {
           this.closeModal(modal.id);
         }
       });
@@ -324,36 +340,22 @@ export class App {
   }
 
   private async importVideos() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'video/mp4,.mp4';
-    input.multiple = true;
-    input.style.display = 'none';
-    document.body.appendChild(input);
+    try {
+      // Use Wails native file dialog to get file paths directly
+      const paths = await OpenVideoDialog();
 
-    input.onchange = async (e) => {
-      const files = (e.target as HTMLInputElement).files;
-      if (files && files.length > 0) {
-        try {
-          const paths: string[] = [];
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const path = (file as any).path || file.name;
-            paths.push(path);
-          }
-          await AddVideos(paths);
-          await this.refreshVideoList();
-          this.updateUI();
-        } catch (error) {
-          console.error('Error importing videos:', error);
-          await this.showError('Failed to import videos');
-        } finally {
-          document.body.removeChild(input);
-        }
+      if (paths.length === 0) {
+        // User cancelled the dialog
+        return;
       }
-    };
 
-    input.click();
+      await AddVideos(paths);
+      await this.refreshVideoList();
+      this.updateUI();
+    } catch (error) {
+      console.error('Error importing videos:', error);
+      await this.showError(`Failed to import videos: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   private async refreshVideoList() {
@@ -371,9 +373,14 @@ export class App {
     this.videoList.forEach((videoPath, index) => {
       const videoWrapper = document.createElement('div');
       videoWrapper.className = 'video-wrapper';
+
+      // Encode the file path for use in URL
+      const encodedPath = encodeURIComponent(videoPath);
+      const videoUrl = `/video?path=${encodedPath}`;
+
       videoWrapper.innerHTML = `
                 <video id="video-${index}" class="video-player" controls>
-                    <source src="file://${videoPath}" type="video/mp4">
+                    <source src="${videoUrl}" type="video/mp4">
                 </video>
                 <div class="video-label">Video ${index + 1}</div>
             `;
@@ -393,6 +400,12 @@ export class App {
             this.updateTimeDisplay();
           }
         });
+        video.addEventListener('error', () => {
+          console.error(`Error loading video ${index + 1}:`, video.error, video.src);
+        });
+        video.addEventListener('canplay', () => {
+          console.log(`Video ${index + 1} ready to play`);
+        });
         this.videoPlayers.push(video);
       }
     });
@@ -407,8 +420,26 @@ export class App {
   }
 
   private playAll() {
-    this.videoPlayers.forEach((player) => {
-      player.play().catch((err) => console.error('Error playing video:', err));
+    this.videoPlayers.forEach((player, index) => {
+      if (player.readyState >= 2) {
+        // HAVE_CURRENT_DATA or higher
+        player.play().catch((err) => {
+          console.error(`Error playing video ${index + 1}:`, err, player.src);
+        });
+      } else {
+        // Wait for video to be ready
+        const playWhenReady = () => {
+          player.play().catch((err) => {
+            console.error(`Error playing video ${index + 1}:`, err, player.src);
+          });
+          player.removeEventListener('canplay', playWhenReady);
+        };
+        player.addEventListener('canplay', playWhenReady);
+        // Also try to load if not already loading
+        if (player.readyState === 0) {
+          player.load();
+        }
+      }
     });
     this.isPlaying = true;
     const btn = document.getElementById('play-pause-btn');
@@ -706,13 +737,62 @@ export class App {
   }
 
   private async generateVideo() {
+    console.log('Generate video button clicked');
+
+    // Quick validation before proceeding
+    if (this.videoList.length === 0) {
+      await this.showError('Please import at least one video first');
+      return;
+    }
+
+    if (!this.outputDirectorySelected) {
+      await this.showError('Please select an output directory first');
+      return;
+    }
+
+    if (!this.cachedElements.timelineTextarea) {
+      this.cachedElements.timelineTextarea = document.getElementById('timeline-text') as HTMLTextAreaElement;
+    }
+    const timeline = this.cachedElements.timelineTextarea?.value.trim() || '';
+    if (!timeline) {
+      await this.showError('Please enter a timeline before generating video');
+      return;
+    }
+
     const btn = document.getElementById('generate-video-btn') as HTMLButtonElement;
     if (btn) btn.disabled = true;
 
+    // Update status immediately to show something is happening
+    await this.updateStatus('Starting video generation...');
+    const statusEl = document.getElementById('status-text');
+    if (statusEl) {
+      statusEl.textContent = 'Starting video generation...';
+    }
+
     try {
+      console.log('Calling GenerateVideo()...');
+      console.log('Video list:', this.videoList);
+      console.log('Timeline:', timeline);
       await GenerateVideo();
+      console.log('GenerateVideo() completed successfully');
+      // Status will be updated by the backend via GetStatus polling
     } catch (error: any) {
-      await this.showError(error.message || 'Failed to generate video');
+      console.error('Error generating video:', error);
+      // Extract error message - Wails errors might be in different formats
+      let errorMessage = 'Failed to generate video';
+      if (error) {
+        if (typeof error === 'string') {
+          errorMessage = error;
+        } else if (error.message) {
+          errorMessage = error.message;
+        } else if (error.error) {
+          errorMessage = error.error;
+        } else {
+          errorMessage = String(error);
+        }
+      }
+      console.error('Error message:', errorMessage);
+      await this.showError(errorMessage);
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -720,40 +800,57 @@ export class App {
 
   private async updateUI() {
     // Update video list button
-    const viewBtn = document.getElementById('view-video-list-btn');
-    if (viewBtn) {
-      viewBtn.textContent = `View Video List (${this.videoList.length} of 4)`;
+    if (!this.cachedElements.viewVideoListBtn) {
+      this.cachedElements.viewVideoListBtn = document.getElementById('view-video-list-btn');
+    }
+    if (this.cachedElements.viewVideoListBtn) {
+      this.cachedElements.viewVideoListBtn.textContent = `View Video List (${this.videoList.length} of 4)`;
     }
 
     // Update play/pause button
-    const playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
-    if (playPauseBtn) {
-      playPauseBtn.disabled = this.videoList.length === 0;
+    if (!this.cachedElements.playPauseBtn) {
+      this.cachedElements.playPauseBtn = document.getElementById('play-pause-btn') as HTMLButtonElement;
+    }
+    if (this.cachedElements.playPauseBtn) {
+      this.cachedElements.playPauseBtn.disabled = this.videoList.length === 0;
     }
 
-    // Update generate button
-    const generateBtn = document.getElementById('generate-video-btn') as HTMLButtonElement;
-    if (generateBtn) {
-      generateBtn.disabled = this.videoList.length === 0;
+    // Update generate button - need videos, timeline, and output directory
+    if (!this.cachedElements.generateVideoBtn) {
+      this.cachedElements.generateVideoBtn = document.getElementById('generate-video-btn') as HTMLButtonElement;
+    }
+    if (this.cachedElements.generateVideoBtn) {
+      // Button should be enabled if there are videos AND output directory is selected
+      this.cachedElements.generateVideoBtn.disabled = this.videoList.length === 0 || !this.outputDirectorySelected;
+    }
+
+    // Update open output folder button
+    const openOutputBtn = document.getElementById('open-output-dir-btn') as HTMLButtonElement;
+    if (openOutputBtn) {
+      openOutputBtn.disabled = !this.outputDirectorySelected;
     }
 
     // Update audio track select
-    const audioTrackSelect = document.getElementById('audio-track-select') as HTMLSelectElement;
-    if (audioTrackSelect) {
-      audioTrackSelect.innerHTML = '';
+    if (!this.cachedElements.audioTrackSelect) {
+      this.cachedElements.audioTrackSelect = document.getElementById('audio-track-select') as HTMLSelectElement;
+    }
+    if (this.cachedElements.audioTrackSelect) {
+      this.cachedElements.audioTrackSelect.innerHTML = '';
       for (let i = 1; i <= this.videoList.length; i++) {
         const option = document.createElement('option');
         option.value = i.toString();
         option.textContent = i.toString();
         if (i === this.audioTrack) option.selected = true;
-        audioTrackSelect.appendChild(option);
+        this.cachedElements.audioTrackSelect.appendChild(option);
       }
     }
 
     // Update FFmpeg preset
-    const presetSelect = document.getElementById('ffmpeg-preset-select') as HTMLSelectElement;
-    if (presetSelect) {
-      presetSelect.value = this.ffmpegPreset;
+    if (!this.cachedElements.presetSelect) {
+      this.cachedElements.presetSelect = document.getElementById('ffmpeg-preset-select') as HTMLSelectElement;
+    }
+    if (this.cachedElements.presetSelect) {
+      this.cachedElements.presetSelect.value = this.ffmpegPreset;
     }
 
     await this.updateAudioPreviewButtons();
@@ -764,9 +861,11 @@ export class App {
   }
 
   private async updateStatus(message: string) {
-    const statusEl = document.getElementById('status-text');
-    if (statusEl) {
-      statusEl.textContent = message;
+    if (!this.cachedElements.statusText) {
+      this.cachedElements.statusText = document.getElementById('status-text');
+    }
+    if (this.cachedElements.statusText) {
+      this.cachedElements.statusText.textContent = message;
     }
     // Also update backend status
     try {
@@ -781,16 +880,83 @@ export class App {
     await this.updateStatus(`Error: ${message}`);
   }
 
+  private async loadOutputDirectory() {
+    try {
+      const outputDir = await GetOutputDirectory();
+      if (!this.cachedElements.outputDirPath) {
+        this.cachedElements.outputDirPath = document.getElementById('output-dir-path');
+      }
+      if (this.cachedElements.outputDirPath) {
+        // Check if output directory is set (not just default current directory)
+        // We'll consider it "selected" if it's not "." or empty
+        if (outputDir && outputDir !== '.' && outputDir !== '') {
+          this.outputDirectorySelected = true;
+          this.cachedElements.outputDirPath.textContent = outputDir;
+        } else {
+          this.outputDirectorySelected = false;
+          this.cachedElements.outputDirPath.textContent = 'Not selected';
+        }
+      }
+      this.updateUI();
+    } catch (error) {
+      console.error('Error loading output directory:', error);
+      if (!this.cachedElements.outputDirPath) {
+        this.cachedElements.outputDirPath = document.getElementById('output-dir-path');
+      }
+      if (this.cachedElements.outputDirPath) {
+        this.cachedElements.outputDirPath.textContent = 'Error loading path';
+      }
+      this.outputDirectorySelected = false;
+      this.updateUI();
+    }
+  }
+
+  private async selectOutputDirectory() {
+    try {
+      const selectedPath = await SelectOutputDirectory();
+      if (selectedPath) {
+        this.outputDirectorySelected = true;
+        if (!this.cachedElements.outputDirPath) {
+          this.cachedElements.outputDirPath = document.getElementById('output-dir-path');
+        }
+        if (this.cachedElements.outputDirPath) {
+          this.cachedElements.outputDirPath.textContent = selectedPath;
+        }
+        await this.updateStatus(`Output directory selected: ${selectedPath}`);
+        this.updateUI();
+      }
+    } catch (error) {
+      console.error('Error selecting output directory:', error);
+      await this.showError(
+        `Failed to select output directory: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+  }
+
+  private async openOutputDirectory() {
+    try {
+      await OpenOutputDirectory();
+    } catch (error) {
+      console.error('Error opening output directory:', error);
+      await this.showError(
+        `Failed to open output directory: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+  }
+
   private startStatusUpdates() {
     if (this.statusUpdateInterval !== null) {
       clearInterval(this.statusUpdateInterval);
     }
+    // Cache status element
+    if (!this.cachedElements.statusText) {
+      this.cachedElements.statusText = document.getElementById('status-text');
+    }
     this.statusUpdateInterval = window.setInterval(async () => {
       try {
         const status = await GetStatus();
-        const statusEl = document.getElementById('status-text');
-        if (statusEl) {
-          statusEl.textContent = status;
+        if (this.cachedElements.statusText) {
+          this.cachedElements.statusText.textContent = status;
         }
       } catch (error) {
         console.error('Error updating status:', error);
