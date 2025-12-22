@@ -5,9 +5,10 @@ name: Go Build and Test
 
 on:
   push:
-    branches: ['main']
+    branches: 
+      - 'main'
   pull_request:
-    branches: ['main']
+    # Trigger on PRs from any branch to any branch (no branches filter = all PRs)
 
 permissions:
   contents: read
